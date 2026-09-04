@@ -2,9 +2,12 @@ name: R-CMD-check
 
 on:
   push:
-    branches: [main, develop/**]
+    branches:
+      - main
+      - 'develop/**'
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -28,5 +31,5 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          error-on: '"'error'"'
-          args: '"--no-manual" "--as-cran"'
+          error-on: 'error'
+          args: 'c("--no-manual", "--as-cran")'
