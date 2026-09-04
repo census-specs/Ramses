@@ -12,33 +12,24 @@
 #   4. Installation de Ramses dans la bibliothèque R active (devtools::install)
 # ==============================================================================
 
-# Assurer l'arrêt en cas d'erreur bloquante
 options(warn = 1)
 
-# Message stylisé
 cli_title <- function(txt) {
   cat("\n", paste(rep("=", 75), collapse = ""), "\n", sep = "")
   cat("  >>> ", txt, "\n")
   cat(paste(rep("=", 75), collapse = ""), "\n\n", sep = "")
 }
 
-cli_success <- function(txt) {
-  cat("[OK] ", txt, "\n", sep = "")
-}
-
-cli_info <- function(txt) {
-  cat("[INFO] ", txt, "\n", sep = "")
-}
+cli_success <- function(txt) cat("[OK] ", txt, "\n", sep = "")
+cli_info <- function(txt) cat("[INFO] ", txt, "\n", sep = "")
 
 cli_title("1. VERIFICATION DE L'ENVIRONNEMENT DE DEVELOPPEMENT")
 
-# Vérifier le répertoire de travail
 pkg_root <- rprojroot::find_root(rprojroot::is_r_package, path = getwd())
 cli_info(paste0("Racine du package detectee : ", pkg_root))
 setwd(pkg_root)
 
-# Liste des packages de développement requis
-dev_deps <- c("devtools", "roxygen2", "rmarkdown", "knitr", "testthat")
+dev_deps <- c("devtools", "roxygen2", "rmarkdown", "knitr", "testthat", "rprojroot")
 missing_deps <- dev_deps[!vapply(dev_deps, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
 
 if (length(missing_deps) > 0) {
@@ -49,8 +40,6 @@ if (length(missing_deps) > 0) {
 }
 
 cli_title("2. GENERATION DE LA DOCUMENTATION (Roxygen2)")
-
-# Étape 1 : devtools::document() pour générer man/ et mettre à jour NAMESPACE
 cli_info("Generation des fiches d'aide (.Rd) et mise a jour de NAMESPACE...")
 tryCatch({
   devtools::document(pkg = pkg_root)
@@ -60,17 +49,14 @@ tryCatch({
 })
 
 cli_title("3. AUDIT QUALITE ET CONTROLE DE CONFORMITE (devtools::check)")
-
-# Étape 2 : devtools::check()
-# Audite la structure, la syntaxe, les imports, les exemples et les tests unitaires
 cli_info("Execution de R CMD check via devtools::check()...")
 cli_info("Recherche d'erreurs (ERRORS), d'avertissements (WARNINGS) et de remarques (NOTES)...")
 
 check_results <- devtools::check(
   pkg = pkg_root,
   document = FALSE,
-  cran = FALSE,          # Activer TRUE pour une soumission officielle CRAN
-  error_on = "warning"   # Tolérance zéro sur les warnings et erreurs
+  cran = FALSE,
+  error_on = "warning"
 )
 
 cat("\n")
@@ -84,8 +70,6 @@ if (length(check_results$errors) == 0 && length(check_results$warnings) == 0) {
 }
 
 cli_title("4. INSTALLATION LOCALE DU PACKAGE (devtools::install)")
-
-# Étape 3 : devtools::install()
 cli_info("Installation de la version locale de Ramses dans la bibliotheque R active...")
 tryCatch({
   devtools::install(
@@ -100,10 +84,7 @@ tryCatch({
 })
 
 cli_title("5. TEST RAPIDE DE LANCEMENT")
-
 cli_info("Pour tester l'interface graphique de Ramses des maintenant, executez :")
-cat("\n")
-cat("    library(Ramses)\n")
-cat("    run_app()\n\n")
+cat("\n    library(Ramses)\n    run_app()\n\n")
 cat(paste(rep("=", 75), collapse = ""), "\n")
 cat("Processus de build termine avec succes.\n")
