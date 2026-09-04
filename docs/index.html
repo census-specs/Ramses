@@ -1,260 +1,39 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ramses - Interface Graphique Moderne d'Analyse Statistique en R</title>
-  <meta name="description" content="Documentation officielle du package R Ramses : alternative contemporaine à Rcmdr, analyses statistiques complètes et journalisation R Markdown reproductible.">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramses — Interface graphique d'analyse statistique en R</title>
+<meta name="description" content="Ramses est une interface graphique Shiny pour l'analyse statistique, la visualisation et la reproductibilité en R.">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<nav class="navbar"><div class="navbar-container">
+<a href="index.html" class="navbar-brand"><span>Ramses</span><span class="pkg-tag">v0.1.0</span></a>
+<ul class="nav-links"><li><a href="index.html" class="nav-link active">Accueil</a></li><li><a href="installation.html" class="nav-link">Installation</a></li><li><a href="tutoriel.html" class="nav-link">Tutoriel</a></li><li><a href="auteur.html" class="nav-link">À propos</a></li></ul>
+<a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
+</div></nav>
+<main class="main-wrapper"><article class="article-content">
+<header><h1>Ramses</h1><p style="font-size:1.15rem;color:var(--color-primary-light);font-weight:500;">Interface graphique moderne pour l'analyse statistique et la reproductibilité en R</p>
+<div class="badge-group"><span class="badge badge-version">version 0.1.0</span><span class="badge badge-r-req">R ≥ 4.1.0</span><span class="badge badge-license">MIT</span><span class="badge badge-rmd">Shiny + bslib</span></div>
+<figure><img src="images/ramses-hero.png" alt="Interface Ramses"><figcaption>Interface graphique Ramses</figcaption></figure></header>
+<section><h2>Le projet</h2>
+<p><strong>Ramses</strong> cherche à rapprocher deux mondes : la simplicité d'une interface graphique et la rigueur du code R. L'utilisateur choisit ses variables et ses paramètres dans une interface Shiny, tandis que les analyses peuvent être consignées dans un journal R Markdown.</p>
+<p>Le projet est actuellement en <strong>version 0.1.0</strong>. Il constitue une base fonctionnelle destinée à évoluer progressivement, notamment vers une architecture de résultats plus homogène et une couverture méthodologique plus large.</p></section>
+<section><h2>Fonctionnalités réellement disponibles</h2><div class="grid-2">
+<div class="card"><h3>Importation & données</h3><p>CSV, TXT, TSV, Excel (.xlsx/.xls), SPSS (.sav), Stata (.dta) et RDS. Aperçu interactif avec recherche, tri et pagination via DT.</p></div>
+<div class="card"><h3>Statistiques descriptives</h3><p>Variables quantitatives, fréquences qualitatives, tableaux croisés et matrices de corrélation Pearson/Spearman.</p></div>
+<div class="card"><h3>Visualisation</h3><p>8 types : nuage de points, barres, boxplot, violon, histogramme, ligne, densité et heatmap, avec axes, couleur, taille et facettes.</p></div>
+<div class="card"><h3>Inférence & modèles</h3><p>Shapiro-Wilk, KS, Bartlett, Fligner, t-tests, Wilcoxon, ANOVA à un facteur, Kruskal-Wallis, Chi², Fisher, McNemar, corrélations, régression linéaire et logistique.</p></div>
+</div></section>
+<section><h2>Reproductibilité</h2><p>Les analyses peuvent être ajoutées au <strong>Journal R Markdown</strong>. Le journal peut être exporté en <code>.R</code>, <code>.Rmd</code> ou rapport <code>.html</code>. L'objectif n'est donc pas de remplacer R par une boîte noire, mais de fournir une porte d'entrée graphique vers une analyse qui reste inspectable.</p><figure><img src="images/feature-rmd-journal.png" alt="Journal R Markdown Ramses"><figcaption>Journal R Markdown et code reproductible</figcaption></figure></section>
+<section><h2>Positionnement</h2><p>Ramses est inspiré par l'idée d'une alternative moderne à R Commander : interface web, composants Bootstrap 5, graphiques interactifs et génération de code. Il ne cherche pas encore à reproduire toute la couverture fonctionnelle de Rcmdr, jamovi ou SPSS.</p>
+<div class="callout callout-note"><div class="callout-title">Version de développement</div><p style="margin-bottom:0;">Certaines fonctionnalités annoncées dans d'anciennes versions de la documentation ne sont pas encore implémentées : drag-and-drop, ANOVA factorielle, tests de proportions, Levene, Odds Ratios dédiés et véritable système de provenance analytique.</p></div></section>
+<section><h2>Démarrage rapide</h2><div class="code-block-container"><div class="code-header"><span class="code-lang">R</span></div><pre><code>if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+remotes::install_github("census-specs/Ramses")
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <a href="index.html" class="navbar-brand">
-        <span>Ramses</span>
-        <span class="pkg-tag">v0.1.0</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="index.html" class="nav-link active">Accueil</a></li>
-        <li><a href="installation.html" class="nav-link">Installation</a></li>
-        <li><a href="tutoriel.html" class="nav-link">Tutoriel</a></li>
-        <li><a href="auteur.html" class="nav-link">À propos</a></li>
-      </ul>
-      <a href="https://github.com/astral-r/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">
-        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-        </svg>
-        <span>GitHub</span>
-      </a>
-    </div>
-  </nav>
-
-  <!-- Main Container -->
-  <main class="main-wrapper">
-    <article class="article-content">
-      
-      <!-- Header Section -->
-      <header>
-        <h1>Ramses</h1>
-        <p style="font-size: 1.15rem; color: var(--color-primary-light); font-weight: 500; margin-bottom: 1rem;">
-          Interface Graphique Moderne d'Analyse Statistique et de Reproductibilité en R
-        </p>
-
-        <!-- Metadata Badges -->
-        <div class="badge-group">
-          <span class="badge badge-version">version 0.1.0</span>
-          <span class="badge badge-r-req">R &gt;= 4.1.0</span>
-          <span class="badge badge-license">Licence MIT</span>
-          <span class="badge badge-rmd">R Markdown / knitr</span>
-          <span class="badge">Bootstrap 5 (bslib)</span>
-        </div>
-
-        <!-- Figure Principale -->
-        <figure>
-          <img src="images/ramses-hero.png" alt="Interface générale du package Ramses" />
-          <figcaption>Figure 1 : Interface générale du package Ramses</figcaption>
-        </figure>
-      </header>
-
-      <!-- Résumé Exécutif -->
-      <section>
-        <h2>Pourquoi Ramses ?</h2>
-        <p>
-          Depuis plus de deux décennies, <strong>R Commander (Rcmdr)</strong> a joué un rôle pionnier dans l'enseignement et la pratique des biostatistiques appliquées en démocratisant l'accès à R via une interface graphique. Cependant, les contraintes ergonomiques des fenêtres graphiques X11/Tcl/Tk et l'absence d'intégration native aux standards modernes du web imposaient une modernisation en profondeur.
-        </p>
-        <p>
-          <strong>Ramses</strong> a été développé pour combler cette lacune en proposant une <strong>interface web réactive, contemporaine et accessible</strong> construite avec <code>Shiny</code> et <code>bslib</code> (Bootstrap 5). Conçu pour les chercheurs, data analysts, biostatisticiens, enseignants et étudiants, Ramses privilégie l'intégrité scientifique : <em>toutes les manipulations et calculs effectués à l'écran sont rigoureusement traduits en code R pur et consignés dans un journal R Markdown reproductible</em>.
-        </p>
-      </section>
-
-      <!-- Les 4 Piliers Fondateurs -->
-      <section>
-        <h2>Les 4 Piliers de l'Architecture Ramses</h2>
-        
-        <div class="grid-2">
-          
-          <!-- Pilier 1 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
-              1. Menus Modaux & Navigation Fluide
-            </h3>
-            <p>
-              Exploration tabulaire interactive avec <code>DT::datatable</code>, importation guidée multi-formats (CSV, Excel, SPSS, Stata, RDS) et paramétrage modulaire sans rechargement de page.
-            </p>
-          </div>
-
-          <!-- Pilier 2 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-              2. Analyses Statistiques Complètes
-            </h3>
-            <p>
-              Statistiques descriptives univariées et bivariées, tests paramétriques (Student, ANOVA), non-paramétriques (Wilcoxon, Kruskal-Wallis), tests du Chi-2/Fisher et régressions (OLS, logistique avec Odds Ratios).
-            </p>
-          </div>
-
-          <!-- Pilier 3 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-              3. Visualisation "Tableau-Style"
-            </h3>
-            <p>
-              Générateur visuel de graphiques permettant de mapper intuitivement les variables sur les axes, couleurs, tailles et facettes. Rendu dynamique synchronisé entre <code>ggplot2</code> et <code>plotly</code>.
-            </p>
-            <figure style="margin: 1rem 0 0.5rem 0;">
-              <img src="images/feature-chart-builder.png" alt="Module Chart Builder" />
-              <figcaption>Figure 2 : Module Chart Builder pour la composition graphique interactive</figcaption>
-            </figure>
-          </div>
-
-          <!-- Pilier 4 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-              4. Reproductibilité R Markdown
-            </h3>
-            <p>
-              Journalisation chronologique temps réel de chaque analyse. Possibilité d'annoter le script et d'exporter en script R source (<code>.R</code>), document knitr (<code>.Rmd</code>) ou rapport compilé (<code>.html</code>).
-            </p>
-            <figure style="margin: 1rem 0 0.5rem 0;">
-              <img src="images/feature-rmd-journal.png" alt="Journal R Markdown reproductible" />
-              <figcaption>Figure 3 : Journal R Markdown avec synchronisation du code source R</figcaption>
-            </figure>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Lancement Rapide -->
-      <section>
-        <h2>Démarrage Rapide</h2>
-        <p>
-          Ramses s'installe et s'exécute directement depuis votre console R ou RStudio avec une seule instruction :
-        </p>
-
-        <div class="code-block-container">
-          <div class="code-header">
-            <span class="code-lang">Console R</span>
-            <button class="btn-copy" type="button">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              <span>Copier le code</span>
-            </button>
-          </div>
-          <pre><code># 1. Installation depuis GitHub (via le package remotes)
-if (!requireNamespace("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
-remotes::install_github("astral-r/Ramses")
-
-# 2. Chargement de la bibliothèque
 library(Ramses)
-
-# 3. Lancement de l'interface graphique interactive
-run_app()</code></pre>
-        </div>
-
-        <div class="callout callout-note">
-          <div class="callout-title">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm.93-9.412l-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 110-2 1 1 0 010 2z"/></svg>
-            Mode interactif vs Serveur
-          </div>
-          <p style="margin-bottom: 0;">
-            Par défaut, <code>run_app()</code> initialise un port TCP libre et ouvre automatiquement votre navigateur système par défaut. Pour un environnement conteneurisé (Docker, Cloud Run), spécifiez <code>run_app(host = "0.0.0.0", port = 3000, launch.browser = FALSE)</code>.
-          </p>
-        </div>
-      </section>
-
-      <!-- Aperçu des fonctionnalités -->
-      <section>
-        <h2>Comparatif Fonctionnel : Rcmdr vs Ramses</h2>
-        <div class="table-container">
-          <table class="academic-table">
-            <thead>
-              <tr>
-                <th>Fonctionnalité / Dimension</th>
-                <th>Rcmdr (R Commander)</th>
-                <th>Ramses (Modern GUI)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Moteur de Rendu UI</strong></td>
-                <td>Tcl/Tk (X11 / fenêtres OS)</td>
-                <td>HTML5 / CSS3 / bslib (Bootstrap 5)</td>
-              </tr>
-              <tr>
-                <td><strong>Environnement d'exécution</strong></td>
-                <td>Session locale uniquement (XQuartz sur macOS)</td>
-                <td>Navigateur web standard, RStudio Viewer, Docker</td>
-              </tr>
-              <tr>
-                <td><strong>Visualisations graphiques</strong></td>
-                <td>Tracés graphiques statiques R de base</td>
-                <td>Moteur hybride <code>ggplot2</code> + <code>plotly</code> interactif</td>
-              </tr>
-              <tr>
-                <td><strong>Exploration des tables</strong></td>
-                <td>Visionneuse basique X11</td>
-                <td>Datatables paginées avec tri, filtres et recherche plein texte</td>
-              </tr>
-              <tr>
-                <td><strong>Reproductibilité du code</strong></td>
-                <td>Fenêtre de script modifiable brute</td>
-                <td>Journal dynamique synchronisé + Export .R, .Rmd et .html</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="table-caption">Tableau 1 : Comparatif synthétique des architectures logicielles et de l'expérience utilisateur.</p>
-        </div>
-      </section>
-
-      <section style="margin-top: 2rem;">
-        <p>
-          Pour commencer à utiliser le package, consultez le <a href="installation.html" style="color: var(--color-primary-light); font-weight: 600;">Guide d'installation complet</a> ou suivez notre <a href="tutoriel.html" style="color: var(--color-primary-light); font-weight: 600;">Tutoriel pas à pas sur un cas réel de santé publique</a>.
-        </p>
-      </section>
-
-    </article>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p>
-      <strong>Package R Ramses</strong> — Licence libre MIT. Conçu avec rigueur pour la recherche scientifique et l'enseignement statistique.<br>
-      Documentation générée pour la version 0.1.0 • Hébergé sur <a href="https://github.com/astral-r/Ramses" target="_blank" rel="noopener noreferrer">GitHub</a>.
-    </p>
-  </footer>
-
-  <!-- Code Copy Script -->
-  <script>
-    document.querySelectorAll('.btn-copy').forEach(button => {
-      button.addEventListener('click', () => {
-        const container = button.closest('.code-block-container');
-        const codeElement = container.querySelector('pre code');
-        const textToCopy = codeElement.innerText;
-
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          const originalHTML = button.innerHTML;
-          button.classList.add('copied');
-          button.innerHTML = `
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Copié !</span>
-          `;
-          setTimeout(() => {
-            button.classList.remove('copied');
-            button.innerHTML = originalHTML;
-          }, 2000);
-        }).catch(err => {
-          console.error('Erreur lors de la copie :', err);
-        });
-      });
-    });
-  </script>
-
-</body>
-</html>
+run_app()</code></pre></div></section>
+<section><p>Consultez le <a href="installation.html">guide d'installation</a>, puis le <a href="tutoriel.html">tutoriel pratique</a>.</p></section>
+</article></main>
+<footer class="footer"><p><strong>Ramses</strong> — package R libre sous licence MIT • version 0.1.0 • <a href="https://github.com/census-specs/Ramses">dépôt GitHub</a></p></footer>
+</body></html>
