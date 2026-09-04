@@ -1,24 +1,21 @@
 Package: Ramses
 Title: Modern Graphical User Interface for Statistical Analysis in R
 Version: 0.1.0
-Authors@R: c(
-    person("Équipe", "Ramses", email = "contact@ramses-r.org", role = c("aut", "cre")),
-    person("Astral", "Association", role = "cph")
+Authors@R: person(
+    "census-specs", role = c("aut", "cre"),
+    email = "census-specs@users.noreply.github.com"
   )
-Description: Interface graphique interactive moderne basée sur Shiny et bslib
-    (Bootstrap 5) pour l'analyse de données statistiques en R. Conçue comme une
-    alternative contemporaine et intuitive à Rcmdr, Ramses propose l'importation
-    multi-formats (CSV, Excel, SPSS, Stata, RDS), des statistiques descriptives
-    exhaustives, un créateur visuel de graphiques de style Tableau (ggplot2 et
-    Plotly interactif), six catégories complètes de tests statistiques et
-    modélisations, ainsi qu'un journal R Markdown garantissant une reproductibilité
-    analytique totale.
+Description: Modern graphical user interface built with Shiny and bslib for
+    interactive statistical analysis in R. Ramses provides guided data import,
+    descriptive statistics, statistical tests, regression models, interactive
+    visualisation with ggplot2 and Plotly, and an R Markdown journal designed to
+    support reproducible analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-URL: https://github.com/astral-r/Ramses
-BugReports: https://github.com/astral-r/Ramses/issues
+URL: https://github.com/census-specs/Ramses, https://census-specs.github.io/Ramses/
+BugReports: https://github.com/census-specs/Ramses/issues
 Depends:
     R (>= 4.1.0)
 Imports:
@@ -40,7 +37,7 @@ Imports:
 Suggests:
     devtools,
     roxygen2,
-    testthat (>= 3.0.0),
     remotes,
+    testthat (>= 3.0.0),
     corrplot
-
+Config/testthat/edition: 3
