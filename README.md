@@ -71,7 +71,7 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 }
 
 # Installer Ramses depuis le dépôt GitHub
-remotes::install_github("astral-r/Ramses")
+remotes::install_github("census-specs/Ramses")
 ```
 
 ### Installation locale (depuis les sources du package)
@@ -142,7 +142,7 @@ Ramses/
 ## 🤝 Contribution & Signalement de Bugs
 
 Les contributions sont les bienvenues ! Pour signaler un problème ou proposer une nouvelle fonctionnalité :
-1. Ouvrez une *issue* sur GitHub : [https://github.com/astral-r/Ramses/issues](https://github.com/astral-r/Ramses/issues)
+1. Ouvrez une *issue* sur GitHub : [https://github.com/census-specs/Ramses/issues](https://github.com/astral-r/Ramses/issues)
 2. Soumettez une *Pull Request* avec les tests associés.
 
 ---
