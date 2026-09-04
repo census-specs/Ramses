@@ -6,6 +6,7 @@
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(c(
     ".",
+    ".data",
     "x",
     "y",
     "label",
@@ -17,6 +18,7 @@ if (getRversion() >= "2.15.1") {
     "estimate",
     "std.error",
     "statistic",
-    "p.value"
+    "p.value",
+    "Y_agg"
   ))
 }

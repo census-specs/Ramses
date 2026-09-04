@@ -1,12 +1,13 @@
 # Audit technique — Ramses 0.1.0
 
-Date de l'audit : 4 septembre 2026
+Date de l'audit initial : 4 septembre 2026
+Dernière mise à jour : 4 septembre 2026
 
 ## 1. Résumé exécutif
 
 Ramses possède déjà une vraie architecture de package Shiny : une fonction publique `run_app()`, une application principale, trois modules fonctionnels et une couche de documentation Roxygen2. Le cœur est lisible et le découpage est cohérent pour un premier prototype.
 
-Le principal problème n'est pas l'absence de fonctionnalités, mais le décalage entre ce que le projet annonce et ce que le code implémente réellement. La documentation initiale annonçait plusieurs fonctionnalités absentes (drag-and-drop, >10 graphiques, ANOVA factorielle, Levene, tests de proportions, Odds Ratios, etc.) et contenait une fausse identité académique ainsi que des liens vers un autre dépôt.
+Le principal problème n'est pas l'absence de fonctionnalités, mais le décalage initial entre ce que le projet annonçait et ce que le code implémentait réellement. Cette documentation a été réalignée sur le code observé.
 
 Le code montre également plusieurs points méthodologiques à sécuriser avant de présenter Ramses comme un outil statistique généraliste : génération de formules non protégée contre les noms de variables complexes, contrôles de conditions d'application encore limités, carte thermique simplifiée, validation incomplète des types de variables et journal R Markdown qui ne représente pas encore toute la provenance analytique.
 
@@ -23,7 +24,9 @@ Le package est organisé autour de :
 - `R/globals.R` : déclarations pour `R CMD check` ;
 - `man/` : documentation générée par roxygen2 ;
 - `inst/app/www/` : ressources statiques ;
-- `docs/` : site documentaire statique.
+- `docs/` : site documentaire statique ;
+- `tests/testthat/` : premiers tests automatisés de fumée ;
+- `.github/workflows/` : premier workflow CI pour `R CMD check`.
 
 Cette architecture est adaptée à une première version. Elle peut évoluer vers des modules plus spécialisés sans réécrire toute l'application.
 
@@ -71,7 +74,7 @@ Cette architecture est adaptée à une première version. Elle peut évoluer ver
 
 Le journal R Markdown enregistre des blocs de code produits par les modules et permet l'export `.R`, `.Rmd` et `.html`.
 
-## 4. Incohérences corrigées dans cette mise à jour
+## 4. Incohérences corrigées
 
 1. Les liens `astral-r/Ramses` ont été remplacés par `census-specs/Ramses`.
 2. Le badge R-CMD-check « passing » non démontré a été supprimé du README.
@@ -84,13 +87,30 @@ Le journal R Markdown enregistre des blocs de code produits par les modules et p
 9. La page auteur ne présente plus de doctorat, affiliation, ORCID, expérience ou association non vérifiés.
 10. `DESCRIPTION` a été réaligné sur le dépôt actuel et `testthat` édition 3 a été déclaré.
 
-## 5. Problèmes techniques prioritaires
+## 5. Travaux ajoutés après l'audit initial
+
+### Tests
+
+Le dépôt contient maintenant :
+
+- `tests/testthat.R` ;
+- `tests/testthat/test-package-smoke.R`.
+
+Ces tests vérifient actuellement les métadonnées du package, le retour de `run_app()` et la construction des principales interfaces publiques.
+
+### Intégration continue
+
+Un workflow `.github/workflows/R-CMD-check.yaml` a été ajouté. Il installe R et les dépendances de développement puis lance `R CMD check` sur les pushs vers `main`/`develop/**` et sur les pull requests vers `main`.
+
+> Le workflow n'a pas été exécuté dans l'environnement d'audit : R n'y était pas disponible. Le premier passage CI sur GitHub devra donc être considéré comme une étape de validation réelle.
+
+## 6. Problèmes techniques prioritaires
 
 ### P0 — Reproductibilité du code généré
 
 Plusieurs morceaux de code généré construisent des formules à partir de chaînes de caractères sans protéger les noms de variables avec des backticks. Une colonne appelée par exemple `revenu mensuel`, `âge`, `traitement (A/B)` ou contenant certains caractères spéciaux peut produire du code R invalide.
 
-**Action recommandée :** créer un helper unique du type `quote_var()`/`as_name()` et l'utiliser partout dans la génération des formules et du code R.
+**Action recommandée :** créer un helper unique de quotation des noms de variables et l'utiliser partout dans la génération des formules et du code R.
 
 ### P0 — Conditions méthodologiques
 
@@ -134,38 +154,9 @@ Le journal est utile, mais il s'agit actuellement d'une génération de code plu
 
 **Action recommandée :** chaque analyse doit conserver ses paramètres et son code dans le même objet de résultat avant de l'ajouter au journal.
 
-### P2 — Tests automatisés
+### P1 — Copie et autonomie de l'interface
 
-Le dépôt ne contient actuellement pas de dossier `tests/`. Le script `dev/build_package.R` mentionne les tests et `testthat`, mais aucune suite automatisée n'est présente dans l'arborescence observée.
-
-**Action recommandée :** mettre en place `testthat` édition 3, puis tester d'abord les fonctions statistiques pures et les helpers avant les tests d'interface Shiny.
-
-### P2 — Script de développement
-
-`dev/build_package.R` utilise `rprojroot` mais ne l'ajoute pas à sa liste `dev_deps`. Sur une machine de développement neuve, le script peut donc échouer avant d'avoir installé toutes ses dépendances.
-
-## 6. Qualité logicielle
-
-### Points forts
-
-- namespace explicite pour la majorité des appels ;
-- utilisation de `moduleServer()` ;
-- séparation UI/server des modules ;
-- gestion d'erreurs par `tryCatch` dans plusieurs chemins ;
-- utilisation de `validate()`/`req()` dans plusieurs rendus ;
-- export R Markdown intégré au workflow ;
-- ressources statiques embarquées dans `inst/app/www`.
-
-### Points à améliorer
-
-- plusieurs blocs de logique sont très longs et gagneraient à être factorisés ;
-- certaines fonctions calculent puis reconstruisent plusieurs fois les mêmes résultats ;
-- les messages utilisateur utilisent parfois « accepter/conserver H0 », formulation à remplacer par « ne pas rejeter H0 » ;
-- la génération de code et le calcul devraient partager une même définition des paramètres ;
-- certaines couleurs sont codées directement dans les modules au lieu d'une couche de thème ;
-- les fonctionnalités de copie vers le presse-papiers affichent actuellement une notification mais ne réalisent pas partout une copie navigateur effective ;
-- la dépendance `fontawesome` est déclarée mais l'interface utilise aussi un CDN Font Awesome directement ;
-- la dépendance externe aux Google Fonts/CDN rend l'expérience moins autonome hors connexion.
+Les fonctions de copie vers le presse-papiers et certaines ressources externes doivent être fiabilisées. L'objectif est de rendre l'application utilisable de manière aussi autonome que possible, notamment sur des connexions faibles.
 
 ## 7. Méthodologie : corrections de vocabulaire à prévoir
 
@@ -173,7 +164,7 @@ Ramses doit éviter les formulations statistiques trop catégoriques :
 
 - préférer **« on ne rejette pas H0 »** à « H0 est conservée » ;
 - éviter **« les données sont normales »** après un test non significatif ; préférer « aucune évidence statistique suffisante contre l'hypothèse de normalité » ;
-- distinguer **significativité statistique** et **importance pratique/clinique** ;
+- distinguer **significativité statistique** et **importance pratique** ;
 - ne pas déduire une causalité d'une simple corrélation ;
 - ne pas présenter automatiquement un test paramétrique comme valide uniquement parce que Shapiro-Wilk n'est pas significatif.
 
@@ -181,13 +172,13 @@ Ramses doit éviter les formulations statistiques trop catégoriques :
 
 ### Version 0.1.x — Stabilisation
 
-- corriger les noms de variables complexes ;
-- corriger la heatmap ;
-- ajouter tests `testthat` ;
-- renforcer les validations ;
-- harmoniser les interprétations ;
-- fiabiliser les exports ;
-- mettre en place un premier workflow CI.
+- [x] premiers tests `testthat` ;
+- [x] premier workflow CI ;
+- [ ] corriger les noms de variables complexes ;
+- [ ] corriger la heatmap ;
+- [ ] renforcer les validations méthodologiques ;
+- [ ] harmoniser les interprétations ;
+- [ ] fiabiliser les exports.
 
 ### Version 0.2.x — Architecture analytique
 
@@ -210,7 +201,3 @@ Ramses doit éviter les formulations statistiques trop catégoriques :
 ### À plus long terme
 
 Ramses peut devenir le module d'analyse statistique d'une suite GUI R plus large consacrée à la préparation, l'analyse et la visualisation des données. Cette évolution est cohérente avec l'objectif pédagogique du projet : rendre l'analyse accessible sans abandonner R, la transparence et la reproductibilité.
-
-## 9. Références de développement
-
-Les recommandations concernant `R CMD check`, la structure des packages et `testthat` édition 3 suivent les pratiques documentées par *R Packages* et testthat. `R CMD check` est conçu pour détecter de nombreux problèmes de structure, namespace, documentation et tests ; une suite `testthat` est recommandée pour les packages activement développés.

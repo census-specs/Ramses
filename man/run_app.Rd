@@ -4,40 +4,31 @@
 \alias{run_app}
 \title{Lancer l'interface utilisateur graphique Ramses}
 \usage{
-run_app(port = NULL, launch.browser = interactive(), host = "127.0.0.1", ...)
+run_app(standalone = TRUE, port = NULL, launch.browser = TRUE,
+  host = "127.0.0.1", ...)
 }
 \arguments{
-\item{port}{Entier optionnel spécifiant le port TCP sur lequel écouter (ex: \code{3838} ou \code{3000}).
-Par défaut \code{NULL} (un port aléatoire libre est choisi automatiquement par Shiny).}
+\item{standalone}{Valeur logique indiquant si l'application doit etre ouverte dans sa propre fenetre de bureau dediee. Par defaut \code{TRUE}.}
 
-\item{launch.browser}{Valeur logique indiquant s'il faut ouvrir l'application dans
-le navigateur web par défaut du système. Par défaut \code{TRUE} en session interactive.}
+\item{port}{Entier optionnel specifiant le port TCP sur lequel ecouter. Par defaut \code{NULL} : un port local libre est automatiquement attribue via \code{httpuv::randomPort()} lorsque httpuv est disponible.}
 
-\item{host}{Adresse IP sur laquelle écouter. Par défaut \code{"127.0.0.1"} (localhost).
-Utiliser \code{"0.0.0.0"} pour autoriser les connexions réseau externes ou conteneurisées.}
+\item{launch.browser}{Valeur logique ou fonction indiquant s'il faut ouvrir automatiquement l'application au demarrage. Par defaut \code{TRUE}.}
 
-\item{...}{Arguments supplémentaires transmis à \code{\link[shiny]{shinyApp}}.}
+\item{host}{Adresse IP sur laquelle ecouter. Par defaut \code{"127.0.0.1"} (localhost). Utiliser \code{"0.0.0.0"} pour autoriser les connexions reseau externes ou conteneurisees.}
+
+\item{...}{Arguments supplementaires transmis a \code{\link[shiny]{shinyApp}}.}
 }
 \value{
-Un objet d'application Shiny exécutable (\code{shiny.appobj}).
+Un objet d'application Shiny executable (\code{shiny.appobj}).
 }
 \description{
-Lance l'application graphique interactive Shiny fournie par le
-package Ramses. Conçue comme une alternative moderne, fluide et intuitive à Rcmdr,
-cette interface permet d'importer des fichiers (CSV, Excel, SPSS, Stata, RDS),
-d'explorer les données de manière interactive, de calculer des statistiques
-descriptives univariées et bivariées, de construire des graphiques de type Tableau
-(basés sur ggplot2 et Plotly), et d'exécuter une gamme exhaustive de tests statistiques
-paramétriques et non-paramétriques, tout en consignant automatiquement chaque commande
-dans un journal R Markdown reproductible.
+Lance l'application graphique interactive Shiny fournie par le package Ramses. Cette interface permet d'importer des fichiers, d'explorer les donnees, de calculer des statistiques descriptives, de construire des graphiques bases sur ggplot2 et Plotly, d'executer des tests statistiques et de consigner les commandes dans un journal R Markdown.
 }
 \examples{
 \dontrun{
   library(Ramses)
-  # Démarrage standard dans le navigateur par défaut
   run_app()
-
-  # Démarrage sur un port spécifique sans lancer le navigateur
-  run_app(port = 8080, launch.browser = FALSE)
+  run_app(standalone = FALSE, port = 3838)
+  run_app(launch.browser = FALSE)
 }
 }
