@@ -1,0 +1,543 @@
+/* ==============================================================================
+   Ramses Documentation - Feuille de styles académique & scientifique
+   Inspiration : Pandoc / Quarto / Bookdown / Typst
+   ============================================================================== */
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  --color-bg: #F8F9FA;
+  --color-surface: #FFFFFF;
+  --color-text: #212529;
+  --color-text-muted: #4A5568;
+  --color-text-light: #718096;
+  
+  --color-primary: #1A365D;      /* Bleu nuit académique */
+  --color-primary-light: #2B6CB0;/* Bleu acier */
+  --color-accent: #3182CE;
+  --color-border: #E2E8F0;
+  --color-border-subtle: #EDF2F7;
+  
+  --color-code-bg: #1A202C;
+  --color-code-header: #2D3748;
+  --color-code-text: #E2E8F0;
+  
+  --callout-note-border: #2B6CB0;
+  --callout-note-bg: #EBF8FF;
+  --callout-warning-border: #DD6B20;
+  --callout-warning-bg: #FFFAF0;
+  --callout-tip-border: #38A169;
+  --callout-tip-bg: #F0FFF4;
+  
+  --max-width: 920px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==============================================================================
+   Barre de Navigation
+   ============================================================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+}
+
+.navbar-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.navbar-brand .pkg-tag {
+  background: #EBF8FF;
+  color: var(--color-primary-light);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #BEE3F8;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  list-style: none;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease-in-out;
+}
+
+.nav-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-border-subtle);
+}
+
+.nav-link.active {
+  color: var(--color-primary);
+  background-color: #EBF8FF;
+  font-weight: 600;
+}
+
+.nav-btn-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: var(--color-surface);
+  transition: all 0.15s ease;
+}
+
+.nav-btn-github:hover {
+  background: var(--color-border-subtle);
+  border-color: #CBD5E0;
+}
+
+/* ==============================================================================
+   Structure & Conteneur Principal
+   ============================================================================== */
+.main-wrapper {
+  max-width: var(--max-width);
+  margin: 2rem auto 4rem auto;
+  padding: 0 1.5rem;
+}
+
+.article-content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2.5rem 2.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 680px) {
+  .article-content {
+    padding: 1.5rem 1.25rem;
+  }
+  .navbar-container {
+    flex-wrap: wrap;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+}
+
+/* ==============================================================================
+   Typographie Scientifique
+   ============================================================================== */
+h1, h2, h3, h4 {
+  color: var(--color-primary);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border-subtle);
+  margin-bottom: 1.25rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+  margin-top: 2.25rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+h3 {
+  font-size: 1.15rem;
+  margin-top: 1.75rem;
+}
+
+p {
+  margin-bottom: 1.15rem;
+  color: var(--color-text);
+}
+
+strong {
+  font-weight: 600;
+  color: #1A202C;
+}
+
+ul, ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* ==============================================================================
+   Figures, Images & Légendes Scientifiques (Quarto / Bookdown style)
+   ============================================================================== */
+figure {
+  margin: 1.75rem auto 2.25rem auto;
+  text-align: center;
+  max-width: 100%;
+}
+
+figure img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); /* 6px */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+  background-color: var(--color-surface);
+}
+
+figcaption {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #4A5568;
+  text-align: center;
+  line-height: 1.45;
+  padding: 0 1rem;
+}
+
+/* Portrait auteur spécifique */
+.author-portrait-figure {
+  margin: 0;
+  text-align: left;
+}
+
+.author-portrait-figure img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.author-portrait-figure figcaption {
+  font-size: 0.75rem;
+  margin-top: 0.4rem;
+  padding: 0;
+}
+
+/* ==============================================================================
+   Badges & Étiquettes de Métadonnées
+   ============================================================================== */
+.badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: #EDF2F7;
+  color: #2D3748;
+  border: 1px solid #E2E8F0;
+}
+
+.badge-version { background: #EBF8FF; color: #2B6CB0; border-color: #BEE3F8; }
+.badge-license { background: #FEFCBF; color: #744210; border-color: #F6E05E; }
+.badge-r-req   { background: #E6FFFA; color: #234E52; border-color: #B2F5EA; }
+.badge-rmd     { background: #F7FAFC; color: #4A5568; border-color: #CBD5E0; }
+
+/* ==============================================================================
+   Blocs de Code & Bouton de Copie
+   ============================================================================== */
+.code-block-container {
+  position: relative;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-header);
+  border-radius: var(--radius-md);
+  margin: 1.25rem 0 1.75rem 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-code-header);
+  padding: 0.4rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #A0AEC0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.code-header .code-lang {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #E2E8F0;
+  text-transform: uppercase;
+}
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #E2E8F0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-copy:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+.btn-copy.copied {
+  background: #276749;
+  border-color: #48BB78;
+  color: #FFFFFF;
+}
+
+pre {
+  margin: 0;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--color-code-text);
+  background: transparent;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+p code, li code, td code {
+  background: #EDF2F7;
+  color: #C53030;
+  padding: 0.15em 0.35em;
+  border-radius: var(--radius-sm);
+  border: 1px solid #E2E8F0;
+}
+
+/* ==============================================================================
+   Encadrés Académiques (Callouts style Quarto)
+   ============================================================================== */
+.callout {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-primary-light);
+  background: var(--color-border-subtle);
+  font-size: 0.92rem;
+}
+
+.callout-title {
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.callout-note {
+  border-left-color: var(--callout-note-border);
+  background-color: var(--callout-note-bg);
+  color: #2C5282;
+}
+.callout-note .callout-title { color: #2B6CB0; }
+
+.callout-warning {
+  border-left-color: var(--callout-warning-border);
+  background-color: var(--callout-warning-bg);
+  color: #7B341E;
+}
+.callout-warning .callout-title { color: #C05621; }
+
+.callout-tip {
+  border-left-color: var(--callout-tip-border);
+  background-color: var(--callout-tip-bg);
+  color: #22543D;
+}
+.callout-tip .callout-title { color: #2F855A; }
+
+/* ==============================================================================
+   Grilles & Cartes Simples
+   ============================================================================== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.card h3 {
+  margin-top: 0;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0;
+}
+
+/* ==============================================================================
+   Tableaux Scientifiques
+   ============================================================================== */
+.table-container {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+table.academic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  border-top: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+table.academic-table th {
+  background: #F7FAFC;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+table.academic-table td {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text);
+}
+
+table.academic-table tr:hover {
+  background-color: #F8FAFC;
+}
+
+.table-caption {
+  font-size: 0.82rem;
+  color: var(--color-text-light);
+  font-style: italic;
+  margin-top: 0.35rem;
+}
+
+/* ==============================================================================
+   Pied de Page
+   ============================================================================== */
+.footer {
+  border-top: 1px solid var(--color-border);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+}
+
+.footer a {
+  color: var(--color-primary-light);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

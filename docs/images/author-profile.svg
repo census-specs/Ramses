@@ -1,0 +1,26 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="50%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="120" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle academic geometric rings -->
+  <circle cx="120" cy="120" r="114" fill="none" stroke="#3B82F6" stroke-width="2" stroke-opacity="0.4"/>
+  <circle cx="120" cy="120" r="95" fill="none" stroke="#60A5FA" stroke-width="1" stroke-dasharray="6 4" stroke-opacity="0.3"/>
+  
+  <!-- Stylized researcher silhouette -->
+  <circle cx="120" cy="85" r="38" fill="#F8FAFC"/>
+  <!-- Glasses -->
+  <rect x="100" y="76" width="16" height="12" rx="3" fill="none" stroke="#1E293B" stroke-width="2.5"/>
+  <rect x="124" y="76" width="16" height="12" rx="3" fill="none" stroke="#1E293B" stroke-width="2.5"/>
+  <line x1="116" y1="82" x2="124" y2="82" stroke="#1E293B" stroke-width="2"/>
+  
+  <!-- Shoulders & Coat -->
+  <path d="M60 215 C60 155, 90 140, 120 140 C150 140, 180 155, 180 215 Z" fill="#E2E8F0"/>
+  <path d="M100 140 L120 180 L140 140 Z" fill="#1E3A8A"/>
+  <polygon points="115,160 120,185 125,160" fill="#F59E0B"/>
+</svg>

@@ -1,0 +1,57 @@
+<svg width="860" height="460" viewBox="0 0 860 460" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif">
+  <rect width="860" height="460" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="860" height="45" fill="#1E293B" rx="8 8 0 0"/>
+  <text x="25" y="28" fill="#FFFFFF" font-size="14" font-weight="700">Journal R Markdown &amp; Reproductibilité Analytique</text>
+  
+  <rect x="680" y="10" width="160" height="26" rx="4" fill="#2563EB"/>
+  <text x="698" y="27" fill="#FFFFFF" font-size="12" font-weight="600">Exporter le rapport (.html)</text>
+
+  <!-- Left Code Editor / Notebook Area -->
+  <rect x="20" y="65" width="530" height="375" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+  
+  <!-- Editor Header -->
+  <rect x="20" y="65" width="530" height="32" fill="#1E293B" rx="6 6 0 0"/>
+  <text x="35" y="86" fill="#94A3B8" font-size="11" font-family="monospace">analyse_reproductible.Rmd</text>
+  
+  <g font-family="monospace" font-size="11" fill="#E2E8F0">
+    <text x="35" y="120" fill="#64748B">---</text>
+    <text x="35" y="138" fill="#38BDF8">title: <tspan fill="#FDE047">"Rapport d'Analyse Biomédicale"</tspan></text>
+    <text x="35" y="156" fill="#38BDF8">output: <tspan fill="#A7F3D0">html_document</tspan></text>
+    <text x="35" y="174" fill="#64748B">---</text>
+    
+    <text x="35" y="205" fill="#94A3B8">```{r test-student}</text>
+    <text x="35" y="225" fill="#CBD5E1"># Comparaison de moyennes par Student bilatéral</text>
+    <text x="35" y="245"><tspan fill="#F43F5E">resultat_t</tspan> &lt;- <tspan fill="#38BDF8">t.test</tspan>(Tension_Systolique ~ Traitement,</text>
+    <text x="35" y="265">                    data = df_patients,</text>
+    <text x="35" y="285">                    var.equal = <tspan fill="#F59E0B">TRUE</tspan>)</text>
+    <text x="35" y="305"><tspan fill="#38BDF8">print</tspan>(resultat_t)</text>
+    <text x="35" y="325" fill="#94A3B8">```</text>
+
+    <text x="35" y="360" fill="#F8FAFC">## Interprétation</text>
+    <text x="35" y="380" fill="#94A3B8">La différence observée est de 8.50 mmHg (p &lt; 0.001).</text>
+  </g>
+
+  <!-- Right Timeline & Controls -->
+  <rect x="570" y="65" width="270" height="375" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="585" y="90" fill="#0F172A" font-size="13" font-weight="700">Chronologie des Analyses (4)</text>
+
+  <!-- Timeline items -->
+  <circle cx="595" cy="120" r="5" fill="#10B981"/>
+  <line x1="595" y1="125" x2="595" y2="175" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="610" y="124" fill="#0F172A" font-size="12" font-weight="600">1. Importation CSV</text>
+  <text x="610" y="139" fill="#64748B" font-size="10">read.csv("sante_patients.csv")</text>
+
+  <circle cx="595" cy="180" r="5" fill="#10B981"/>
+  <line x1="595" y1="185" x2="595" y2="235" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="610" y="184" fill="#0F172A" font-size="12" font-weight="600">2. Statistiques Descriptives</text>
+  <text x="610" y="199" fill="#64748B" font-size="10">summary(Tension_Systolique)</text>
+
+  <circle cx="595" cy="240" r="5" fill="#10B981"/>
+  <line x1="595" y1="245" x2="595" y2="295" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="610" y="244" fill="#0F172A" font-size="12" font-weight="600">3. Graphique Boxplot ggplot2</text>
+  <text x="610" y="259" fill="#64748B" font-size="10">geom_boxplot + geom_jitter</text>
+
+  <circle cx="595" cy="300" r="5" fill="#2563EB"/>
+  <text x="610" y="304" fill="#1D4ED8" font-size="12" font-weight="700">4. Test t de Student</text>
+  <text x="610" y="319" fill="#64748B" font-size="10">t = 4.36, p = 2.81e-05</text>
+</svg>

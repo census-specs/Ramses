@@ -1,0 +1,61 @@
+<svg width="860" height="260" viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif">
+  <rect width="860" height="260" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="30" y="35" fill="#1E293B" font-size="15" font-weight="700">Workflow d'Analyse Biomédicale Reproductible dans Ramses</text>
+  
+  <!-- Step 1 -->
+  <rect x="25" y="65" width="145" height="155" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="25" y="65" width="145" height="30" rx="6 6 0 0" fill="#E2E8F0"/>
+  <text x="40" y="85" fill="#1E293B" font-size="12" font-weight="700">1. Importation</text>
+  <text x="40" y="115" fill="#475569" font-size="11">• Multi-formats</text>
+  <text x="40" y="133" fill="#475569" font-size="11">• Auto-détection</text>
+  <text x="40" y="151" fill="#475569" font-size="11">• Aperçu DT</text>
+  <text x="40" y="185" fill="#2563EB" font-size="10" font-family="monospace">read.csv()</text>
+
+  <!-- Arrow 1 -->
+  <path d="M175 142 L195 142 M190 137 L195 142 L190 147" stroke="#94A3B8" stroke-width="2" fill="none"/>
+
+  <!-- Step 2 -->
+  <rect x="200" y="65" width="145" height="155" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="200" y="65" width="145" height="30" rx="6 6 0 0" fill="#E2E8F0"/>
+  <text x="215" y="85" fill="#1E293B" font-size="12" font-weight="700">2. Exploration</text>
+  <text x="215" y="115" fill="#475569" font-size="11">• Descriptives</text>
+  <text x="215" y="133" fill="#475569" font-size="11">• Tris croisés</text>
+  <text x="215" y="151" fill="#475569" font-size="11">• Boxplots/Violon</text>
+  <text x="215" y="185" fill="#2563EB" font-size="10" font-family="monospace">ggplot2 + plotly</text>
+
+  <!-- Arrow 2 -->
+  <path d="M350 142 L370 142 M365 137 L370 142 L365 147" stroke="#94A3B8" stroke-width="2" fill="none"/>
+
+  <!-- Step 3 -->
+  <rect x="375" y="65" width="145" height="155" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="375" y="65" width="145" height="30" rx="6 6 0 0" fill="#E2E8F0"/>
+  <text x="390" y="85" fill="#1E293B" font-size="12" font-weight="700">3. Postulats</text>
+  <text x="390" y="115" fill="#475569" font-size="11">• Shapiro-Wilk</text>
+  <text x="390" y="133" fill="#475569" font-size="11">• Bartlett / Levene</text>
+  <text x="390" y="151" fill="#475569" font-size="11">• Homoscédasticité</text>
+  <text x="390" y="185" fill="#2563EB" font-size="10" font-family="monospace">shapiro.test()</text>
+
+  <!-- Arrow 3 -->
+  <path d="M525 142 L545 142 M540 137 L545 142 L540 147" stroke="#94A3B8" stroke-width="2" fill="none"/>
+
+  <!-- Step 4 -->
+  <rect x="550" y="65" width="145" height="155" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="550" y="65" width="145" height="30" rx="6 6 0 0" fill="#E2E8F0"/>
+  <text x="565" y="85" fill="#1E293B" font-size="12" font-weight="700">4. Inférence</text>
+  <text x="565" y="115" fill="#475569" font-size="11">• Test t Student</text>
+  <text x="565" y="133" fill="#475569" font-size="11">• IC 95% delta</text>
+  <text x="565" y="151" fill="#475569" font-size="11">• Sortie clinique</text>
+  <text x="565" y="185" fill="#2563EB" font-size="10" font-family="monospace">t.test()</text>
+
+  <!-- Arrow 4 -->
+  <path d="M700 142 L720 142 M715 137 L720 142 L715 147" stroke="#94A3B8" stroke-width="2" fill="none"/>
+
+  <!-- Step 5 -->
+  <rect x="725" y="65" width="120" height="155" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+  <rect x="725" y="65" width="120" height="30" rx="6 6 0 0" fill="#3B82F6"/>
+  <text x="740" y="85" fill="#FFFFFF" font-size="12" font-weight="700">5. R Markdown</text>
+  <text x="735" y="115" fill="#1E3A8A" font-size="11">• Journal live</text>
+  <text x="735" y="133" fill="#1E3A8A" font-size="11">• Notes libres</text>
+  <text x="735" y="151" fill="#1E3A8A" font-size="11">• Export .html</text>
+  <text x="735" y="185" fill="#2563EB" font-size="10" font-family="monospace">knitr::render()</text>
+</svg>

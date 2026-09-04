@@ -1,0 +1,34 @@
+<svg width="860" height="380" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif">
+  <rect width="860" height="380" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="0" y="0" width="860" height="42" fill="#1E293B" rx="8 8 0 0"/>
+  <text x="25" y="26" fill="#FFFFFF" font-size="13" font-weight="700">Résultats du Test d'Hypothèse : Test t de Student pour deux échantillons indépendants</text>
+
+  <!-- Top Metrics Summary Cards -->
+  <rect x="25" y="60" width="185" height="70" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="40" y="82" fill="#64748B" font-size="11" font-weight="600">STATISTIQUE t OBS.</text>
+  <text x="40" y="112" fill="#1E293B" font-size="20" font-weight="700">t = 4.3591</text>
+
+  <rect x="230" y="60" width="185" height="70" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="245" y="82" fill="#64748B" font-size="11" font-weight="600">DEGRÉS DE LIBERTÉ</text>
+  <text x="245" y="112" fill="#1E293B" font-size="20" font-weight="700">df = 118</text>
+
+  <rect x="435" y="60" width="200" height="70" rx="6" fill="#EFF6FF" stroke="#3B82F6"/>
+  <text x="450" y="82" fill="#1D4ED8" font-size="11" font-weight="700">VALEUR-P (P-VALUE)</text>
+  <text x="450" y="112" fill="#2563EB" font-size="20" font-weight="800">2.812 × 10⁻⁵ ***</text>
+
+  <rect x="655" y="60" width="180" height="70" rx="6" fill="#ECFDF5" stroke="#10B981"/>
+  <text x="670" y="82" fill="#047857" font-size="11" font-weight="700">EFFET CLINIQUE (Δ)</text>
+  <text x="670" y="112" fill="#059669" font-size="20" font-weight="800">-8.50 mmHg</text>
+
+  <!-- Detailed Diagnostic Box -->
+  <rect x="25" y="150" width="810" height="205" rx="6" fill="#0F172A" stroke="#334155"/>
+  <g font-family="monospace" font-size="12" fill="#E2E8F0">
+    <text x="45" y="180" fill="#94A3B8">	Two Sample t-test (Welch / Student)</text>
+    <text x="45" y="205"><tspan fill="#38BDF8">data:</tspan> Tension_Systolique by Traitement</text>
+    <text x="45" y="230"><tspan fill="#F43F5E">t = 4.3591</tspan>, df = 118, <tspan fill="#34D399">p-value = 2.812e-05</tspan></text>
+    <text x="45" y="255">alternative hypothesis: true difference in means is not equal to 0</text>
+    <text x="45" y="280"><tspan fill="#FDE047">95 percent confidence interval:</tspan> [4.63189 ; 12.36811] mmHg</text>
+    <text x="45" y="305">sample estimates:</text>
+    <text x="45" y="330">  mean in group Traitement_A : <tspan fill="#F87171">148.9000 mmHg</tspan>  |  mean in group Traitement_B : <tspan fill="#60A5FA">140.4000 mmHg</tspan></text>
+  </g>
+</svg>

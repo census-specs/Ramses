@@ -1,0 +1,110 @@
+<svg width="1000" height="580" viewBox="0 0 1000 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif">
+  <rect width="1000" height="580" fill="#F8FAFC"/>
+  <!-- App Window Frame -->
+  <rect x="15" y="15" width="970" height="550" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.05))"/>
+  
+  <!-- App Header -->
+  <path d="M15 23 Q15 15 23 15 L977 15 Q985 15 985 23 L985 65 L15 65 Z" fill="#1E293B"/>
+  <circle cx="40" cy="40" r="6" fill="#EF4444"/>
+  <circle cx="58" cy="40" r="6" fill="#F59E0B"/>
+  <circle cx="76" cy="40" r="6" fill="#10B981"/>
+  
+  <text x="110" y="45" fill="#FFFFFF" font-size="16" font-weight="700">Ramses</text>
+  <rect x="180" y="30" width="45" height="20" rx="4" fill="#3B82F6" fill-opacity="0.3"/>
+  <text x="188" y="44" fill="#93C5FD" font-size="11" font-family="monospace" font-weight="600">v0.1.0</text>
+  <text x="240" y="44" fill="#94A3B8" font-size="13">Interface Graphique Moderne &amp; Reproductibilité en R</text>
+  
+  <!-- Active dataset pill in header -->
+  <rect x="740" y="28" width="225" height="26" rx="13" fill="#334155"/>
+  <circle cx="756" cy="41" r="4" fill="#34D399"/>
+  <text x="768" y="45" fill="#E2E8F0" font-size="12" font-family="monospace">sante_patients.csv (120x6)</text>
+  
+  <!-- Sub-navbar / Navigation Tabs -->
+  <rect x="15" y="65" width="970" height="42" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <!-- Tab 1: Active -->
+  <rect x="25" y="70" width="130" height="32" rx="5" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="45" y="91" fill="#1E293B" font-size="13" font-weight="600">📊 Données</text>
+  
+  <!-- Tab 2 -->
+  <rect x="165" y="70" width="150" height="32" rx="5" fill="transparent"/>
+  <text x="175" y="91" fill="#64748B" font-size="13" font-weight="500">📈 Descriptives</text>
+  
+  <!-- Tab 3 -->
+  <rect x="325" y="70" width="140" height="32" rx="5" fill="transparent"/>
+  <text x="335" y="91" fill="#64748B" font-size="13" font-weight="500">🎨 Chart Builder</text>
+  
+  <!-- Tab 4 -->
+  <rect x="475" y="70" width="140" height="32" rx="5" fill="transparent"/>
+  <text x="485" y="91" fill="#64748B" font-size="13" font-weight="500">🧪 Tests Stat.</text>
+  
+  <!-- Tab 5 -->
+  <rect x="625" y="70" width="160" height="32" rx="5" fill="transparent"/>
+  <text x="635" y="91" fill="#64748B" font-size="13" font-weight="500">📝 Journal Rmd (5)</text>
+
+  <!-- Content Area: Left Data Controls & Info -->
+  <rect x="30" y="120" width="220" height="430" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="45" y="145" fill="#0F172A" font-size="14" font-weight="700">Actions sur les Données</text>
+  
+  <rect x="45" y="160" width="190" height="32" rx="4" fill="#2563EB"/>
+  <text x="65" y="181" fill="#FFFFFF" font-size="12" font-weight="600">📥 Importer un fichier...</text>
+  
+  <rect x="45" y="200" width="190" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="65" y="220" fill="#334155" font-size="12">🔄 Filtrer / Mutate</text>
+  
+  <rect x="45" y="238" width="190" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="65" y="258" fill="#334155" font-size="12">💾 Exporter (.csv, .rds)</text>
+
+  <line x1="45" y1="285" x2="235" y2="285" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="45" y="308" fill="#475569" font-size="12" font-weight="700">Variables (6)</text>
+  
+  <text x="45" y="330" fill="#2563EB" font-size="11" font-family="monospace"># Id [chr]</text>
+  <text x="45" y="352" fill="#059669" font-size="11" font-family="monospace"># Age [num]</text>
+  <text x="45" y="374" fill="#D97706" font-size="11" font-family="monospace"># Sexe [factor:2]</text>
+  <text x="45" y="396" fill="#D97706" font-size="11" font-family="monospace"># Traitement [factor:2]</text>
+  <text x="45" y="418" fill="#059669" font-size="11" font-family="monospace"># Tension_Systolique [num]</text>
+  <text x="45" y="440" fill="#D97706" font-size="11" font-family="monospace"># Guerison [factor:2]</text>
+
+  <!-- Content Area: Main DataTable -->
+  <rect x="265" y="120" width="705" height="430" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <!-- Table Header Bar -->
+  <rect x="265" y="120" width="705" height="38" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="280" y="144" fill="#334155" font-size="12" font-weight="700">Id</text>
+  <text x="360" y="144" fill="#334155" font-size="12" font-weight="700">Age</text>
+  <text x="440" y="144" fill="#334155" font-size="12" font-weight="700">Sexe</text>
+  <text x="540" y="144" fill="#334155" font-size="12" font-weight="700">Traitement</text>
+  <text x="690" y="144" fill="#334155" font-size="12" font-weight="700">Tension_Systolique</text>
+  <text x="880" y="144" fill="#334155" font-size="12" font-weight="700">Guerison</text>
+
+  <!-- Table Rows -->
+  <g font-size="12" font-family="monospace" fill="#1E293B">
+    <rect x="265" y="158" width="705" height="32" fill="#FFFFFF"/>
+    <text x="280" y="179">PAT-001</text><text x="360" y="179">59 ans</text><text x="440" y="179">Homme</text><text x="540" y="179">Traitement_A</text><text x="700" y="179" font-weight="600" fill="#DC2626">152.4 mmHg</text><text x="880" y="179"><tspan fill="#DC2626">Non</tspan></text>
+    
+    <rect x="265" y="190" width="705" height="32" fill="#F8FAFC"/>
+    <text x="280" y="211">PAT-002</text><text x="360" y="211">63 ans</text><text x="440" y="211">Femme</text><text x="540" y="211">Traitement_B</text><text x="700" y="211" font-weight="600" fill="#16A34A">134.1 mmHg</text><text x="880" y="211"><tspan fill="#16A34A">Oui</tspan></text>
+    
+    <rect x="265" y="222" width="705" height="32" fill="#FFFFFF"/>
+    <text x="280" y="243">PAT-003</text><text x="360" y="243">52 ans</text><text x="440" y="243">Femme</text><text x="540" y="243">Traitement_B</text><text x="700" y="243" font-weight="600" fill="#16A34A">138.6 mmHg</text><text x="880" y="243"><tspan fill="#16A34A">Oui</tspan></text>
+    
+    <rect x="265" y="254" width="705" height="32" fill="#F8FAFC"/>
+    <text x="280" y="275">PAT-004</text><text x="360" y="275">71 ans</text><text x="440" y="275">Homme</text><text x="540" y="275">Traitement_A</text><text x="700" y="275" font-weight="600" fill="#DC2626">161.0 mmHg</text><text x="880" y="275"><tspan fill="#DC2626">Non</tspan></text>
+    
+    <rect x="265" y="286" width="705" height="32" fill="#FFFFFF"/>
+    <text x="280" y="307">PAT-005</text><text x="360" y="307">48 ans</text><text x="440" y="307">Homme</text><text x="540" y="307">Traitement_B</text><text x="700" y="307" font-weight="600" fill="#16A34A">131.5 mmHg</text><text x="880" y="307"><tspan fill="#16A34A">Oui</tspan></text>
+
+    <rect x="265" y="318" width="705" height="32" fill="#F8FAFC"/>
+    <text x="280" y="339">PAT-006</text><text x="360" y="339">66 ans</text><text x="440" y="339">Femme</text><text x="540" y="339">Traitement_A</text><text x="700" y="339" font-weight="600" fill="#DC2626">147.8 mmHg</text><text x="880" y="339"><tspan fill="#DC2626">Non</tspan></text>
+  </g>
+
+  <!-- Table Pagination & Footer -->
+  <rect x="265" y="505" width="705" height="45" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="285" y="532" fill="#64748B" font-size="12">Affichage de 1 à 10 sur 120 observations</text>
+  <rect x="830" y="515" width="28" height="25" rx="3" fill="#2563EB"/>
+  <text x="841" y="532" fill="#FFFFFF" font-size="11" font-weight="700">1</text>
+  <rect x="865" y="515" width="28" height="25" rx="3" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="876" y="532" fill="#334155" font-size="11">2</text>
+  <rect x="900" y="515" width="28" height="25" rx="3" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="911" y="532" fill="#334155" font-size="11">3</text>
+</svg>

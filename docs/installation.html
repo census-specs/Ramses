@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide d'Installation - Package R Ramses</title>
+  <meta name="description" content="Instructions détaillées pour installer le package R Ramses depuis GitHub, sources locales ou archive tar.gz, avec guide de dépannage complet.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand">
+        <span>Ramses</span>
+        <span class="pkg-tag">v0.1.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Accueil</a></li>
+        <li><a href="installation.html" class="nav-link active">Installation</a></li>
+        <li><a href="tutoriel.html" class="nav-link">Tutoriel</a></li>
+        <li><a href="auteur.html" class="nav-link">À propos</a></li>
+      </ul>
+      <a href="https://github.com/astral-r/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+    <article class="article-content">
+      
+      <header>
+        <h1>Guide d'Installation de Ramses</h1>
+        <p style="font-size: 1.05rem; color: var(--color-text-muted);">
+          Prérequis système, méthodes d'installation recommandées et diagnostic des dépendances.
+        </p>
+      </header>
+
+      <!-- Section 1 : Prérequis -->
+      <section>
+        <h2>1. Prérequis Système</h2>
+        <p>
+          Avant de procéder à l'installation de Ramses, assurez-vous que votre poste de travail dispose d'un environnement R à jour :
+        </p>
+        <ul>
+          <li><strong>R version 4.1.0 ou supérieure</strong> : Téléchargeable gratuitement sur le site officiel du <a href="https://cran.r-project.org/" target="_blank" rel="noopener noreferrer">CRAN</a>.</li>
+          <li><strong>RStudio Desktop (fortement recommandé)</strong> : L'environnement de développement intégré recommandé pour exploiter le visualiseur interne et la compilation R Markdown.</li>
+          <li><strong>Outils de compilation (selon votre système d'exploitation)</strong> :
+            <ul>
+              <li><em>Windows</em> : Installez <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" rel="noopener noreferrer">Rtools</a> correspondant à votre version de R pour la compilation de packages C++.</li>
+              <li><em>macOS</em> : Assurez-vous d'avoir installé les outils en ligne de commande Xcode (<code>xcode-select --install</code> dans le Terminal).</li>
+              <li><em>Linux (Ubuntu/Debian)</em> : Installez les bibliothèques système <code>libcurl4-openssl-dev</code>, <code>libssl-dev</code> et <code>libxml2-dev</code>.</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 2 : Méthode 1 GitHub -->
+      <section>
+        <h2>2. Méthode Recommandée : Installation via GitHub</h2>
+        <p>
+          Le package Ramses est hébergé sur GitHub. La méthode la plus simple et directe pour obtenir la dernière version stable consiste à utiliser le gestionnaire de packages légers <code>remotes</code> :
+        </p>
+
+        <div class="code-block-container">
+          <div class="code-header">
+            <span class="code-lang">Console R</span>
+            <button class="btn-copy" type="button">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              <span>Copier le code</span>
+            </button>
+          </div>
+          <pre><code># Étape A : Vérification et installation de remotes
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes", repos = "https://cloud.r-project.org")
+}
+
+# Étape B : Installation de Ramses avec résolution automatique des dépendances
+remotes::install_github(
+  repo = "astral-r/Ramses",
+  dependencies = TRUE,
+  upgrade = "ask"
+)</code></pre>
+        </div>
+
+        <p>
+          Le paramètre <code>dependencies = TRUE</code> garantit que l'ensemble des bibliothèques requises (<code>shiny</code>, <code>bslib</code>, <code>DT</code>, <code>plotly</code>, <code>rmarkdown</code>, <code>haven</code>, etc.) seront automatiquement téléchargées et installées dans votre bibliothèque R.
+        </p>
+      </section>
+
+      <!-- Section 3 : Méthode 2 Archive Source Locale -->
+      <section>
+        <h2>3. Installation Locale depuis les Sources ou Archive .tar.gz</h2>
+        <p>
+          Si vous travaillez dans un environnement hors-ligne ou sécurisé (intranet hospitalier, serveur d'entreprise sans accès internet direct) :
+        </p>
+
+        <h3>Option A : Depuis une archive binaire ou source (.tar.gz)</h3>
+        <div class="code-block-container">
+          <div class="code-header">
+            <span class="code-lang">Console R</span>
+            <button class="btn-copy" type="button">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              <span>Copier le code</span>
+            </button>
+          </div>
+          <pre><code># Spécifiez le chemin absolu vers l'archive téléchargée
+install.packages(
+  pkgs = "chemin/vers/Ramses_0.1.0.tar.gz",
+  repos = NULL,
+  type = "source"
+)</code></pre>
+        </div>
+
+        <h3>Option B : Depuis le dépôt cloné localement</h3>
+        <p>
+          Si vous avez cloné le dépôt source avec Git, vous pouvez compiler et auditer le package directement avec le script d'assemblage fourni dans le dossier <code>dev/</code> :
+        </p>
+        <div class="code-block-container">
+          <div class="code-header">
+            <span class="code-lang">Console R</span>
+            <button class="btn-copy" type="button">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              <span>Copier le code</span>
+            </button>
+          </div>
+          <pre><code># Depuis le répertoire racine du projet Ramses cloné
+source("dev/build_package.R")</code></pre>
+        </div>
+      </section>
+
+      <!-- Section 4 : Dépannage et Résolution des Problèmes Fréquents -->
+      <section>
+        <h2>4. Résolution des Problèmes Fréquents (FAQ Technique)</h2>
+
+        <!-- Problème 1 : Pandoc -->
+        <div class="callout callout-warning">
+          <div class="callout-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+            1. Erreur de compilation R Markdown : "Pandoc is not available"
+          </div>
+          <p>
+            Ramses utilise <code>rmarkdown</code> et <code>knitr</code> pour compiler les rapports HTML. Pandoc est inclus par défaut dans RStudio. Si vous exécutez R en dehors de RStudio (ex: terminal ou serveur distant), vérifiez la disponibilité de Pandoc :
+          </p>
+          <div class="code-block-container" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            <div class="code-header">
+              <span class="code-lang">Test R</span>
+              <button class="btn-copy" type="button"><span>Copier</span></button>
+            </div>
+            <pre><code>rmarkdown::find_pandoc()
+# Si indisponible, sous Ubuntu/Debian : sudo apt-get install pandoc
+# Sous macOS : brew install pandoc</code></pre>
+          </div>
+        </div>
+
+        <!-- Problème 2 : Dépendance bloquée sur Windows -->
+        <div class="callout callout-note">
+          <div class="callout-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm.93-9.412l-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5a1 1 0 110-2 1 1 0 010 2z"/></svg>
+            2. Erreur lors de l'installation des dépendances binaires (haven, plotly)
+          </div>
+          <p>
+            Si l'installation échoue avec un message réclamant des outils de compilation, vous pouvez forcer l'utilisation des versions pré-compilées (binaires) plutôt que de compiler depuis les sources :
+          </p>
+          <div class="code-block-container" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            <div class="code-header">
+              <span class="code-lang">Console R</span>
+              <button class="btn-copy" type="button"><span>Copier</span></button>
+            </div>
+            <pre><code># Forcer l'installation binaire des dépendances clés
+install.packages(c("haven", "readxl", "plotly", "bslib", "DT"), type = "binary")
+remotes::install_github("astral-r/Ramses", upgrade = "never")</code></pre>
+          </div>
+        </div>
+
+        <!-- Problème 3 : Port déjà occupé -->
+        <div class="callout callout-tip">
+          <div class="callout-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+            3. Port réseau occupé ou exécution sur serveur
+          </div>
+          <p style="margin-bottom: 0;">
+            Si le port assigné par défaut est déjà utilisé par un autre service local, vous pouvez spécifier manuellement un port alternatif : <code>run_app(port = 4567)</code>.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- Validation de l'installation -->
+      <section>
+        <h2>5. Vérification de la Bonne Installation</h2>
+        <p>
+          Pour valider que Ramses est opérationnel dans votre environnement, lancez simplement la fonction de test :
+        </p>
+        <div class="code-block-container">
+          <div class="code-header">
+            <span class="code-lang">Console R</span>
+            <button class="btn-copy" type="button">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              <span>Copier le code</span>
+            </button>
+          </div>
+          <pre><code>library(Ramses)
+packageVersion("Ramses")
+# Doit renvoyer : [1] '0.1.0'
+
+# Lancement de l'application
+run_app()</code></pre>
+        </div>
+        <p>
+          Une fois le serveur démarré, vous pouvez passer à l'étape suivante : découvrir le <a href="tutoriel.html" style="color: var(--color-primary-light); font-weight: 600;">Tutoriel pas à pas</a>.
+        </p>
+      </section>
+
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      <strong>Package R Ramses</strong> — Guide d'Installation • Version 0.1.0 • Licence MIT<br>
+      Besoin d'assistance ? Consultez la section des <a href="https://github.com/astral-r/Ramses/issues" target="_blank" rel="noopener noreferrer">Tickets GitHub</a>.
+    </p>
+  </footer>
+
+  <!-- Code Copy Script -->
+  <script>
+    document.querySelectorAll('.btn-copy').forEach(button => {
+      button.addEventListener('click', () => {
+        const container = button.closest('.code-block-container');
+        const codeElement = container.querySelector('pre code');
+        const textToCopy = codeElement.innerText;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalHTML = button.innerHTML;
+          button.classList.add('copied');
+          button.innerHTML = `
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Copié !</span>
+          `;
+          setTimeout(() => {
+            button.classList.remove('copied');
+            button.innerHTML = originalHTML;
+          }, 2000);
+        }).catch(err => {
+          console.error('Erreur lors de la copie :', err);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

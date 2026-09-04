@@ -1,0 +1,43 @@
+<svg width="780" height="420" viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif">
+  <rect width="780" height="420" fill="#0F172A" fill-opacity="0.4"/>
+  
+  <!-- Modal Window -->
+  <rect x="120" y="35" width="540" height="350" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" filter="drop-shadow(0 10px 15px rgba(0,0,0,0.1))"/>
+  
+  <!-- Modal Header -->
+  <rect x="120" y="35" width="540" height="45" fill="#F8FAFC" rx="8 8 0 0" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="145" y="63" fill="#0F172A" font-size="15" font-weight="700">Importer un jeu de données</text>
+  <text x="630" y="63" fill="#94A3B8" font-size="16">✕</text>
+
+  <!-- Modal Body -->
+  <text x="145" y="110" fill="#475569" font-size="12" font-weight="600">Sélectionner un fichier (CSV, XLSX, SAV, DTA, RDS) :</text>
+  
+  <rect x="145" y="120" width="490" height="42" rx="4" fill="#F8FAFC" stroke="#94A3B8" stroke-dasharray="4 2"/>
+  <text x="280" y="146" fill="#2563EB" font-size="13" font-weight="600">sante_patients.csv (14.2 Ko)</text>
+
+  <!-- Options Grid -->
+  <text x="145" y="195" fill="#475569" font-size="11" font-weight="600">Séparateur de colonnes :</text>
+  <rect x="145" y="205" width="150" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="155" y="225" fill="#1E293B" font-size="12">Virgule ( , )</text>
+
+  <text x="315" y="195" fill="#475569" font-size="11" font-weight="600">Séparateur décimal :</text>
+  <rect x="315" y="205" width="150" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="325" y="225" fill="#1E293B" font-size="12">Point ( . )</text>
+
+  <text x="485" y="195" fill="#475569" font-size="11" font-weight="600">Encodage :</text>
+  <rect x="485" y="205" width="150" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="495" y="225" fill="#1E293B" font-size="12">UTF-8</text>
+
+  <!-- Checkbox -->
+  <rect x="145" y="255" width="16" height="16" rx="3" fill="#2563EB"/>
+  <polyline points="148 263 152 267 158 259" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <text x="170" y="268" fill="#334155" font-size="12">La première ligne contient les noms de variables (Header = TRUE)</text>
+
+  <!-- Modal Footer -->
+  <rect x="120" y="325" width="540" height="60" fill="#F8FAFC" rx="0 0 8 8" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="440" y="340" width="90" height="32" rx="4" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="465" y="361" fill="#475569" font-size="12">Annuler</text>
+
+  <rect x="545" y="340" width="90" height="32" rx="4" fill="#2563EB"/>
+  <text x="568" y="361" fill="#FFFFFF" font-size="12" font-weight="600">Valider</text>
+</svg>
