@@ -38,6 +38,7 @@ Suggests:
     devtools,
     roxygen2,
     remotes,
+    rprojroot,
     testthat (>= 3.0.0),
     corrplot
 Config/testthat/edition: 3
