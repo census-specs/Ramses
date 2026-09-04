@@ -1,5 +1,5 @@
 test_that("package metadata is available", {
-  expect_true(is.character(packageVersion("Ramses")))
+  expect_s3_class(packageVersion("Ramses"), "package_version")
   expect_equal(as.character(packageVersion("Ramses")), "0.1.0")
 })
 
