@@ -10,13 +10,22 @@ ramses_code_symbol <- function(name) {
   rlang::expr_text(rlang::sym(name), width = Inf)
 }
 
+#' Convert a character value to a safe R string literal.
+#'
+#' The returned value is source code and escapes quotes and control characters.
+#' @noRd
+ramses_code_string <- function(value) {
+  stopifnot(length(value) == 1L, is.character(value), !is.na(value))
+  rlang::expr_text(rlang::expr(!!value), width = Inf)
+}
+
 #' Build a safe reference to a dataframe column for generated R code.
 #' @noRd
 ramses_code_column <- function(data_name, column_name) {
   paste0(
     ramses_code_symbol(data_name),
     "[[",
-    dQuote(column_name),
+    ramses_code_string(column_name),
     "]]"
   )
 }
