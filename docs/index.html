@@ -3,258 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ramses - Interface Graphique Moderne d'Analyse Statistique en R</title>
-  <meta name="description" content="Documentation officielle du package R Ramses : alternative contemporaine à Rcmdr, analyses statistiques complètes et journalisation R Markdown reproductible.">
+  <title>Ramses — Analyse statistique guidée avec R</title>
+  <meta name="description" content="Documentation simple et pratique de Ramses, une interface graphique Shiny pour préparer, explorer, visualiser et analyser des données avec R.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="navbar-container">
-      <a href="index.html" class="navbar-brand">
-        <span>Ramses</span>
-        <span class="pkg-tag">v0.1.0</span>
-      </a>
+      <a href="index.html" class="navbar-brand"><span>Ramses</span><span class="pkg-tag">v1.0.0</span></a>
       <ul class="nav-links">
         <li><a href="index.html" class="nav-link active">Accueil</a></li>
         <li><a href="installation.html" class="nav-link">Installation</a></li>
         <li><a href="tutoriel.html" class="nav-link">Tutoriel</a></li>
         <li><a href="auteur.html" class="nav-link">À propos</a></li>
       </ul>
-      <a href="https://github.com/astral-r/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">
-        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-        </svg>
-        <span>GitHub</span>
-      </a>
+      <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
     </div>
   </nav>
 
-  <!-- Main Container -->
   <main class="main-wrapper">
     <article class="article-content">
-      
-      <!-- Header Section -->
       <header>
         <h1>Ramses</h1>
-        <p style="font-size: 1.15rem; color: var(--color-primary-light); font-weight: 500; margin-bottom: 1rem;">
-          Interface Graphique Moderne d'Analyse Statistique et de Reproductibilité en R
-        </p>
-
-        <!-- Metadata Badges -->
+        <p style="font-size:1.2rem;color:var(--color-primary-light);font-weight:600;">Faire des analyses statistiques avec R, sans devoir commencer par écrire du code.</p>
+        <p>Ramses est une interface graphique interactive pour préparer des données, faire des statistiques, créer des graphiques et produire un rapport reproductible.</p>
         <div class="badge-group">
-          <span class="badge badge-version">version 0.1.0</span>
-          <span class="badge badge-r-req">R &gt;= 4.1.0</span>
+          <span class="badge badge-version">Ramses 1.0.0</span>
+          <span class="badge badge-r-req">R ≥ 4.1.0</span>
           <span class="badge badge-license">Licence MIT</span>
-          <span class="badge badge-rmd">R Markdown / knitr</span>
-          <span class="badge">Bootstrap 5 (bslib)</span>
+          <span class="badge">Shiny + bslib</span>
+          <span class="badge badge-rmd">R Markdown</span>
         </div>
-
-        <!-- Figure Principale -->
         <figure>
-          <img src="images/ramses-hero.png" alt="Interface générale du package Ramses" />
-          <figcaption>Figure 1 : Interface générale du package Ramses</figcaption>
+          <img src="images/ramses-hero.png" alt="Vue générale de Ramses" />
+          <figcaption>Ramses regroupe les principales étapes d'une analyse dans une seule interface.</figcaption>
         </figure>
       </header>
 
-      <!-- Résumé Exécutif -->
       <section>
-        <h2>Pourquoi Ramses ?</h2>
-        <p>
-          Depuis plus de deux décennies, <strong>R Commander (Rcmdr)</strong> a joué un rôle pionnier dans l'enseignement et la pratique des biostatistiques appliquées en démocratisant l'accès à R via une interface graphique. Cependant, les contraintes ergonomiques des fenêtres graphiques X11/Tcl/Tk et l'absence d'intégration native aux standards modernes du web imposaient une modernisation en profondeur.
-        </p>
-        <p>
-          <strong>Ramses</strong> a été développé pour combler cette lacune en proposant une <strong>interface web réactive, contemporaine et accessible</strong> construite avec <code>Shiny</code> et <code>bslib</code> (Bootstrap 5). Conçu pour les chercheurs, data analysts, biostatisticiens, enseignants et étudiants, Ramses privilégie l'intégrité scientifique : <em>toutes les manipulations et calculs effectués à l'écran sont rigoureusement traduits en code R pur et consignés dans un journal R Markdown reproductible</em>.
-        </p>
-      </section>
-
-      <!-- Les 4 Piliers Fondateurs -->
-      <section>
-        <h2>Les 4 Piliers de l'Architecture Ramses</h2>
-        
-        <div class="grid-2">
-          
-          <!-- Pilier 1 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
-              1. Menus Modaux & Navigation Fluide
-            </h3>
-            <p>
-              Exploration tabulaire interactive avec <code>DT::datatable</code>, importation guidée multi-formats (CSV, Excel, SPSS, Stata, RDS) et paramétrage modulaire sans rechargement de page.
-            </p>
-          </div>
-
-          <!-- Pilier 2 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-              2. Analyses Statistiques Complètes
-            </h3>
-            <p>
-              Statistiques descriptives univariées et bivariées, tests paramétriques (Student, ANOVA), non-paramétriques (Wilcoxon, Kruskal-Wallis), tests du Chi-2/Fisher et régressions (OLS, logistique avec Odds Ratios).
-            </p>
-          </div>
-
-          <!-- Pilier 3 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-              3. Visualisation "Tableau-Style"
-            </h3>
-            <p>
-              Générateur visuel de graphiques permettant de mapper intuitivement les variables sur les axes, couleurs, tailles et facettes. Rendu dynamique synchronisé entre <code>ggplot2</code> et <code>plotly</code>.
-            </p>
-            <figure style="margin: 1rem 0 0.5rem 0;">
-              <img src="images/feature-chart-builder.png" alt="Module Chart Builder" />
-              <figcaption>Figure 2 : Module Chart Builder pour la composition graphique interactive</figcaption>
-            </figure>
-          </div>
-
-          <!-- Pilier 4 -->
-          <div class="card">
-            <h3>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-              4. Reproductibilité R Markdown
-            </h3>
-            <p>
-              Journalisation chronologique temps réel de chaque analyse. Possibilité d'annoter le script et d'exporter en script R source (<code>.R</code>), document knitr (<code>.Rmd</code>) ou rapport compilé (<code>.html</code>).
-            </p>
-            <figure style="margin: 1rem 0 0.5rem 0;">
-              <img src="images/feature-rmd-journal.png" alt="Journal R Markdown reproductible" />
-              <figcaption>Figure 3 : Journal R Markdown avec synchronisation du code source R</figcaption>
-            </figure>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Lancement Rapide -->
-      <section>
-        <h2>Démarrage Rapide</h2>
-        <p>
-          Ramses s'installe et s'exécute directement depuis votre console R ou RStudio avec une seule instruction :
-        </p>
-
-        <div class="code-block-container">
-          <div class="code-header">
-            <span class="code-lang">Console R</span>
-            <button class="btn-copy" type="button">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              <span>Copier le code</span>
-            </button>
-          </div>
-          <pre><code># 1. Installation depuis GitHub (via le package remotes)
-if (!requireNamespace("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
-remotes::install_github("astral-r/Ramses")
-
-# 2. Chargement de la bibliothèque
-library(Ramses)
-
-# 3. Lancement de l'interface graphique interactive
-run_app()</code></pre>
-        </div>
-
+        <h2>Ramses en une phrase</h2>
         <div class="callout callout-note">
-          <div class="callout-title">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm.93-9.412l-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 110-2 1 1 0 010 2z"/></svg>
-            Mode interactif vs Serveur
-          </div>
-          <p style="margin-bottom: 0;">
-            Par défaut, <code>run_app()</code> initialise un port TCP libre et ouvre automatiquement votre navigateur système par défaut. Pour un environnement conteneurisé (Docker, Cloud Run), spécifiez <code>run_app(host = "0.0.0.0", port = 3000, launch.browser = FALSE)</code>.
-          </p>
+          <div class="callout-title">L'idée est simple</div>
+          <p style="margin-bottom:0;">Vous chargez vos données → vous les vérifiez → vous les préparez → vous choisissez une analyse → Ramses affiche les résultats → le code R correspondant est conservé dans le journal.</p>
         </div>
+        <p>Vous n'avez donc pas besoin de connaître R pour commencer. En revanche, Ramses ne remplace pas le raisonnement statistique : il vous aide à l'appliquer et à garder une trace de ce que vous avez fait.</p>
       </section>
 
-      <!-- Aperçu des fonctionnalités -->
       <section>
-        <h2>Comparatif Fonctionnel : Rcmdr vs Ramses</h2>
-        <div class="table-container">
-          <table class="academic-table">
-            <thead>
-              <tr>
-                <th>Fonctionnalité / Dimension</th>
-                <th>Rcmdr (R Commander)</th>
-                <th>Ramses (Modern GUI)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Moteur de Rendu UI</strong></td>
-                <td>Tcl/Tk (X11 / fenêtres OS)</td>
-                <td>HTML5 / CSS3 / bslib (Bootstrap 5)</td>
-              </tr>
-              <tr>
-                <td><strong>Environnement d'exécution</strong></td>
-                <td>Session locale uniquement (XQuartz sur macOS)</td>
-                <td>Navigateur web standard, RStudio Viewer, Docker</td>
-              </tr>
-              <tr>
-                <td><strong>Visualisations graphiques</strong></td>
-                <td>Tracés graphiques statiques R de base</td>
-                <td>Moteur hybride <code>ggplot2</code> + <code>plotly</code> interactif</td>
-              </tr>
-              <tr>
-                <td><strong>Exploration des tables</strong></td>
-                <td>Visionneuse basique X11</td>
-                <td>Datatables paginées avec tri, filtres et recherche plein texte</td>
-              </tr>
-              <tr>
-                <td><strong>Reproductibilité du code</strong></td>
-                <td>Fenêtre de script modifiable brute</td>
-                <td>Journal dynamique synchronisé + Export .R, .Rmd et .html</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="table-caption">Tableau 1 : Comparatif synthétique des architectures logicielles et de l'expérience utilisateur.</p>
+        <h2>Que peut faire Ramses ?</h2>
+        <div class="grid-2">
+          <div class="card"><h3>1. Importer les données</h3><p>Importez des fichiers <strong>CSV, TXT/TSV, Excel (.xlsx/.xls), SPSS (.sav), Stata (.dta)</strong> ou des objets R <strong>.rds</strong>. Pour Excel, vous pouvez choisir la feuille à importer.</p></div>
+          <div class="card"><h3>2. Préparer les données</h3><p>Inspectez les lignes, colonnes, valeurs manquantes, doublons et valeurs aberrantes. Renommez, supprimez, réorganisez ou convertissez des variables, recodez des modalités, remplacez des valeurs et créez des variables calculées.</p></div>
+          <div class="card"><h3>3. Nettoyer et filtrer</h3><p>Traitez les valeurs manquantes, supprimez les doublons, nettoyez les espaces, modifiez la casse du texte, filtrez les observations, triez les lignes et sélectionnez les colonnes utiles.</p></div>
+          <div class="card"><h3>4. Décrire les données</h3><p>Calculez des effectifs, moyennes, médianes, variances, écarts-types, CV, minimum, maximum, IQR, asymétrie et aplatissement. Travaillez aussi par groupe.</p></div>
+          <div class="card"><h3>5. Faire des tableaux</h3><p>Créez des distributions qualitatives et des tableaux croisés avec effectifs, pourcentages par ligne, par colonne ou sur le total.</p></div>
+          <div class="card"><h3>6. Étudier les relations</h3><p>Calculez des corrélations <strong>Pearson</strong> ou <strong>Spearman</strong> dans les descriptifs, puis Pearson, Spearman ou Kendall dans les tests de corrélation.</p></div>
+          <div class="card"><h3>7. Tester des hypothèses</h3><p>Normalité, égalité des variances, tests t, Wilcoxon, ANOVA, Kruskal-Wallis, Chi-deux, Fisher, McNemar et tests de proportions sont disponibles.</p></div>
+          <div class="card"><h3>8. Modéliser</h3><p>Ajustez une <strong>régression linéaire</strong> simple ou multiple, ou une <strong>régression logistique binaire</strong>, avec tableaux de résultats et diagnostics.</p></div>
+          <div class="card"><h3>9. Visualiser</h3><p>Construisez des graphiques interactifs : nuage de points, barres, camembert, boxplot, violon, histogramme, ligne, densité et heatmap.</p></div>
+          <div class="card"><h3>10. Garder le code</h3><p>Les opérations réalisées dans l'interface peuvent être ajoutées au <strong>Journal R Markdown</strong>, puis exportées en <strong>.R, .Rmd ou .html</strong>.</p></div>
         </div>
       </section>
 
-      <section style="margin-top: 2rem;">
-        <p>
-          Pour commencer à utiliser le package, consultez le <a href="installation.html" style="color: var(--color-primary-light); font-weight: 600;">Guide d'installation complet</a> ou suivez notre <a href="tutoriel.html" style="color: var(--color-primary-light); font-weight: 600;">Tutoriel pas à pas sur un cas réel de santé publique</a>.
-        </p>
+      <section>
+        <h2>Les grands espaces de travail</h2>
+        <table class="academic-table">
+          <thead><tr><th>Espace</th><th>À quoi sert-il ?</th><th>Exemples</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Données</strong></td><td>Charger et regarder le jeu de données actif.</td><td>Importer, aperçu, dimensions, recherche.</td></tr>
+            <tr><td><strong>Préparation</strong></td><td>Corriger et transformer les données avant l'analyse.</td><td>NA, doublons, recodage, calcul, filtre, tri.</td></tr>
+            <tr><td><strong>Descriptif</strong></td><td>Décrire ce que contient le jeu de données.</td><td>Moyenne, médiane, fréquences, tableaux croisés, corrélations.</td></tr>
+            <tr><td><strong>Tests statistiques</strong></td><td>Répondre à une question statistique.</td><td>Test t, Wilcoxon, ANOVA, Chi-deux, proportions, corrélation.</td></tr>
+            <tr><td><strong>Visualisation</strong></td><td>Construire un graphique en choisissant les variables.</td><td>X, Y, couleur, taille, facettes, thème et palette.</td></tr>
+            <tr><td><strong>Journal Rmd</strong></td><td>Conserver la démarche et le code reproductible.</td><td>Notes, code R, export R/Rmd/HTML.</td></tr>
+          </tbody>
+        </table>
       </section>
 
+      <section>
+        <h2>Quel test choisir ?</h2>
+        <p>Pour un débutant, commencez par la <strong>question</strong>, pas par le nom du test.</p>
+        <table class="academic-table">
+          <thead><tr><th>Votre question</th><th>Outil Ramses à regarder</th></tr></thead>
+          <tbody>
+            <tr><td>Mes données suivent-elles approximativement une loi normale ?</td><td>Normalité & Variance</td></tr>
+            <tr><td>Une moyenne est-elle différente d'une valeur donnée ?</td><td>Test t — échantillon unique</td></tr>
+            <tr><td>Deux groupes ont-ils des moyennes différentes ?</td><td>Test t indépendant / Welch</td></tr>
+            <tr><td>Les mesures avant et après sont-elles différentes ?</td><td>Test t apparié ou Wilcoxon apparié</td></tr>
+            <tr><td>Trois groupes ou plus ont-ils des moyennes différentes ?</td><td>ANOVA ou Kruskal-Wallis</td></tr>
+            <tr><td>Deux variables qualitatives sont-elles associées ?</td><td>Chi-deux ou Fisher</td></tr>
+            <tr><td>Deux proportions sont-elles différentes ?</td><td>Tests de proportions</td></tr>
+            <tr><td>Deux variables quantitatives sont-elles liées ?</td><td>Corrélation Pearson / Spearman / Kendall</td></tr>
+            <tr><td>Je veux expliquer une variable quantitative.</td><td>Régression linéaire</td></tr>
+            <tr><td>Je veux expliquer une variable binaire.</td><td>Régression logistique</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-warning"><div class="callout-title">Important</div><p style="margin-bottom:0;">Un test statistique ne se choisit pas uniquement avec un menu. Il faut tenir compte du type de variable, du plan d'étude, de l'indépendance ou de l'appariement des observations, des hypothèses du test et du contexte scientifique.</p></div>
+      </section>
+
+      <section>
+        <h2>Pourquoi le journal R Markdown est important ?</h2>
+        <p>Ramses ne se limite pas à afficher un résultat. Lorsque vous réalisez une opération analytique, l'application peut conserver le code R correspondant dans le journal.</p>
+        <figure><img src="images/feature-rmd-journal.png" alt="Journal R Markdown de Ramses" /><figcaption>Le journal permet de revenir sur les étapes de l'analyse et de les reproduire.</figcaption></figure>
+        <p>À la fin, vous pouvez produire :</p>
+        <ul><li><strong>.R</strong> : le code R exécutable ;</li><li><strong>.Rmd</strong> : le document source R Markdown ;</li><li><strong>.html</strong> : un rapport HTML compilé.</li></ul>
+      </section>
+
+      <section>
+        <h2>Commencer en 3 étapes</h2>
+        <ol>
+          <li><strong>Installer Ramses</strong> depuis la page <a href="installation.html">Installation</a>.</li>
+          <li><strong>Charger un jeu de données</strong>. Si vous débutez, Ramses démarre avec le jeu de données <code>iris</code>.</li>
+          <li><strong>Suivre le parcours</strong> : préparer → décrire → visualiser → tester → documenter.</li>
+        </ol>
+        <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>library(Ramses)
+run_app()</code></pre></div>
+      </section>
+
+      <section>
+        <h2>Ce que Ramses ne fait pas à votre place</h2>
+        <p>Ramses automatise l'exécution et la présentation de nombreuses méthodes. Il ne décide pas si votre étude est bien conçue, si vos variables mesurent réellement ce que vous voulez mesurer ou si une conclusion est scientifiquement pertinente.</p>
+        <p><strong>Le bon réflexe :</strong> utiliser Ramses pour faciliter l'analyse, puis expliquer clairement pourquoi la méthode choisie répond à votre question.</p>
+      </section>
+
+      <section>
+        <h2>Besoin d'un guide pas à pas ?</h2>
+        <p>Le <a href="tutoriel.html"><strong>tutoriel débutant</strong></a> vous accompagne depuis le chargement des données jusqu'au rapport final.</p>
+      </section>
     </article>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>
-      <strong>Package R Ramses</strong> — Licence libre MIT. Conçu avec rigueur pour la recherche scientifique et l'enseignement statistique.<br>
-      Documentation générée pour la version 0.1.0 • Hébergé sur <a href="https://github.com/astral-r/Ramses" target="_blank" rel="noopener noreferrer">GitHub</a>.
-    </p>
-  </footer>
-
-  <!-- Code Copy Script -->
+  <footer class="footer"><p><strong>Ramses 1.0.0</strong> — Interface graphique pour l'analyse statistique en R — Licence MIT.</p></footer>
   <script>
     document.querySelectorAll('.btn-copy').forEach(button => {
-      button.addEventListener('click', () => {
-        const container = button.closest('.code-block-container');
-        const codeElement = container.querySelector('pre code');
-        const textToCopy = codeElement.innerText;
-
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          const originalHTML = button.innerHTML;
-          button.classList.add('copied');
-          button.innerHTML = `
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Copié !</span>
-          `;
-          setTimeout(() => {
-            button.classList.remove('copied');
-            button.innerHTML = originalHTML;
-          }, 2000);
-        }).catch(err => {
-          console.error('Erreur lors de la copie :', err);
-        });
+      button.addEventListener('click', async () => {
+        const code = button.closest('.code-block-container').querySelector('pre code').innerText;
+        try { await navigator.clipboard.writeText(code); button.querySelector('span').textContent = 'Copié !'; setTimeout(() => button.querySelector('span').textContent = 'Copier', 1600); }
+        catch(e) { button.querySelector('span').textContent = 'Sélectionnez le code'; }
       });
     });
   </script>
-
 </body>
 </html>
