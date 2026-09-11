@@ -44,14 +44,14 @@ mod_descriptives_quanti_ui <- function(id) {
               "Effectif (N)" = "n",
               "Valeurs manquantes (NA)" = "na",
               "Moyenne" = "mean",
-              "Médiane" = "median",
+              "M\u00e9diane" = "median",
               "Variance" = "var",
-              "Écart-type (SD)" = "sd",
+              "\u00c9cart-type (SD)" = "sd",
               "CV (%)" = "cv",
               "Minimum" = "min",
               "Maximum" = "max",
               "IQR" = "iqr",
-              "Asymétrie" = "skewness",
+              "Asym\u00e9trie" = "skewness",
               "Aplatissement" = "kurtosis"
             ),
             selected = c("n", "na", "mean", "median", "sd", "min", "max", "iqr"),
@@ -59,8 +59,8 @@ mod_descriptives_quanti_ui <- function(id) {
           ),
           shiny::radioButtons(
             inputId = ns("quanti_plot_type_direct"),
-            label = "Graphique associé :",
-            choices = c("Boîte à moustaches (Boxplot)" = "box", "Histogramme" = "hist"),
+            label = "Graphique associ\u00e9 :",
+            choices = c("Bo\u00eete \u00e0 moustaches (Boxplot)" = "box", "Histogramme" = "hist"),
             selected = "box",
             inline = TRUE
           ),
@@ -137,14 +137,14 @@ mod_descriptives_quali_ui <- function(id) {
             choices = c(
               "Effectifs (N)" = "n",
               "Pourcentages (%)" = "pct",
-              "% cumulés" = "cum_pct"
+              "% cumul\u00e9s" = "cum_pct"
             ),
             selected = c("n", "pct", "cum_pct"),
             inline = TRUE
           ),
           shiny::radioButtons(
             inputId = ns("quali_plot_type_direct"),
-            label = "Graphique associé :",
+            label = "Graphique associ\u00e9 :",
             choices = c("Diagramme en barres" = "bar", "Diagramme circulaire (Camembert)" = "pie"),
             selected = "bar",
             inline = TRUE
@@ -181,7 +181,7 @@ mod_descriptives_quali_ui <- function(id) {
   )
 }
 
-#' Sous-interface : Tableaux croisés
+#' Sous-interface : Tableaux crois\u00e9s
 #'
 #' @noRd
 mod_descriptives_cross_ui <- function(id) {
@@ -196,7 +196,7 @@ mod_descriptives_cross_ui <- function(id) {
           class = "py-2 bg-light d-flex justify-content-between align-items-center",
           shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::tags$strong("Tableau Croisé (Contingence)")
+            shiny::tags$strong("Tableau Crois\u00e9 (Contingence)")
           ),
           shiny::actionButton(
             inputId = ns("btn_open_crosstab_modal"),
@@ -218,9 +218,9 @@ mod_descriptives_cross_ui <- function(id) {
           ),
           shiny::radioButtons(
             inputId = ns("crosstab_display_direct"),
-            label = "Métriques affichées dans la table :",
+            label = "M\u00e9triques affich\u00e9es dans la table :",
             choices = c(
-              "Effectifs observés (N)" = "count",
+              "Effectifs observ\u00e9s (N)" = "count",
               "Pourcentages ligne (% Ligne)" = "row_pct",
               "Pourcentages colonne (% Col)" = "col_pct",
               "Pourcentages totaux (% Total)" = "total_pct"
@@ -253,7 +253,7 @@ mod_descriptives_cross_ui <- function(id) {
           )
         ),
         bslib::nav_panel(
-          title = "Répartition bivariée",
+          title = "R\u00e9partition bivari\u00e9e",
           bslib::card_body(
             padding = 1,
             plotly::plotlyOutput(ns("plot_crosstab"), height = "440px")
@@ -264,7 +264,7 @@ mod_descriptives_cross_ui <- function(id) {
   )
 }
 
-#' Sous-interface : Matrice de corrélation
+#' Sous-interface : Matrice de corr\u00e9lation
 #'
 #' @noRd
 mod_descriptives_cor_ui <- function(id) {
@@ -279,7 +279,7 @@ mod_descriptives_cor_ui <- function(id) {
           class = "py-2 bg-light d-flex justify-content-between align-items-center",
           shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::tags$strong("Matrice de Corrélation")
+            shiny::tags$strong("Matrice de Corr\u00e9lation")
           ),
           shiny::actionButton(
             inputId = ns("btn_open_cor_modal"),
@@ -291,16 +291,16 @@ mod_descriptives_cor_ui <- function(id) {
           class = "p-3",
           shiny::selectizeInput(
             inputId = ns("cor_vars_direct"),
-            label = "Variables numériques (>= 2) :",
+            label = "Variables num\u00e9riques (>= 2) :",
             choices = NULL,
             multiple = TRUE,
             options = list(plugins = list("remove_button"))
           ),
           shiny::radioButtons(
             inputId = ns("cor_method_direct"),
-            label = "Méthode de corrélation :",
+            label = "M\u00e9thode de corr\u00e9lation :",
             choices = c(
-              "Pearson (linéaire)" = "pearson",
+              "Pearson (lin\u00e9aire)" = "pearson",
               "Spearman (rangs / monotone)" = "spearman"
             ),
             selected = "pearson",
@@ -325,14 +325,14 @@ mod_descriptives_cor_ui <- function(id) {
       bslib::navset_card_tab(
         id = ns("cor_results_tabs"),
         bslib::nav_panel(
-          title = "Coefficients de corrélation",
+          title = "Coefficients de corr\u00e9lation",
           bslib::card_body(
             padding = 0,
             DT::dataTableOutput(ns("table_cor"))
           )
         ),
         bslib::nav_panel(
-          title = "Heatmap de corrélation",
+          title = "Heatmap de corr\u00e9lation",
           bslib::card_body(
             padding = 1,
             plotly::plotlyOutput(ns("plot_cor"), height = "440px")
@@ -346,8 +346,8 @@ mod_descriptives_cor_ui <- function(id) {
 #' @title Interface utilisateur pour le module de statistiques descriptives
 #'
 #' @description Construit l'interface du module de statistiques descriptives de Ramses,
-#'   comprenant l'analyse univariée quantitative, l'analyse univariée qualitative,
-#'   les tableaux de contingence croisés et les matrices de corrélation.
+#'   comprenant l'analyse univari\u00e9e quantitative, l'analyse univari\u00e9e qualitative,
+#'   les tableaux de contingence crois\u00e9s et les matrices de corr\u00e9lation.
 #'
 #' @param id Identifiant de namespace Shiny.
 #' @return Un objet tagList d'interface Shiny (\code{shiny.tag}).
@@ -370,24 +370,256 @@ mod_descriptives_ui <- function(id) {
       mod_descriptives_quali_ui(id)
     ),
     bslib::nav_panel(
-      title = "Tableau Croisé",
+      title = "Tableau Crois\u00e9",
       mod_descriptives_cross_ui(id)
     ),
     bslib::nav_panel(
-      title = "Matrice de Corrélation",
+      title = "Matrice de Corr\u00e9lation",
       mod_descriptives_cor_ui(id)
     )
   )
 }
 
+#' Calcul securise des statistiques descriptives quantitatives (univarie et groupe)
+#'
+#' @param df Dataframe source.
+#' @param vars Vecteur des noms des variables quantitatives.
+#' @param group_var Nom de la variable de regroupement (facultatif).
+#' @param active_stats Vecteur des statistiques a inclure.
+#' @return Un data.frame contenant les statistiques ou un data.frame vide structure.
+#' @noRd
+ramses_compute_quanti_table <- function(df, vars, group_var = "", active_stats = c("n", "na", "mean", "median", "sd", "min", "max", "iqr")) {
+  has_group_req <- nzchar(group_var)
+
+  if (is.null(df) || !is.data.frame(df) || nrow(df) == 0) {
+    if (has_group_req) {
+      return(data.frame(
+        Variable = character(0),
+        Groupe = character(0),
+        Statistique = character(0),
+        Valeur = numeric(0),
+        stringsAsFactors = FALSE
+      ))
+    }
+
+    selected_cols <- c("Variable")
+    if ("n" %in% active_stats) selected_cols <- c(selected_cols, "N")
+    if ("na" %in% active_stats) selected_cols <- c(selected_cols, "NA")
+    if ("mean" %in% active_stats) selected_cols <- c(selected_cols, "Moyenne")
+    if ("median" %in% active_stats) selected_cols <- c(selected_cols, "M\u00e9diane")
+    if ("var" %in% active_stats) selected_cols <- c(selected_cols, "Variance")
+    if ("sd" %in% active_stats) selected_cols <- c(selected_cols, "\u00c9cart-type")
+    if ("cv" %in% active_stats) selected_cols <- c(selected_cols, "CV (%)")
+    if ("min" %in% active_stats) selected_cols <- c(selected_cols, "Min")
+    if ("max" %in% active_stats) selected_cols <- c(selected_cols, "Max")
+    if ("iqr" %in% active_stats) selected_cols <- c(selected_cols, "IQR")
+    if ("skewness" %in% active_stats) selected_cols <- c(selected_cols, "Asym\u00e9trie")
+    if ("kurtosis" %in% active_stats) selected_cols <- c(selected_cols, "Aplatissement")
+
+    empty_list <- stats::setNames(
+      lapply(selected_cols, function(col) character(0)),
+      selected_cols
+    )
+    return(as.data.frame(empty_list, stringsAsFactors = FALSE))
+  }
+
+  valid_vars <- vars[vars %in% names(df)]
+  if (length(valid_vars) == 0) {
+    if (has_group_req) {
+      return(data.frame(
+        Variable = character(0),
+        Groupe = character(0),
+        Statistique = character(0),
+        Valeur = numeric(0),
+        stringsAsFactors = FALSE
+      ))
+    }
+    return(data.frame(Statistique = character(0), Valeur = character(0), stringsAsFactors = FALSE))
+  }
+
+  if (is.null(active_stats) || length(active_stats) == 0) {
+    active_stats <- character(0)
+  }
+
+  has_group <- has_group_req && (group_var %in% names(df))
+
+  if (!has_group && length(valid_vars) == 1) {
+    # Formatage vertical univarie a 2 colonnes (Statistique / Valeur) type SPSS
+    v <- valid_vars[1]
+    sub_vec <- df[[v]]
+    vals <- sub_vec[!is.na(sub_vec)]
+    n_val <- length(vals)
+    na_count <- sum(is.na(sub_vec))
+    m_val <- if (n_val > 0) mean(vals) else NA_real_
+    s_val <- if (n_val > 1) stats::sd(vals) else NA_real_
+    var_val <- if (n_val > 1) stats::var(vals) else NA_real_
+    med_val <- if (n_val > 0) stats::median(vals) else NA_real_
+    iqr_val <- if (n_val > 0) stats::IQR(vals) else NA_real_
+    min_val <- if (n_val > 0) min(vals) else NA_real_
+    max_val <- if (n_val > 0) max(vals) else NA_real_
+    cv_val <- if (n_val > 1 && !is.na(m_val) && m_val != 0 && !is.na(s_val)) round((s_val / m_val) * 100, 2) else NA_real_
+    skew_val <- if (n_val >= 3 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^3) / (n_val * s_val^3), 3) else NA_real_
+    kurt_val <- if (n_val >= 4 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^4) / (n_val * s_val^4) - 3, 3) else NA_real_
+
+    stats_defs <- list(
+      list(id = "n", label = "Effectif valide (N)", val = as.character(n_val)),
+      list(id = "na", label = "Valeurs manquantes (NA)", val = as.character(na_count)),
+      list(id = "mean", label = "Moyenne", val = if (!is.na(m_val)) sprintf("%.3f", m_val) else "NA"),
+      list(id = "median", label = "M\u00e9diane", val = if (!is.na(med_val)) sprintf("%.3f", med_val) else "NA"),
+      list(id = "var", label = "Variance", val = if (!is.na(var_val)) sprintf("%.3f", var_val) else "NA"),
+      list(id = "sd", label = "\u00c9cart-type (SD)", val = if (!is.na(s_val)) sprintf("%.3f", s_val) else "NA"),
+      list(id = "cv", label = "Coefficient de variation (CV %)", val = if (!is.na(cv_val)) paste0(sprintf("%.2f", cv_val), " %") else "NA"),
+      list(id = "min", label = "Minimum", val = if (!is.na(min_val)) sprintf("%.3f", min_val) else "NA"),
+      list(id = "max", label = "Maximum", val = if (!is.na(max_val)) sprintf("%.3f", max_val) else "NA"),
+      list(id = "iqr", label = "\u00c9cart interquartile (IQR)", val = if (!is.na(iqr_val)) sprintf("%.3f", iqr_val) else "NA"),
+      list(id = "skewness", label = "Asym\u00e9trie (Skewness)", val = if (!is.na(skew_val)) sprintf("%.3f", skew_val) else "NA"),
+      list(id = "kurtosis", label = "Aplatissement (Kurtosis)", val = if (!is.na(kurt_val)) sprintf("%.3f", kurt_val) else "NA")
+    )
+
+    filtered_defs <- stats_defs[vapply(stats_defs, function(x) x$id %in% active_stats, logical(1))]
+
+    res_df <- data.frame(
+      Statistique = vapply(filtered_defs, function(x) x$label, character(1)),
+      Valeur = vapply(filtered_defs, function(x) x$val, character(1)),
+      stringsAsFactors = FALSE
+    )
+    return(res_df)
+  }
+
+  if (has_group) {
+    # Formatage vertical long par groupe (Variable x Groupe x Statistique x Valeur)
+    var_vec <- character(0)
+    grp_vec <- character(0)
+    stat_vec <- character(0)
+    val_vec <- numeric(0)
+
+    grp_col <- df[[group_var]]
+    modalities <- levels(as.factor(grp_col))
+
+    for (v in valid_vars) {
+      for (m in modalities) {
+        sub_vec <- df[[v]][grp_col == m & !is.na(grp_col)]
+        vals <- sub_vec[!is.na(sub_vec)]
+        n_val <- length(vals)
+        na_count <- sum(is.na(sub_vec))
+        m_val <- if (n_val > 0) mean(vals) else NA_real_
+        s_val <- if (n_val > 1) stats::sd(vals) else NA_real_
+        var_val <- if (n_val > 1) stats::var(vals) else NA_real_
+        med_val <- if (n_val > 0) stats::median(vals) else NA_real_
+        iqr_val <- if (n_val > 0) stats::IQR(vals) else NA_real_
+        min_val <- if (n_val > 0) min(vals) else NA_real_
+        max_val <- if (n_val > 0) max(vals) else NA_real_
+        cv_val <- if (n_val > 1 && !is.na(m_val) && m_val != 0 && !is.na(s_val)) round((s_val / m_val) * 100, 2) else NA_real_
+        skew_val <- if (n_val >= 3 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^3) / (n_val * s_val^3), 3) else NA_real_
+        kurt_val <- if (n_val >= 4 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^4) / (n_val * s_val^4) - 3, 3) else NA_real_
+
+        stat_candidates <- list(
+          list(id = "n", label = "N", val = as.numeric(n_val)),
+          list(id = "na", label = "NA", val = as.numeric(na_count)),
+          list(id = "mean", label = "Moyenne", val = if (!is.na(m_val)) round(m_val, 3) else NA_real_),
+          list(id = "median", label = "M\u00e9diane", val = if (!is.na(med_val)) round(med_val, 3) else NA_real_),
+          list(id = "var", label = "Variance", val = if (!is.na(var_val)) round(var_val, 3) else NA_real_),
+          list(id = "sd", label = "\u00c9cart-type", val = if (!is.na(s_val)) round(s_val, 3) else NA_real_),
+          list(id = "cv", label = "CV (%)", val = cv_val),
+          list(id = "min", label = "Min", val = if (!is.na(min_val)) round(min_val, 3) else NA_real_),
+          list(id = "max", label = "Max", val = if (!is.na(max_val)) round(max_val, 3) else NA_real_),
+          list(id = "iqr", label = "IQR", val = if (!is.na(iqr_val)) round(iqr_val, 3) else NA_real_),
+          list(id = "skewness", label = "Asym\u00e9trie", val = skew_val),
+          list(id = "kurtosis", label = "Aplatissement", val = kurt_val)
+        )
+
+        for (st in stat_candidates) {
+          if (st$id %in% active_stats) {
+            var_vec <- c(var_vec, v)
+            grp_vec <- c(grp_vec, as.character(m))
+            stat_vec <- c(stat_vec, st$label)
+            val_vec <- c(val_vec, st$val)
+          }
+        }
+      }
+    }
+
+    res_df <- data.frame(
+      Variable = var_vec,
+      Groupe = grp_vec,
+      Statistique = stat_vec,
+      Valeur = val_vec,
+      stringsAsFactors = FALSE
+    )
+    return(res_df)
+  }
+
+  # Tableau multivarie sans groupe (horizontal : 1 ligne par variable)
+  rows_list <- list()
+  for (v in valid_vars) {
+    sub_vec <- df[[v]]
+    vals <- sub_vec[!is.na(sub_vec)]
+    n_val <- length(vals)
+    na_count <- sum(is.na(sub_vec))
+    m_val <- if (n_val > 0) mean(vals) else NA_real_
+    s_val <- if (n_val > 1) stats::sd(vals) else NA_real_
+    var_val <- if (n_val > 1) stats::var(vals) else NA_real_
+    med_val <- if (n_val > 0) stats::median(vals) else NA_real_
+    iqr_val <- if (n_val > 0) stats::IQR(vals) else NA_real_
+    min_val <- if (n_val > 0) min(vals) else NA_real_
+    max_val <- if (n_val > 0) max(vals) else NA_real_
+    cv_val <- if (n_val > 1 && !is.na(m_val) && m_val != 0 && !is.na(s_val)) round((s_val / m_val) * 100, 2) else NA_real_
+    skew_val <- if (n_val >= 3 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^3) / (n_val * s_val^3), 3) else NA_real_
+    kurt_val <- if (n_val >= 4 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^4) / (n_val * s_val^4) - 3, 3) else NA_real_
+
+    row_data <- list(
+      "Variable" = v,
+      "N" = n_val,
+      "NA" = na_count,
+      "Moyenne" = if (!is.na(m_val)) round(m_val, 3) else NA_real_,
+      "M\u00e9diane" = if (!is.na(med_val)) round(med_val, 3) else NA_real_,
+      "Variance" = if (!is.na(var_val)) round(var_val, 3) else NA_real_,
+      "\u00c9cart-type" = if (!is.na(s_val)) round(s_val, 3) else NA_real_,
+      "CV (%)" = cv_val,
+      "Min" = if (!is.na(min_val)) round(min_val, 3) else NA_real_,
+      "Max" = if (!is.na(max_val)) round(max_val, 3) else NA_real_,
+      "IQR" = if (!is.na(iqr_val)) round(iqr_val, 3) else NA_real_,
+      "Asym\u00e9trie" = skew_val,
+      "Aplatissement" = kurt_val
+    )
+    rows_list[[length(rows_list) + 1]] <- row_data
+  }
+
+  selected_cols <- c("Variable")
+  if ("n" %in% active_stats) selected_cols <- c(selected_cols, "N")
+  if ("na" %in% active_stats) selected_cols <- c(selected_cols, "NA")
+  if ("mean" %in% active_stats) selected_cols <- c(selected_cols, "Moyenne")
+  if ("median" %in% active_stats) selected_cols <- c(selected_cols, "M\u00e9diane")
+  if ("var" %in% active_stats) selected_cols <- c(selected_cols, "Variance")
+  if ("sd" %in% active_stats) selected_cols <- c(selected_cols, "\u00c9cart-type")
+  if ("cv" %in% active_stats) selected_cols <- c(selected_cols, "CV (%)")
+  if ("min" %in% active_stats) selected_cols <- c(selected_cols, "Min")
+  if ("max" %in% active_stats) selected_cols <- c(selected_cols, "Max")
+  if ("iqr" %in% active_stats) selected_cols <- c(selected_cols, "IQR")
+  if ("skewness" %in% active_stats) selected_cols <- c(selected_cols, "Asym\u00e9trie")
+  if ("kurtosis" %in% active_stats) selected_cols <- c(selected_cols, "Aplatissement")
+
+  if (length(rows_list) == 0) {
+    empty_list <- stats::setNames(
+      lapply(selected_cols, function(col) character(0)),
+      selected_cols
+    )
+    return(as.data.frame(empty_list, stringsAsFactors = FALSE))
+  }
+
+  res_df <- do.call(rbind, lapply(rows_list, as.data.frame, stringsAsFactors = FALSE))
+  res_df <- res_df[, intersect(selected_cols, names(res_df)), drop = FALSE]
+  return(res_df)
+}
+
 #' @title Logique serveur pour le module de statistiques descriptives
 #'
-#' @description Gère la logique interactive, les calculs de statistiques descriptives,
-#'   le rendu des tableaux DT, la génération des graphiques Plotly et l'enregistrement
+#' @description G\u00e8re la logique interactive, les calculs de statistiques descriptives,
+#'   le rendu des tableaux DT, la g\u00e9n\u00e9ration des graphiques Plotly et l'enregistrement
 #'   reproductible dans le journal R Markdown.
 #'
 #' @param id Identifiant de namespace Shiny.
-#' @param data_holder Environnement ou liste réactive contenant \code{df} et \code{name}.
+#' @param data_holder Environnement ou liste r\u00e9active contenant \code{df} et \code{name}.
 #' @param append_to_rmd Fonction de callback pour enregistrer le code dans le journal Rmd.
 #' @return Un module serveur Shiny.
 #' @export
@@ -395,7 +627,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Helpers de détection des types de variables dans le dataset actif
+    # Helpers de d\u00e9tection des types de variables dans le dataset actif
     numeric_vars <- shiny::reactive({
       df <- data_holder$df
       if (!is.data.frame(df)) return(character(0))
@@ -408,7 +640,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       names(df)[vapply(df, function(x) is.factor(x) || is.character(x) || length(unique(x)) <= 15, logical(1))]
     })
 
-    # Mise à jour automatique des sélecteurs directs (layout 2 colonnes)
+    # Mise \u00e0 jour automatique des s\u00e9lecteurs directs (layout 2 colonnes)
     shiny::observe({
       num_cols <- numeric_vars()
       cat_cols <- categorical_vars()
@@ -426,57 +658,58 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       shiny::updateSelectizeInput(session, "cor_vars_direct", choices = num_cols, selected = if (length(num_cols) >= 2) num_cols[1:min(length(num_cols), 4)] else num_cols)
     })
 
-    # Helper interne pour la génération reproductible du code R dplyr::summarise
+    # Helper interne pour la g\u00e9n\u00e9ration reproductible du code R dplyr::summarise
     build_quanti_rmd_code <- function(target_df, vars, group_var, selected_stats) {
       if (is.null(selected_stats) || length(selected_stats) == 0) {
         selected_stats <- c("n", "mean", "sd")
       }
-      group_clause <- if (nzchar(group_var)) paste0('group_by(', group_var, ') %>%\n  ') else ''
+      group_clause <- if (nzchar(group_var)) paste0('group_by(', ramses_code_symbol(group_var), ') %>%\n  ') else ''
 
       summarise_terms <- character(0)
       for (v in vars) {
+        v_sym <- ramses_code_symbol(v)
         if ("n" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (N)` = sum(!is.na(', v, '))'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (N)")), ' = sum(!is.na(', v_sym, '))'))
         }
         if ("na" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (NA)` = sum(is.na(', v, '))'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (NA)")), ' = sum(is.na(', v_sym, '))'))
         }
         if ("mean" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Moyenne)` = round(mean(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Moyenne)")), ' = round(mean(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("median" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Médiane)` = round(median(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Mediane)")), ' = round(median(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("var" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Variance)` = round(var(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Variance)")), ' = round(var(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("sd" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Écart-type)` = round(sd(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Ecart-type)")), ' = round(sd(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("cv" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (CV %)` = round((sd(', v, ', na.rm = TRUE) / mean(', v, ', na.rm = TRUE)) * 100, 2)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (CV %)")), ' = round((sd(', v_sym, ', na.rm = TRUE) / mean(', v_sym, ', na.rm = TRUE)) * 100, 2)'))
         }
         if ("min" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Min)` = round(min(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Min)")), ' = round(min(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("max" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Max)` = round(max(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Max)")), ' = round(max(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("iqr" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (IQR)` = round(IQR(', v, ', na.rm = TRUE), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (IQR)")), ' = round(IQR(', v_sym, ', na.rm = TRUE), 3)'))
         }
         if ("skewness" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Asymétrie)` = round(sum((', v, ' - mean(', v, ', na.rm = TRUE))^3, na.rm = TRUE) / (sum(!is.na(', v, ')) * sd(', v, ', na.rm = TRUE)^3), 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Asymetrie)")), ' = round(sum((', v_sym, ' - mean(', v_sym, ', na.rm = TRUE))^3, na.rm = TRUE) / (sum(!is.na(', v_sym, ')) * sd(', v_sym, ', na.rm = TRUE)^3), 3)'))
         }
         if ("kurtosis" %in% selected_stats) {
-          summarise_terms <- c(summarise_terms, paste0('  `', v, ' (Aplatissement)` = round(sum((', v, ' - mean(', v, ', na.rm = TRUE))^4, na.rm = TRUE) / (sum(!is.na(', v, ')) * sd(', v, ', na.rm = TRUE)^4) - 3, 3)'))
+          summarise_terms <- c(summarise_terms, paste0('  ', ramses_code_symbol(paste0(v, " (Aplatissement)")), ' = round(sum((', v_sym, ' - mean(', v_sym, ', na.rm = TRUE))^4, na.rm = TRUE) / (sum(!is.na(', v_sym, ')) * sd(', v_sym, ', na.rm = TRUE)^4) - 3, 3)'))
         }
       }
 
       paste0(
         "# Statistiques descriptives pour variables quantitatives\n",
         "library(dplyr)\n\n",
-        "res_quanti <- ", target_df, " %>%\n  ",
+        "res_quanti <- ", ramses_code_symbol(target_df), " %>%\n  ",
         group_clause,
         "summarise(\n",
         paste(summarise_terms, collapse = ",\n"),
@@ -492,7 +725,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         if (length(num_cols) > 0) vars <- num_cols[1]
       }
       if (length(vars) == 0) {
-        shiny::showNotification("Veuillez sélectionner au moins une variable quantitative.", type = "warning")
+        shiny::showNotification("Veuillez s\u00e9lectionner au moins une variable quantitative.", type = "warning")
         return()
       }
       quanti_state$vars <- vars
@@ -509,7 +742,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         selected_stats = quanti_state$stats
       )
       append_to_rmd(title = paste0("Statistiques quantitatives (", paste(quanti_state$vars, collapse = ", "), ")"), code = rmd_code)
-      shiny::showNotification("Résumé quantitatif calculé et journalisé !", type = "message")
+      shiny::showNotification("R\u00e9sum\u00e9 quantitatif calcul\u00e9 et journalis\u00e9 !", type = "message")
     })
 
     # Observateur direct pour Qualitatif
@@ -520,24 +753,57 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         return()
       }
       quali_state$var <- v
+      quali_state$plot_type <- if (!is.null(input$quali_plot_type_direct)) input$quali_plot_type_direct else "bar"
       quali_state$ready <- TRUE
       
       target_df <- data_holder$name
-      rmd_code <- paste0(
-        "# Tableau de fréquences\n",
-        sprintf("tab <- table(%s$%s)\n", target_df, v),
-        "print(tab)\nprint(round(prop.table(tab)*100, 2))"
-      )
-      append_to_rmd(title = paste0("Fréquences pour '", v, "'"), code = rmd_code)
-      shiny::showNotification("Table de fréquences calculée et journalisée !", type = "message")
+      if (identical(quali_state$plot_type, "pie")) {
+        rmd_code <- paste0(
+          "# Tableau de frequences et pourcentages\n",
+          sprintf("tab <- table(%s, useNA = 'ifany')\n", ramses_code_column(target_df, v)),
+          "prop <- prop.table(tab) * 100\n",
+          "res_freq <- data.frame(\n",
+          "  Modalite = names(tab),\n",
+          "  Effectif = as.numeric(tab),\n",
+          "  Pourcentage = round(as.numeric(prop), 2)\n",
+          ")\nprint(res_freq)\n\n",
+          "# Diagramme circulaire\n",
+          "library(ggplot2)\n",
+          "library(dplyr)\n",
+          "df_pie <- as.data.frame(tab)\n",
+          "names(df_pie) <- c('Modalite', 'Effectif')\n",
+          "df_pie$Pct <- round(df_pie$Effectif / sum(df_pie$Effectif) * 100, 1)\n",
+          "df_pie$Label <- paste0(df_pie$Modalite, ' \u2014 ', df_pie$Effectif, ' (', df_pie$Pct, ' %)')\n",
+          "ggplot(df_pie, aes(x = '', y = Effectif, fill = Modalite)) +\n",
+          "  geom_col(width = 1, color = 'white') +\n",
+          "  coord_polar(theta = 'y', start = 0) +\n",
+          "  geom_text(aes(label = Label), position = position_stack(vjust = 0.5), size = 3.5) +\n",
+          "  theme_void() +\n",
+          sprintf("  labs(title = %s, fill = %s)", ramses_code_string(paste0("Diagramme circulaire de ", v)), ramses_code_string(v))
+        )
+      } else {
+        rmd_code <- paste0(
+          "# Tableau de frequences\n",
+          sprintf("tab <- table(%s)\n", ramses_code_column(target_df, v)),
+          "print(tab)\nprint(round(prop.table(tab)*100, 2))\n\n",
+          "# Graphique en barres\n",
+          "library(ggplot2)\n",
+          sprintf("ggplot(%s, aes(x = %s)) +\n", ramses_code_symbol(target_df), ramses_code_symbol(v)),
+          "  geom_bar(fill = '#18bc9c', color = '#2c3e50') +\n",
+          "  theme_minimal(base_family = \"IBM Plex Sans\") +\n",
+          sprintf("  labs(title = %s, x = %s, y = 'Effectif')", ramses_code_string(paste0("Distribution de ", v)), ramses_code_string(v))
+        )
+      }
+      append_to_rmd(title = paste0("Frequences pour '", v, "'"), code = rmd_code)
+      shiny::showNotification("Table de frequences calculee et journalisee !", type = "message")
     })
 
-    # Observateur direct pour Tableau Croisé
+    # Observateur direct pour Tableau Croise
     shiny::observeEvent(input$btn_run_crosstab, {
       r_v <- input$crosstab_row_direct
       c_v <- input$crosstab_col_direct
       if (is.null(r_v) || is.null(c_v) || r_v == c_v) {
-        shiny::showNotification("Veuillez sélectionner deux variables distinctes pour le croisement.", type = "warning")
+        shiny::showNotification("Veuillez selectionner deux variables distinctes pour le croisement.", type = "warning")
         return()
       }
       crosstab_state$row_var <- r_v
@@ -553,15 +819,15 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       
       target_df <- data_holder$name
       rmd_code <- paste0(
-        "# Tableau croisé de contingence\n",
-        sprintf("tab_croise <- table(%s$%s, %s$%s)\nprint(tab_croise)\n", target_df, r_v, target_df, c_v),
+        "# Tableau croise de contingence\n",
+        sprintf("tab_croise <- table(%s, %s)\nprint(tab_croise)\n", ramses_code_column(target_df, r_v), ramses_code_column(target_df, c_v)),
         "print(chisq.test(tab_croise))"
       )
-      append_to_rmd(title = paste0("Tableau croisé : ", r_v, " × ", c_v), code = rmd_code)
-      shiny::showNotification("Tableau croisé calculé et consigné !", type = "message")
+      append_to_rmd(title = paste0("Tableau croise : ", r_v, " x ", c_v), code = rmd_code)
+      shiny::showNotification("Tableau croise calcule et consigne !", type = "message")
     })
 
-    # Observateur direct pour Corrélation
+    # Observateur direct pour Correlation
     shiny::observeEvent(input$btn_run_cor, {
       vars <- input$cor_vars_direct
       if (length(vars) < 2) {
@@ -569,7 +835,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         if (length(num_cols) >= 2) vars <- num_cols[1:min(length(num_cols), 4)]
       }
       if (length(vars) < 2) {
-        shiny::showNotification("Il faut au moins 2 variables numériques pour la corrélation.", type = "warning")
+        shiny::showNotification("Il faut au moins 2 variables numeriques pour la correlation.", type = "warning")
         return()
       }
       cor_state$vars <- vars
@@ -577,13 +843,13 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       cor_state$ready <- TRUE
       
       target_df <- data_holder$name
-      vars_str <- paste0('c("', paste(cor_state$vars, collapse = '", "'), '")')
+      vars_str <- ramses_code_string(cor_state$vars)
       rmd_code <- paste0(
-        "# Matrice de corrélation\n",
-        sprintf("mat_cor <- cor(%s[, %s], method = '%s', use = 'pairwise.complete.obs')\nprint(round(mat_cor, 3))\n", target_df, vars_str, cor_state$method)
+        "# Matrice de correlation\n",
+        sprintf("mat_cor <- cor(%s[, %s, drop = FALSE], method = %s, use = 'pairwise.complete.obs')\nprint(round(mat_cor, 3))\n", ramses_code_symbol(target_df), vars_str, ramses_code_string(cor_state$method))
       )
-      append_to_rmd(title = paste0("Matrice de corrélation (", toupper(cor_state$method), ")"), code = rmd_code)
-      shiny::showNotification("Matrice de corrélation calculée !", type = "message")
+      append_to_rmd(title = paste0("Matrice de corr\u00e9lation (", toupper(cor_state$method), ")"), code = rmd_code)
+      shiny::showNotification("Matrice de corr\u00e9lation calcul\u00e9e !", type = "message")
     })
 
     # =========================================================================
@@ -597,12 +863,12 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       ready = FALSE
     )
 
-    # Réactivité instantanée sur la sélection des métriques dans la barre latérale
+    # R\u00e9activit\u00e9 instantan\u00e9e sur la s\u00e9lection des m\u00e9triques dans la barre lat\u00e9rale
     shiny::observeEvent(input$quanti_stats_direct, {
       quanti_state$stats <- input$quanti_stats_direct
     }, ignoreNULL = FALSE)
 
-    # Initialisation automatique dès qu'un dataset est disponible
+    # Initialisation automatique d\u00e8s qu'un dataset est disponible
     shiny::observe({
       num_cols <- numeric_vars()
       if (length(num_cols) > 0 && !quanti_state$ready) {
@@ -618,7 +884,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       cat_cols <- categorical_vars()
 
       if (length(num_cols) == 0) {
-        shiny::showNotification("Aucune variable numérique détectée dans le jeu de données.", type = "warning")
+        shiny::showNotification("Aucune variable num\u00e9rique d\u00e9tect\u00e9e dans le jeu de donn\u00e9es.", type = "warning")
         return()
       }
 
@@ -629,7 +895,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         shiny::modalDialog(
           title = shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::strong("Paramètres - Résumé Statistique Quantitatif")
+            shiny::strong("Param\u00e8tres - R\u00e9sum\u00e9 Statistique Quantitatif")
           ),
           size = "l",
           easyClose = FALSE,
@@ -646,7 +912,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-3",
             shiny::selectizeInput(
               inputId = ns("modal_quanti_vars"),
-              label = shiny::strong("Variable(s) numérique(s) à analyser :"),
+              label = shiny::strong("Variable(s) num\u00e9rique(s) \u00e0 analyser :"),
               choices = num_cols,
               selected = current_selected,
               multiple = TRUE,
@@ -666,7 +932,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
 
           shiny::div(
             class = "mb-3",
-            shiny::strong("Indicateurs statistiques à calculer :"),
+            shiny::strong("Indicateurs statistiques \u00e0 calculer :"),
             shiny::checkboxGroupInput(
               inputId = ns("modal_quanti_stats"),
               label = NULL,
@@ -674,14 +940,14 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
                 "Effectif (N)" = "n",
                 "Valeurs manquantes (NA)" = "na",
                 "Moyenne" = "mean",
-                "Médiane" = "median",
+                "M\u00e9diane" = "median",
                 "Variance" = "var",
-                "Écart-type (SD)" = "sd",
+                "\u00c9cart-type (SD)" = "sd",
                 "CV (%)" = "cv",
                 "Minimum" = "min",
                 "Maximum" = "max",
                 "IQR" = "iqr",
-                "Asymétrie" = "skewness",
+                "Asym\u00e9trie" = "skewness",
                 "Aplatissement" = "kurtosis"
               ),
               selected = if (!is.null(quanti_state$stats)) quanti_state$stats else c("n", "na", "mean", "median", "sd", "min", "max", "iqr"),
@@ -693,9 +959,9 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-2",
             shiny::radioButtons(
               inputId = ns("modal_quanti_plot_type"),
-              label = shiny::strong("Graphique interactif Plotly associé :"),
+              label = shiny::strong("Graphique interactif Plotly associ\u00e9 :"),
               choices = c(
-                "Boîte à moustaches (Boxplot)" = "box",
+                "Bo\u00eete \u00e0 moustaches (Boxplot)" = "box",
                 "Histogramme de distribution" = "hist"
               ),
               selected = quanti_state$plot_type,
@@ -708,7 +974,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
 
     shiny::observeEvent(input$btn_confirm_quanti, {
       if (length(input$modal_quanti_vars) == 0) {
-        shiny::showNotification("Veuillez sélectionner au moins une variable numérique.", type = "warning")
+        shiny::showNotification("Veuillez s\u00e9lectionner au moins une variable num\u00e9rique.", type = "warning")
         return()
       }
 
@@ -720,7 +986,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
 
       shiny::removeModal()
 
-      # Mise à jour synchronisée des sélecteurs UI directs
+      # Mise \u00e0 jour synchronis\u00e9e des s\u00e9lecteurs UI directs
       shiny::updateCheckboxGroupInput(session, "quanti_stats_direct", selected = quanti_state$stats)
 
       # Construction du code R reproductible pour rmd_log
@@ -737,12 +1003,12 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         code = rmd_code
       )
 
-      shiny::showNotification("Résumé quantitatif calculé et journalisé avec succès !", type = "message")
+      shiny::showNotification("R\u00e9sum\u00e9 quantitatif calcul\u00e9 et journalis\u00e9 avec succ\u00e8s !", type = "message")
     })
 
     output$quanti_status_badge <- shiny::renderUI({
       if (!quanti_state$ready || length(quanti_state$vars) == 0) return(NULL)
-      group_txt <- if (nzchar(quanti_state$group)) paste0(" | Groupé par : ", quanti_state$group) else " | Global"
+      group_txt <- if (nzchar(quanti_state$group)) paste0(" | Group\u00e9 par : ", quanti_state$group) else " | Global"
       shiny::div(
         class = "alert alert-info py-1 px-2 small mb-2 d-flex justify-content-between align-items-center",
         shiny::span(
@@ -766,159 +1032,30 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       active_stats <- if (!is.null(input$quanti_stats_direct)) input$quanti_stats_direct else quanti_state$stats
       if (is.null(active_stats) || length(active_stats) == 0) active_stats <- character(0)
 
-      has_group <- nzchar(quanti_state$group) && (quanti_state$group %in% names(df))
+      res_df <- ramses_compute_quanti_table(
+        df = df,
+        vars = vars,
+        group_var = quanti_state$group,
+        active_stats = active_stats
+      )
 
-      if (!has_group && length(vars) == 1) {
-        # Formatage vertical univarié à 2 colonnes (Statistique / Valeur) type SPSS
-        v <- vars[1]
-        sub_vec <- df[[v]]
-        vals <- sub_vec[!is.na(sub_vec)]
-        n_val <- length(vals)
-        na_count <- sum(is.na(sub_vec))
-        m_val <- if (n_val > 0) mean(vals) else NA_real_
-        s_val <- if (n_val > 1) stats::sd(vals) else NA_real_
-        var_val <- if (n_val > 1) stats::var(vals) else NA_real_
-        med_val <- if (n_val > 0) stats::median(vals) else NA_real_
-        iqr_val <- if (n_val > 0) stats::IQR(vals) else NA_real_
-        min_val <- if (n_val > 0) min(vals) else NA_real_
-        max_val <- if (n_val > 0) max(vals) else NA_real_
-        cv_val <- if (n_val > 1 && !is.na(m_val) && m_val != 0 && !is.na(s_val)) round((s_val / m_val) * 100, 2) else NA_real_
-        skew_val <- if (n_val >= 3 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^3) / (n_val * s_val^3), 3) else NA_real_
-        kurt_val <- if (n_val >= 4 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^4) / (n_val * s_val^4) - 3, 3) else NA_real_
+      has_group_active <- nzchar(quanti_state$group)
 
-        stats_defs <- list(
-          list(id = "n", label = "Effectif valide (N)", val = as.character(n_val)),
-          list(id = "na", label = "Valeurs manquantes (NA)", val = as.character(na_count)),
-          list(id = "mean", label = "Moyenne", val = if (!is.na(m_val)) sprintf("%.3f", m_val) else "NA"),
-          list(id = "median", label = "Médiane", val = if (!is.na(med_val)) sprintf("%.3f", med_val) else "NA"),
-          list(id = "var", label = "Variance", val = if (!is.na(var_val)) sprintf("%.3f", var_val) else "NA"),
-          list(id = "sd", label = "Écart-type (SD)", val = if (!is.na(s_val)) sprintf("%.3f", s_val) else "NA"),
-          list(id = "cv", label = "Coefficient de variation (CV %)", val = if (!is.na(cv_val)) paste0(sprintf("%.2f", cv_val), " %") else "NA"),
-          list(id = "min", label = "Minimum", val = if (!is.na(min_val)) sprintf("%.3f", min_val) else "NA"),
-          list(id = "max", label = "Maximum", val = if (!is.na(max_val)) sprintf("%.3f", max_val) else "NA"),
-          list(id = "iqr", label = "Écart interquartile (IQR)", val = if (!is.na(iqr_val)) sprintf("%.3f", iqr_val) else "NA"),
-          list(id = "skewness", label = "Asymétrie (Skewness)", val = if (!is.na(skew_val)) sprintf("%.3f", skew_val) else "NA"),
-          list(id = "kurtosis", label = "Aplatissement (Kurtosis)", val = if (!is.na(kurt_val)) sprintf("%.3f", kurt_val) else "NA")
-        )
-
-        filtered_defs <- stats_defs[vapply(stats_defs, function(x) x$id %in% active_stats, logical(1))]
-
-        res_df <- data.frame(
-          Statistique = vapply(filtered_defs, function(x) x$label, character(1)),
-          Valeur = vapply(filtered_defs, function(x) x$val, character(1)),
-          stringsAsFactors = FALSE
-        )
-
-        DT::datatable(
-          res_df,
-          options = list(dom = "t", scrollX = TRUE, pageLength = 15),
-          rownames = FALSE,
-          class = "compact stripe hover border"
-        )
-      } else {
-        # Tableau multivarié ou groupé avec indicateurs filtrés
-        rows_list <- list()
-        if (has_group) {
-          grp_col <- df[[quanti_state$group]]
-          modalities <- levels(as.factor(grp_col))
-
-          for (v in vars) {
-            for (m in modalities) {
-              sub_vec <- df[[v]][grp_col == m & !is.na(grp_col)]
-              vals <- sub_vec[!is.na(sub_vec)]
-              n_val <- length(vals)
-              m_val <- if (n_val > 0) mean(vals) else NA_real_
-              s_val <- if (n_val > 1) stats::sd(vals) else NA_real_
-              var_val <- if (n_val > 1) stats::var(vals) else NA_real_
-              med_val <- if (n_val > 0) stats::median(vals) else NA_real_
-              iqr_val <- if (n_val > 0) stats::IQR(vals) else NA_real_
-              min_val <- if (n_val > 0) min(vals) else NA_real_
-              max_val <- if (n_val > 0) max(vals) else NA_real_
-              cv_val <- if (n_val > 1 && !is.na(m_val) && m_val != 0 && !is.na(s_val)) round((s_val / m_val) * 100, 2) else NA_real_
-              skew_val <- if (n_val >= 3 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^3) / (n_val * s_val^3), 3) else NA_real_
-              kurt_val <- if (n_val >= 4 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^4) / (n_val * s_val^4) - 3, 3) else NA_real_
-
-              row_data <- list(
-                "Variable" = v,
-                "Groupe" = as.character(m),
-                "N" = n_val,
-                "NA" = sum(is.na(sub_vec)),
-                "Moyenne" = if (!is.na(m_val)) round(m_val, 3) else NA,
-                "Médiane" = if (!is.na(med_val)) round(med_val, 3) else NA,
-                "Variance" = if (!is.na(var_val)) round(var_val, 3) else NA,
-                "Écart-type" = if (!is.na(s_val)) round(s_val, 3) else NA,
-                "CV (%)" = cv_val,
-                "Min" = if (!is.na(min_val)) round(min_val, 3) else NA,
-                "Max" = if (!is.na(max_val)) round(max_val, 3) else NA,
-                "IQR" = if (!is.na(iqr_val)) round(iqr_val, 3) else NA,
-                "Asymétrie" = skew_val,
-                "Aplatissement" = kurt_val
-              )
-              rows_list[[length(rows_list) + 1]] <- row_data
-            }
-          }
-        } else {
-          for (v in vars) {
-            sub_vec <- df[[v]]
-            vals <- sub_vec[!is.na(sub_vec)]
-            n_val <- length(vals)
-            m_val <- if (n_val > 0) mean(vals) else NA_real_
-            s_val <- if (n_val > 1) stats::sd(vals) else NA_real_
-            var_val <- if (n_val > 1) stats::var(vals) else NA_real_
-            med_val <- if (n_val > 0) stats::median(vals) else NA_real_
-            iqr_val <- if (n_val > 0) stats::IQR(vals) else NA_real_
-            min_val <- if (n_val > 0) min(vals) else NA_real_
-            max_val <- if (n_val > 0) max(vals) else NA_real_
-            cv_val <- if (n_val > 1 && !is.na(m_val) && m_val != 0 && !is.na(s_val)) round((s_val / m_val) * 100, 2) else NA_real_
-            skew_val <- if (n_val >= 3 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^3) / (n_val * s_val^3), 3) else NA_real_
-            kurt_val <- if (n_val >= 4 && !is.na(s_val) && s_val > 0) round(sum((vals - m_val)^4) / (n_val * s_val^4) - 3, 3) else NA_real_
-
-            row_data <- list(
-              "Variable" = v,
-              "N" = n_val,
-              "NA" = sum(is.na(sub_vec)),
-              "Moyenne" = if (!is.na(m_val)) round(m_val, 3) else NA,
-              "Médiane" = if (!is.na(med_val)) round(med_val, 3) else NA,
-              "Variance" = if (!is.na(var_val)) round(var_val, 3) else NA,
-              "Écart-type" = if (!is.na(s_val)) round(s_val, 3) else NA,
-              "CV (%)" = cv_val,
-              "Min" = if (!is.na(min_val)) round(min_val, 3) else NA,
-              "Max" = if (!is.na(max_val)) round(max_val, 3) else NA,
-              "IQR" = if (!is.na(iqr_val)) round(iqr_val, 3) else NA,
-              "Asymétrie" = skew_val,
-              "Aplatissement" = kurt_val
-            )
-            rows_list[[length(rows_list) + 1]] <- row_data
-          }
-        }
-
-        res_df <- do.call(rbind, lapply(rows_list, as.data.frame, stringsAsFactors = FALSE))
-
-        # Filtrage dynamique strict selon les indicateurs cochés
-        selected_cols <- c("Variable")
-        if (has_group) selected_cols <- c(selected_cols, "Groupe")
-        if ("n" %in% active_stats) selected_cols <- c(selected_cols, "N")
-        if ("na" %in% active_stats) selected_cols <- c(selected_cols, "NA")
-        if ("mean" %in% active_stats) selected_cols <- c(selected_cols, "Moyenne")
-        if ("median" %in% active_stats) selected_cols <- c(selected_cols, "Médiane")
-        if ("var" %in% active_stats) selected_cols <- c(selected_cols, "Variance")
-        if ("sd" %in% active_stats) selected_cols <- c(selected_cols, "Écart-type")
-        if ("cv" %in% active_stats) selected_cols <- c(selected_cols, "CV (%)")
-        if ("min" %in% active_stats) selected_cols <- c(selected_cols, "Min")
-        if ("max" %in% active_stats) selected_cols <- c(selected_cols, "Max")
-        if ("iqr" %in% active_stats) selected_cols <- c(selected_cols, "IQR")
-        if ("skewness" %in% active_stats) selected_cols <- c(selected_cols, "Asymétrie")
-        if ("kurtosis" %in% active_stats) selected_cols <- c(selected_cols, "Aplatissement")
-
-        res_df <- res_df[, intersect(selected_cols, names(res_df)), drop = FALSE]
-
-        DT::datatable(
-          res_df,
-          options = list(dom = "t", scrollX = TRUE, pageLength = 15),
-          rownames = FALSE,
-          class = "compact stripe hover border"
-        )
-      }
+      DT::datatable(
+        res_df,
+        options = list(
+          dom = if (has_group_active) "ftp" else "t",
+          scrollX = TRUE,
+          pageLength = if (has_group_active) 25 else 15,
+          language = list(
+            search = "Rechercher :",
+            paginate = list(previous = "Pr\u00e9c\u00e9dent", `next` = "Suivant"),
+            emptyTable = "Aucune observation exploitable pour les variables ou groupes s\u00e9lectionn\u00e9s."
+          )
+        ),
+        rownames = FALSE,
+        class = "compact stripe hover border"
+      )
     })
 
     output$plot_quanti <- plotly::renderPlotly({
@@ -929,31 +1066,32 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
 
       has_group <- nzchar(quanti_state$group) && (quanti_state$group %in% names(df))
 
-      # Filtrage des NA pour un tracé propre sans warnings Plotly
+      # Filtrage des NA pour un trac\u00e9 propre sans warnings Plotly
       plot_df <- df[!is.na(df[[target_var]]), ]
       if (has_group) {
         plot_df <- plot_df[!is.na(plot_df[[quanti_state$group]]), ]
       }
+      if (nrow(plot_df) == 0) return(NULL)
 
       if (quanti_state$plot_type == "box") {
         p <- if (has_group) {
           plotly::plot_ly(
             data = plot_df,
-            x = as.formula(paste0("~", quanti_state$group)),
-            y = as.formula(paste0("~", target_var)),
-            color = as.formula(paste0("~", quanti_state$group)),
+            x = ramses_formula(response = NULL, terms = quanti_state$group),
+            y = ramses_formula(response = NULL, terms = target_var),
+            color = ramses_formula(response = NULL, terms = quanti_state$group),
             type = "box"
           )
         } else {
           plotly::plot_ly(
             data = plot_df,
-            y = as.formula(paste0("~", target_var)),
+            y = ramses_formula(response = NULL, terms = target_var),
             type = "box",
             name = target_var,
             marker = list(color = "#3498db")
           )
         }
-        p <- plotly::layout(
+        p <- plotly::layout(font = list(family = "IBM Plex Sans"), 
           p,
           title = list(text = paste0("Boxplot de ", target_var, if (has_group) paste0(" selon ", quanti_state$group) else "")),
           yaxis = list(title = target_var),
@@ -964,24 +1102,24 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         p <- if (has_group) {
           plotly::plot_ly(
             data = plot_df,
-            x = as.formula(paste0("~", target_var)),
-            color = as.formula(paste0("~", quanti_state$group)),
+            x = ramses_formula(response = NULL, terms = target_var),
+            color = ramses_formula(response = NULL, terms = quanti_state$group),
             type = "histogram",
             opacity = 0.75
-          ) %>% plotly::layout(barmode = "overlay")
+          ) %>% plotly::layout(font = list(family = "IBM Plex Sans"), barmode = "overlay")
         } else {
           plotly::plot_ly(
             data = plot_df,
-            x = as.formula(paste0("~", target_var)),
+            x = ramses_formula(response = NULL, terms = target_var),
             type = "histogram",
             marker = list(color = "#2980b9", line = list(color = "#ffffff", width = 1))
           )
         }
-        p <- plotly::layout(
+        p <- plotly::layout(font = list(family = "IBM Plex Sans"), 
           p,
           title = list(text = paste0("Distribution de ", target_var)),
           xaxis = list(title = target_var),
-          yaxis = list(title = "Effectif (Fréquence)")
+          yaxis = list(title = "Effectif (Fr\u00e9quence)")
         )
       }
       p
@@ -994,6 +1132,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       var = NULL,
       include_na = TRUE,
       sort_mode = "none",
+      plot_type = "bar",
       ready = FALSE
     )
 
@@ -1016,7 +1155,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         shiny::modalDialog(
           title = shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::strong("Paramètres - Table de Fréquences (Qualitative)")
+            shiny::strong("Param\u00e8tres - Table de Fr\u00e9quences (Qualitative)")
           ),
           size = "m",
           easyClose = FALSE,
@@ -1033,7 +1172,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-3",
             shiny::selectInput(
               inputId = ns("modal_quali_var"),
-              label = shiny::strong("Variable qualitative / catégorielle :"),
+              label = shiny::strong("Variable qualitative / cat\u00e9gorielle :"),
               choices = choices_list,
               selected = current_selected
             )
@@ -1052,13 +1191,26 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-2",
             shiny::radioButtons(
               inputId = ns("modal_quali_sort"),
-              label = shiny::strong("Ordre d'affichage des modalités :"),
+              label = shiny::strong("Ordre d'affichage des modalit\u00e9s :"),
               choices = c(
-                "Ordre d'origine / alphabétique" = "none",
-                "Effectif décroissant (du + fréquent au - fréquent)" = "desc",
+                "Ordre d'origine / alphab\u00e9tique" = "none",
+                "Effectif d\u00e9croissant (du + fr\u00e9quent au - fr\u00e9quent)" = "desc",
                 "Effectif croissant" = "asc"
               ),
               selected = quali_state$sort_mode
+            )
+          ),
+
+          shiny::div(
+            class = "mb-2",
+            shiny::radioButtons(
+              inputId = ns("modal_quali_plot_type"),
+              label = shiny::strong("Graphique associ\u00e9 :"),
+              choices = c(
+                "Diagramme en barres" = "bar",
+                "Diagramme circulaire (Camembert)" = "pie"
+              ),
+              selected = if (!is.null(quali_state$plot_type)) quali_state$plot_type else "bar"
             )
           )
         )
@@ -1070,6 +1222,10 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       quali_state$var <- input$modal_quali_var
       quali_state$include_na <- input$modal_quali_include_na
       quali_state$sort_mode <- input$modal_quali_sort
+      if (!is.null(input$modal_quali_plot_type)) {
+        quali_state$plot_type <- input$modal_quali_plot_type
+        shiny::updateRadioButtons(session, "quali_plot_type_direct", selected = input$modal_quali_plot_type)
+      }
       quali_state$ready <- TRUE
 
       shiny::removeModal()
@@ -1078,30 +1234,57 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       v <- quali_state$var
       na_arg <- if (quali_state$include_na) 'useNA = "ifany"' else 'useNA = "no"'
 
-      rmd_code <- paste0(
-        "# Tableau de fréquences et pourcentages\n",
-        sprintf("tab <- table(%s$%s, %s)\n", target_df, v, na_arg),
-        "prop <- prop.table(tab) * 100\n",
-        "res_freq <- data.frame(\n",
-        "  Modalite = names(tab),\n",
-        "  Effectif = as.numeric(tab),\n",
-        "  Pourcentage = round(as.numeric(prop), 2),\n",
-        "  Pourcentage_Cumule = round(cumsum(as.numeric(prop)), 2)\n",
-        ")\nprint(res_freq)\n\n",
-        "# Graphique en barres\n",
-        "library(ggplot2)\n",
-        sprintf("ggplot(%s, aes(x = %s)) +\n", target_df, v),
-        '  geom_bar(fill = "#18bc9c", color = "#2c3e50") +\n',
-        "  theme_minimal() +\n",
-        sprintf('  labs(title = "Distribution de %s", x = "%s", y = "Effectif")', v, v)
-      )
+      if (identical(quali_state$plot_type, "pie")) {
+        rmd_code <- paste0(
+          "# Tableau de frequences et pourcentages\n",
+          sprintf("tab <- table(%s, %s)\n", ramses_code_column(target_df, v), na_arg),
+          "prop <- prop.table(tab) * 100\n",
+          "res_freq <- data.frame(\n",
+          "  Modalite = names(tab),\n",
+          "  Effectif = as.numeric(tab),\n",
+          "  Pourcentage = round(as.numeric(prop), 2),\n",
+          "  Pourcentage_Cumule = round(cumsum(as.numeric(prop)), 2)\n",
+          ")\nprint(res_freq)\n\n",
+          "# Diagramme circulaire\n",
+          "library(ggplot2)\n",
+          "library(dplyr)\n",
+          "df_pie <- as.data.frame(tab)\n",
+          "names(df_pie) <- c('Modalite', 'Effectif')\n",
+          "df_pie$Pct <- round(df_pie$Effectif / sum(df_pie$Effectif) * 100, 1)\n",
+          "df_pie$Label <- paste0(df_pie$Modalite, ' \u2014 ', df_pie$Effectif, ' (', df_pie$Pct, ' %)')\n",
+          "ggplot(df_pie, aes(x = '', y = Effectif, fill = Modalite)) +\n",
+          "  geom_col(width = 1, color = 'white') +\n",
+          "  coord_polar(theta = 'y', start = 0) +\n",
+          "  geom_text(aes(label = Label), position = position_stack(vjust = 0.5), size = 3.5) +\n",
+          "  theme_void() +\n",
+          sprintf("  labs(title = %s, fill = %s)", ramses_code_string(paste0("Diagramme circulaire de ", v)), ramses_code_string(v))
+        )
+      } else {
+        rmd_code <- paste0(
+          "# Tableau de frequences et pourcentages\n",
+          sprintf("tab <- table(%s, %s)\n", ramses_code_column(target_df, v), na_arg),
+          "prop <- prop.table(tab) * 100\n",
+          "res_freq <- data.frame(\n",
+          "  Modalite = names(tab),\n",
+          "  Effectif = as.numeric(tab),\n",
+          "  Pourcentage = round(as.numeric(prop), 2),\n",
+          "  Pourcentage_Cumule = round(cumsum(as.numeric(prop)), 2)\n",
+          ")\nprint(res_freq)\n\n",
+          "# Graphique en barres\n",
+          "library(ggplot2)\n",
+          sprintf("ggplot(%s, aes(x = %s)) +\n", ramses_code_symbol(target_df), ramses_code_symbol(v)),
+          '  geom_bar(fill = "#18bc9c", color = "#2c3e50") +\n',
+          "  theme_minimal(base_family = \"IBM Plex Sans\") +\n",
+          sprintf('  labs(title = %s, x = %s, y = "Effectif")', ramses_code_string(paste0("Distribution de ", v)), ramses_code_string(v))
+        )
+      }
 
       append_to_rmd(
-        title = paste0("Fréquences pour la variable '", v, "'"),
+        title = paste0("Fr\u00e9quences pour la variable '", v, "'"),
         code = rmd_code
       )
 
-      shiny::showNotification("Table de fréquences mise à jour avec succès !", type = "message")
+      shiny::showNotification("Table de fr\u00e9quences mise \u00e0 jour avec succ\u00e8s !", type = "message")
     })
 
     output$quali_status_badge <- shiny::renderUI({
@@ -1109,9 +1292,9 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       shiny::div(
         class = "alert alert-success py-1 px-2 small mb-2 d-flex justify-content-between align-items-center",
         shiny::span(
-          shiny::strong("Variable analysée : "), quali_state$var
+          shiny::strong("Variable analys\u00e9e : "), quali_state$var
         ),
-        shiny::tags$span(class = "badge bg-success", "Fréquences & Pourcentages")
+        shiny::tags$span(class = "badge bg-success", "Fr\u00e9quences & Pourcentages")
       )
     })
 
@@ -1131,20 +1314,20 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       prop <- prop.table(tab) * 100
 
       res_df <- data.frame(
-        Modalité = names(tab),
+        "Modalit\u00e9" = names(tab),
         Effectif = as.numeric(tab),
-        `Pourcentage (%)` = round(as.numeric(prop), 2),
-        `% Cumulé` = round(cumsum(as.numeric(prop)), 2),
+        "Pourcentage (%)" = round(as.numeric(prop), 2),
+        "% Cumul\u00e9" = round(cumsum(as.numeric(prop)), 2),
         stringsAsFactors = FALSE,
         check.names = FALSE
       )
 
       if (quali_state$sort_mode == "desc") {
         res_df <- res_df[order(-res_df$Effectif), ]
-        res_df$`% Cumulé` <- round(cumsum(res_df$`Pourcentage (%)`), 2)
+        res_df[["% Cumul\u00e9"]] <- round(cumsum(res_df[["Pourcentage (%)"]]), 2)
       } else if (quali_state$sort_mode == "asc") {
         res_df <- res_df[order(res_df$Effectif), ]
-        res_df$`% Cumulé` <- round(cumsum(res_df$`Pourcentage (%)`), 2)
+        res_df[["% Cumul\u00e9"]] <- round(cumsum(res_df[["Pourcentage (%)"]]), 2)
       }
 
       DT::datatable(
@@ -1161,31 +1344,62 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       v <- quali_state$var
       if (!(v %in% names(df))) return(NULL)
 
+      plot_type <- if (!is.null(input$quali_plot_type_direct)) input$quali_plot_type_direct else (if (!is.null(quali_state$plot_type)) quali_state$plot_type else "bar")
+
       tab <- table(df[[v]], useNA = if (quali_state$include_na) "ifany" else "no")
       mod_names <- names(tab)
       counts <- as.numeric(tab)
-      pcts <- round((counts / sum(counts)) * 100, 1)
+      tot <- sum(counts)
+      pcts <- if (tot > 0) round((counts / tot) * 100, 1) else rep(0, length(counts))
 
-      plotly::plot_ly(
-        x = mod_names,
-        y = counts,
-        type = "bar",
-        text = paste0(counts, " (", pcts, "%)"),
-        textposition = "auto",
-        marker = list(
-          color = "#18bc9c",
-          line = list(color = "#128f76", width = 1)
-        )
-      ) %>%
-        plotly::layout(
-          title = list(text = paste0("Effectifs par modalité de '", v, "'")),
-          xaxis = list(title = v),
-          yaxis = list(title = "Effectif (N)")
-        )
+      if (identical(plot_type, "pie")) {
+        labels_text <- paste0(mod_names, " \u2014 ", counts, " (", pcts, " %)")
+        plotly::plot_ly(
+          labels = mod_names,
+          values = counts,
+          type = "pie",
+          text = labels_text,
+          textinfo = "text",
+          hoverinfo = "label+value+percent",
+          marker = list(line = list(color = "#ffffff", width = 1.5))
+        ) %>%
+          plotly::layout(font = list(family = "IBM Plex Sans"), 
+            title = list(text = paste0("Diagramme circulaire : ", v)),
+            autosize = TRUE,
+            margin = list(l = 40, r = 40, b = 40, t = 60)
+          ) %>%
+          plotly::config(
+            displayModeBar = TRUE,
+            displaylogo = FALSE,
+            modeBarButtonsToRemove = c("sendDataToCloud", "lasso2d")
+          )
+      } else {
+        plotly::plot_ly(
+          x = mod_names,
+          y = counts,
+          type = "bar",
+          text = paste0(counts, " (", pcts, "%)"),
+          textposition = "auto",
+          marker = list(
+            color = "#18bc9c",
+            line = list(color = "#128f76", width = 1)
+          )
+        ) %>%
+          plotly::layout(font = list(family = "IBM Plex Sans"), 
+            title = list(text = paste0("Effectifs par modalit\u00e9 de '", v, "'")),
+            xaxis = list(title = v),
+            yaxis = list(title = "Effectif (N)")
+          ) %>%
+          plotly::config(
+            displayModeBar = TRUE,
+            displaylogo = FALSE,
+            modeBarButtonsToRemove = c("sendDataToCloud", "lasso2d")
+          )
+      }
     })
 
     # =========================================================================
-    # 3. LOGIQUE : TABLEAU CROISÉ (BIVARIÉ)
+    # 3. LOGIQUE : TABLEAU CROIS\u00c9 (BIVARI\u00c9)
     # =========================================================================
     crosstab_state <- shiny::reactiveValues(
       row_var = NULL,
@@ -1220,7 +1434,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         shiny::modalDialog(
           title = shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::strong("Paramètres - Tableau Croisé Bivarié (Contingence)")
+            shiny::strong("Param\u00e8tres - Tableau Crois\u00e9 Bivari\u00e9 (Contingence)")
           ),
           size = "m",
           easyClose = FALSE,
@@ -1259,9 +1473,9 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-3",
             shiny::radioButtons(
               inputId = ns("modal_cross_display"),
-              label = shiny::strong("Type de valeurs à présenter dans le tableau :"),
+              label = shiny::strong("Type de valeurs \u00e0 pr\u00e9senter dans le tableau :"),
               choices = c(
-                "Effectifs observés (N)" = "counts",
+                "Effectifs observ\u00e9s (N)" = "counts",
                 "Pourcentages en ligne (% ligne)" = "row_pct",
                 "Pourcentages en colonne (% colonne)" = "col_pct",
                 "Pourcentages sur le total (% total)" = "tot_pct"
@@ -1276,8 +1490,8 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
               inputId = ns("modal_cross_plot_mode"),
               label = shiny::strong("Disposition du graphique en barres Plotly :"),
               choices = c(
-                "Barres groupées (côte à côte)" = "group",
-                "Barres empilées (structure proportionnelle)" = "stack"
+                "Barres group\u00e9es (c\u00f4te \u00e0 c\u00f4te)" = "group",
+                "Barres empil\u00e9es (structure proportionnelle)" = "stack"
               ),
               selected = crosstab_state$plot_mode,
               inline = TRUE
@@ -1306,25 +1520,25 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       c_v <- crosstab_state$col_var
 
       rmd_code <- paste0(
-        "# Tableau croisé bivarié (Table de contingence)\n",
-        sprintf("tab_croise <- table(%s$%s, %s$%s)\n", target_df, r_v, target_df, c_v),
-        "print('--- Effectifs observés ---')\n",
+        "# Tableau croise bivarie (Table de contingence)\n",
+        sprintf("tab_croise <- table(%s, %s)\n", ramses_code_column(target_df, r_v), ramses_code_column(target_df, c_v)),
+        "print('--- Effectifs observes ---')\n",
         "print(tab_croise)\n\n",
         "print('--- Pourcentages en ligne (%) ---')\n",
         "print(round(prop.table(tab_croise, margin = 1) * 100, 2))\n\n",
         "print('--- Pourcentages en colonne (%) ---')\n",
         "print(round(prop.table(tab_croise, margin = 2) * 100, 2))\n\n",
-        "# Test du Chi-deux d'indépendance\n",
+        "# Test du Chi-deux d'independance\n",
         "test_chi2 <- chisq.test(tab_croise)\n",
         "print(test_chi2)"
       )
 
       append_to_rmd(
-        title = paste0("Tableau croisé : ", r_v, " × ", c_v),
+        title = paste0("Tableau crois\u00e9 : ", r_v, " \u00d7 ", c_v),
         code = rmd_code
       )
 
-      shiny::showNotification("Tableau croisé généré et consigné dans le journal R Markdown !", type = "message")
+      shiny::showNotification("Tableau crois\u00e9 g\u00e9n\u00e9r\u00e9 et consign\u00e9 dans le journal R Markdown !", type = "message")
     })
 
     output$crosstab_status_badge <- shiny::renderUI({
@@ -1332,9 +1546,9 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       shiny::div(
         class = "alert alert-warning py-1 px-2 small mb-2 d-flex justify-content-between align-items-center",
         shiny::span(
-          shiny::strong("Croisement : "), crosstab_state$row_var, " × ", crosstab_state$col_var
+          shiny::strong("Croisement : "), crosstab_state$row_var, " \u00d7 ", crosstab_state$col_var
         ),
-        shiny::tags$span(class = "badge bg-warning text-dark", "Bivarié Quali x Quali")
+        shiny::tags$span(class = "badge bg-warning text-dark", "Bivari\u00e9 Quali x Quali")
       )
     })
 
@@ -1392,10 +1606,10 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         )
       }
 
-      plotly::layout(
+      plotly::layout(font = list(family = "IBM Plex Sans"), 
         p,
         barmode = crosstab_state$plot_mode,
-        title = list(text = paste0("Répartition de '", c_v, "' selon '", r_v, "'")),
+        title = list(text = paste0("R\u00e9partition de '", c_v, "' selon '", r_v, "'")),
         xaxis = list(title = r_v),
         yaxis = list(title = "Effectif (N)")
       )
@@ -1419,10 +1633,31 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       }
     })
 
+    # Reinitialisation des etats descriptifs lors d'un changement de jeu de donnees
+    shiny::observeEvent(data_holder$df, {
+      # 1. Variables quantitatives
+      quanti_state$vars <- NULL
+      quanti_state$group <- ""
+      quanti_state$ready <- FALSE
+
+      # 2. Variables qualitatives
+      quali_state$var <- NULL
+      quali_state$ready <- FALSE
+
+      # 3. Tableau croise bivarie
+      crosstab_state$row_var <- NULL
+      crosstab_state$col_var <- NULL
+      crosstab_state$ready <- FALSE
+
+      # 4. Matrice de correlation
+      cor_state$vars <- NULL
+      cor_state$ready <- FALSE
+    }, ignoreNULL = FALSE)
+
     shiny::observeEvent(input$btn_open_cor_modal, {
       num_cols <- numeric_vars()
       if (length(num_cols) < 2) {
-        shiny::showNotification("Il faut au moins 2 variables numériques pour calculer une corrélation.", type = "warning")
+        shiny::showNotification("Il faut au moins 2 variables num\u00e9riques pour calculer une corr\u00e9lation.", type = "warning")
         return()
       }
 
@@ -1432,7 +1667,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         shiny::modalDialog(
           title = shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::strong("Paramètres - Matrice de Corrélation")
+            shiny::strong("Param\u00e8tres - Matrice de Corr\u00e9lation")
           ),
           size = "m",
           easyClose = FALSE,
@@ -1449,7 +1684,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-3",
             shiny::selectizeInput(
               inputId = ns("modal_cor_vars"),
-              label = shiny::strong("Variables numériques (sélectionner 2 ou plus) :"),
+              label = shiny::strong("Variables num\u00e9riques (s\u00e9lectionner 2 ou plus) :"),
               choices = num_cols,
               selected = current_selected,
               multiple = TRUE,
@@ -1461,10 +1696,10 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
             class = "mb-3",
             shiny::radioButtons(
               inputId = ns("modal_cor_method"),
-              label = shiny::strong("Méthode de corrélation :"),
+              label = shiny::strong("M\u00e9thode de corr\u00e9lation :"),
               choices = c(
-                "Pearson (paramétrique, relation linéaire)" = "pearson",
-                "Spearman (non-paramétrique, monotonie de rangs)" = "spearman"
+                "Pearson (param\u00e9trique, relation lin\u00e9aire)" = "pearson",
+                "Spearman (non-param\u00e9trique, monotonie de rangs)" = "spearman"
               ),
               selected = cor_state$method
             )
@@ -1476,8 +1711,8 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
               inputId = ns("modal_cor_use"),
               label = shiny::strong("Traitement des valeurs manquantes :"),
               choices = c(
-                "Paires complètes (pairwise.complete.obs)" = "pairwise.complete.obs",
-                "Observations complètes (complete.obs)" = "complete.obs"
+                "Paires compl\u00e8tes (pairwise.complete.obs)" = "pairwise.complete.obs",
+                "Observations compl\u00e8tes (complete.obs)" = "complete.obs"
               ),
               selected = cor_state$use
             )
@@ -1488,7 +1723,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
 
     shiny::observeEvent(input$btn_confirm_cor, {
       if (length(input$modal_cor_vars) < 2) {
-        shiny::showNotification("Veuillez sélectionner au moins deux variables numériques.", type = "warning")
+        shiny::showNotification("Veuillez s\u00e9lectionner au moins deux variables num\u00e9riques.", type = "warning")
         return()
       }
 
@@ -1500,25 +1735,25 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       shiny::removeModal()
 
       target_df <- data_holder$name
-      vars_str <- paste0('c("', paste(cor_state$vars, collapse = '", "'), '")')
+      vars_str <- ramses_code_string(cor_state$vars)
 
       rmd_code <- paste0(
-        "# Matrice de corrélation linéaire / monotone\n",
-        sprintf("vars_num <- %s[, %s]\n", target_df, vars_str),
-        sprintf('mat_cor <- cor(vars_num, method = "%s", use = "%s")\n', cor_state$method, cor_state$use),
+        "# Matrice de correlation lineaire / monotone\n",
+        sprintf("vars_num <- %s[, %s, drop = FALSE]\n", ramses_code_symbol(target_df), vars_str),
+        sprintf('mat_cor <- cor(vars_num, method = %s, use = %s)\n', ramses_code_string(cor_state$method), ramses_code_string(cor_state$use)),
         "print(round(mat_cor, 3))\n\n",
-        "# Visualisation de la matrice de corrélation\n",
+        "# Visualisation de la matrice de correlation\n",
         "if (requireNamespace('corrplot', quietly = TRUE)) {\n",
         "  corrplot::corrplot(mat_cor, method = 'color', type = 'upper', tl.col = 'black', tl.srt = 45)\n",
         "}"
       )
 
       append_to_rmd(
-        title = paste0("Matrice de corrélation (", toupper(cor_state$method), ")"),
+        title = paste0("Matrice de corr\u00e9lation (", toupper(cor_state$method), ")"),
         code = rmd_code
       )
 
-      shiny::showNotification("Matrice de corrélation calculée et enregistrée !", type = "message")
+      shiny::showNotification("Matrice de corr\u00e9lation calcul\u00e9e et enregistr\u00e9e !", type = "message")
     })
 
     output$cor_status_badge <- shiny::renderUI({
@@ -1527,7 +1762,7 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         class = "alert alert-danger py-1 px-2 small mb-2 d-flex justify-content-between align-items-center",
         shiny::span(
           shiny::strong("Variables : "), paste(cor_state$vars, collapse = ", "),
-          paste0(" | Méthode : ", toupper(cor_state$method))
+          paste0(" | M\u00e9thode : ", toupper(cor_state$method))
         ),
         shiny::tags$span(class = "badge bg-danger", paste0(length(cor_state$vars), " variables"))
       )
@@ -1577,8 +1812,8 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
           list(1, "#c0392b")
         )
       ) %>%
-        plotly::layout(
-          title = list(text = paste0("Heatmap de corrélation (", toupper(cor_state$method), ")")),
+        plotly::layout(font = list(family = "IBM Plex Sans"), 
+          title = list(text = paste0("Heatmap de corr\u00e9lation (", toupper(cor_state$method), ")")),
           xaxis = list(title = ""),
           yaxis = list(title = "")
         )

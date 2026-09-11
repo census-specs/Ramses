@@ -4,14 +4,27 @@
 \alias{run_app}
 \title{Lancer l'interface utilisateur graphique Ramses}
 \usage{
-run_app(port = NULL, launch.browser = interactive(), host = "127.0.0.1", ...)
+run_app(
+  standalone = TRUE,
+  port = NULL,
+  launch.browser = TRUE,
+  host = "127.0.0.1",
+  ...
+)
 }
 \arguments{
-\item{port}{Entier optionnel spécifiant le port TCP sur lequel écouter (ex: \code{3838} ou \code{3000}).
-Par défaut \code{NULL} (un port aléatoire libre est choisi automatiquement par Shiny).}
+\item{standalone}{Valeur logique indiquant si l'application doit être ouverte dans
+sa propre fenêtre de bureau dédiée (mode standalone sans barre d'adresse ni onglets
+via le mode \code{--app=} de Chromium / Microsoft Edge). Par défaut \code{TRUE}.
+Si aucun navigateur compatible n'est trouvé, bascule automatiquement et de façon
+transparente sur le navigateur système standard.}
 
-\item{launch.browser}{Valeur logique indiquant s'il faut ouvrir l'application dans
-le navigateur web par défaut du système. Par défaut \code{TRUE} en session interactive.}
+\item{port}{Entier optionnel spécifiant le port TCP sur lequel écouter (ex: \code{3838} ou \code{3000}).
+Par défaut \code{NULL} : un port local libre est automatiquement attribué via
+\code{httpuv::randomPort()} afin d'éviter tout conflit entre instances.}
+
+\item{launch.browser}{Valeur logique ou fonction indiquant s'il faut ouvrir
+automatiquement l'application au démarrage. Par défaut \code{TRUE} en session interactive.}
 
 \item{host}{Adresse IP sur laquelle écouter. Par défaut \code{"127.0.0.1"} (localhost).
 Utiliser \code{"0.0.0.0"} pour autoriser les connexions réseau externes ou conteneurisées.}
@@ -34,10 +47,13 @@ dans un journal R Markdown reproductible.
 \examples{
 \dontrun{
   library(Ramses)
-  # Démarrage standard dans le navigateur par défaut
+  # Lancement automatique en fenêtre dédiée (mode standalone)
   run_app()
 
-  # Démarrage sur un port spécifique sans lancer le navigateur
-  run_app(port = 8080, launch.browser = FALSE)
+  # Lancement dans le navigateur standard sur un port fixe
+  run_app(standalone = FALSE, port = 3838)
+
+  # Démarrage en arrière-plan sans lancer de fenêtre
+  run_app(launch.browser = FALSE)
 }
 }

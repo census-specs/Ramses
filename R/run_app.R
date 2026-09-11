@@ -1,29 +1,29 @@
 #' @title Lancer l'interface utilisateur graphique Ramses
 #'
 #' @description Lance l'application graphique interactive Shiny fournie par le
-#'   package Ramses. Conçue comme une alternative moderne, fluide et intuitive à Rcmdr,
+#'   package Ramses. Con\u00e7ue comme une alternative moderne, fluide et intuitive \u00e0 Rcmdr,
 #'   cette interface permet d'importer des fichiers (CSV, Excel, SPSS, Stata, RDS),
-#'   d'explorer les données de manière interactive, de calculer des statistiques
-#'   descriptives univariées et bivariées, de construire des graphiques de type Tableau
-#'   (basés sur ggplot2 et Plotly), et d'exécuter une gamme exhaustive de tests statistiques
-#'   paramétriques et non-paramétriques, tout en consignant automatiquement chaque commande
+#'   d'explorer les donn\u00e9es de mani\u00e8re interactive, de calculer des statistiques
+#'   descriptives univari\u00e9es et bivari\u00e9es, de construire des graphiques de type Tableau
+#'   (bas\u00e9s sur ggplot2 et Plotly), et d'ex\u00e9cuter une gamme exhaustive de tests statistiques
+#'   param\u00e9triques et non-param\u00e9triques, tout en consignant automatiquement chaque commande
 #'   dans un journal R Markdown reproductible.
 #'
-#' @param standalone Valeur logique indiquant si l'application doit être ouverte dans
-#'   sa propre fenêtre de bureau dédiée (mode standalone sans barre d'adresse ni onglets
-#'   via le mode \code{--app=} de Chromium / Microsoft Edge). Par défaut \code{TRUE}.
-#'   Si aucun navigateur compatible n'est trouvé, bascule automatiquement et de façon
-#'   transparente sur le navigateur système standard.
-#' @param port Entier optionnel spécifiant le port TCP sur lequel écouter (ex: \code{3838} ou \code{3000}).
-#'   Par défaut \code{NULL} : un port local libre est automatiquement attribué via
-#'   \code{httpuv::randomPort()} afin d'éviter tout conflit entre instances.
+#' @param standalone Valeur logique indiquant si l'application doit \u00eatre ouverte dans
+#'   sa propre fen\u00eatre de bureau d\u00e9di\u00e9e (mode standalone sans barre d'adresse ni onglets
+#'   via le mode \code{--app=} de Chromium / Microsoft Edge). Par d\u00e9faut \code{TRUE}.
+#'   Si aucun navigateur compatible n'est trouv\u00e9, bascule automatiquement et de fa\u00e7on
+#'   transparente sur le navigateur syst\u00e8me standard.
+#' @param port Entier optionnel sp\u00e9cifiant le port TCP sur lequel \u00e9couter (ex: \code{3838} ou \code{3000}).
+#'   Par d\u00e9faut \code{NULL} : un port local libre est automatiquement attribu\u00e9 via
+#'   \code{httpuv::randomPort()} afin d'\u00e9viter tout conflit entre instances.
 #' @param launch.browser Valeur logique ou fonction indiquant s'il faut ouvrir
-#'   automatiquement l'application au démarrage. Par défaut \code{TRUE} en session interactive.
-#' @param host Adresse IP sur laquelle écouter. Par défaut \code{"127.0.0.1"} (localhost).
-#'   Utiliser \code{"0.0.0.0"} pour autoriser les connexions réseau externes ou conteneurisées.
-#' @param ... Arguments supplémentaires transmis à \code{\link[shiny]{shinyApp}}.
+#'   automatiquement l'application au d\u00e9marrage. Par d\u00e9faut \code{TRUE} en session interactive.
+#' @param host Adresse IP sur laquelle \u00e9couter. Par d\u00e9faut \code{"127.0.0.1"} (localhost).
+#'   Utiliser \code{"0.0.0.0"} pour autoriser les connexions r\u00e9seau externes ou conteneuris\u00e9es.
+#' @param ... Arguments suppl\u00e9mentaires transmis \u00e0 \code{\link[shiny]{shinyApp}}.
 #'
-#' @return Un objet d'application Shiny exécutable (\code{shiny.appobj}).
+#' @return Un objet d'application Shiny ex\u00e9cutable (\code{shiny.appobj}).
 #' @export
 #'
 #' @import shiny
@@ -37,19 +37,19 @@
 #' @examples
 #' \dontrun{
 #'   library(Ramses)
-#'   # Lancement automatique en fenêtre dédiée (mode standalone)
+#'   # Lancement automatique en fen\u00eatre d\u00e9di\u00e9e (mode standalone)
 #'   run_app()
 #'
 #'   # Lancement dans le navigateur standard sur un port fixe
 #'   run_app(standalone = FALSE, port = 3838)
 #'
-#'   # Démarrage en arrière-plan sans lancer de fenêtre
+#'   # D\u00e9marrage en arri\u00e8re-plan sans lancer de fen\u00eatre
 #'   run_app(launch.browser = FALSE)
 #' }
 
-#' Recherche interne d'un exécutable Chromium / Edge pour le mode standalone (--app=)
+#' Recherche interne d'un ex\u00e9cutable Chromium / Edge pour le mode standalone (--app=)
 #'
-#' @return Chaîne de caractères contenant le chemin absolu de l'exécutable ou NULL si non trouvé.
+#' @return Cha\u00eene de caract\u00e8res contenant le chemin absolu de l'ex\u00e9cutable ou NULL si non trouv\u00e9.
 #' @noRd
 find_chromium_browser <- function() {
   sys_os <- Sys.info()["sysname"]
@@ -123,7 +123,7 @@ run_app <- function(standalone = TRUE,
                     host = "127.0.0.1",
                     ...) {
 
-  # Attribution automatique d'un port local libre aléatoire si non spécifié
+  # Attribution automatique d'un port local libre al\u00e9atoire si non sp\u00e9cifi\u00e9
   if (is.null(port)) {
     port <- tryCatch({
       if (requireNamespace("httpuv", quietly = TRUE)) {
@@ -134,7 +134,7 @@ run_app <- function(standalone = TRUE,
     }, error = function(e) NULL)
   }
 
-  # Définition du lanceur de navigateur selon le mode standalone
+  # D\u00e9finition du lanceur de navigateur selon le mode standalone
   browser_handler <- launch.browser
 
   if (isTRUE(launch.browser)) {
@@ -149,7 +149,7 @@ run_app <- function(standalone = TRUE,
           )
         }
       } else {
-        # Fallback sécurisé : navigateur par défaut du système
+        # Fallback s\u00e9curis\u00e9 : navigateur par d\u00e9faut du syst\u00e8me
         browser_handler <- utils::browseURL
       }
     } else {

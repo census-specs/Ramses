@@ -1,12 +1,12 @@
-#' @title Interface utilisateur pour le module créateur de graphiques
+#' @title Interface utilisateur pour le module cr\u00e9ateur de graphiques
 #'
-#' @description Module dédié à la création graphique interactive et intuitive
-#'   dans le package Ramses. Inspiré de l'ergonomie de Tableau Software, il permet
-#'   de sélectionner des variables réparties par type (numériques vs facteurs),
-#'   de mapper les dimensions esthétiques (X, Y, Couleur, Taille, Facet), de choisir
-#'   parmi 8 types de visualisations ggplot2 et de personnaliser les thèmes, palettes,
-#'   titres et étiquettes. Le graphique est rendu de manière interactive via Plotly
-#'   et le code ggplot2 reproductible est affiché en direct et injectable dans le Journal R Markdown.
+#' @description Module d\u00e9di\u00e9 \u00e0 la cr\u00e9ation graphique interactive et intuitive
+#'   dans le package Ramses. Inspir\u00e9 de l'ergonomie de Tableau Software, il permet
+#'   de s\u00e9lectionner des variables r\u00e9parties par type (num\u00e9riques vs facteurs),
+#'   de mapper les dimensions esth\u00e9tiques (X, Y, Couleur, Taille, Facet), de choisir
+#'   parmi 8 types de visualisations ggplot2 et de personnaliser les th\u00e8mes, palettes,
+#'   titres et \u00e9tiquettes. Le graphique est rendu de mani\u00e8re interactive via Plotly
+#'   et le code ggplot2 reproductible est affich\u00e9 en direct et injectable dans le Journal R Markdown.
 #'
 #' @param id Identifiant de namespace Shiny.
 #' @return Interface utilisateur Shiny (\code{tagList}).
@@ -18,12 +18,12 @@ mod_chart_builder_ui <- function(id) {
     sidebar = bslib::sidebar(
       title = shiny::div(
         class = "d-flex align-items-center gap-2",
-        shiny::tags$span(style = "font-weight: 600;", "Aesthetics & Paramètres")
+        shiny::tags$span(style = "font-weight: 600;", "Aesthetics & Param\u00e8tres")
       ),
       width = 360,
       open = "open",
 
-      # 1. Résumé des variables disponibles
+      # 1. R\u00e9sum\u00e9 des variables disponibles
       shiny::div(
         class = "mb-3 p-2 bg-light rounded border",
         shiny::div(
@@ -47,11 +47,12 @@ mod_chart_builder_ui <- function(id) {
           choices = c(
             "Nuage de points (Scatter plot)" = "scatter",
             "Diagramme en barres (Barplot)" = "bar",
-            "Boîte à moustaches (Boxplot)" = "boxplot",
+            "Diagramme circulaire (Camembert)" = "pie",
+            "Bo\u00eete \u00e0 moustaches (Boxplot)" = "boxplot",
             "Diagramme en violon (Violin plot)" = "violin",
             "Histogramme de distribution" = "histogram",
             "Courbe / Ligne (Line plot)" = "line",
-            "Densité continue" = "density",
+            "Densit\u00e9 continue" = "density",
             "Carte thermique (Heatmap 2D)" = "heatmap"
           ),
           selected = "scatter",
@@ -70,7 +71,7 @@ mod_chart_builder_ui <- function(id) {
         # Axe X
         shiny::div(
           class = "mb-2",
-          shiny::tags$label(class = "form-label small mb-1 fw-semibold", "Axe X (Abscisse) :"),
+          shiny::tags$label(class = "form-label small mb-1 fw-semibold", "Axe X (Abscisse / Variable) :"),
           shiny::selectInput(
             inputId = ns("axis_x"),
             label = NULL,
@@ -78,10 +79,30 @@ mod_chart_builder_ui <- function(id) {
           )
         ),
 
-        # Axe Y (optionnel selon géométrie)
+        # Options d'affichage pour Diagramme circulaire (Effectifs vs Pourcentages)
+        shiny::conditionalPanel(
+          condition = "input.chart_type == 'pie'",
+          ns = ns,
+          shiny::div(
+            class = "mb-2 p-2 bg-light rounded border",
+            shiny::tags$label(class = "form-label small mb-1 fw-semibold text-dark", "Affichage des donn\u00e9es :"),
+            shiny::radioButtons(
+              inputId = ns("pie_metric"),
+              label = NULL,
+              choices = c(
+                "Effectifs" = "count",
+                "Pourcentages" = "percent"
+              ),
+              selected = "count",
+              inline = TRUE
+            )
+          )
+        ),
+
+        # Axe Y (optionnel selon g\u00e9om\u00e9trie)
         shiny::div(
           class = "mb-2",
-          shiny::tags$label(class = "form-label small mb-1 fw-semibold", "Axe Y (Ordonnée - optionnel en 1D) :"),
+          shiny::tags$label(class = "form-label small mb-1 fw-semibold", "Axe Y (Ordonn\u00e9e - optionnel en 1D) :"),
           shiny::selectInput(
             inputId = ns("axis_y"),
             label = NULL,
@@ -89,20 +110,20 @@ mod_chart_builder_ui <- function(id) {
           )
         ),
 
-        # Statistique d'agrégation conditionnelle pour Barplot avec Axe Y quantitatif
+        # Statistique d'agr\u00e9gation conditionnelle pour Barplot avec Axe Y quantitatif
         shiny::conditionalPanel(
           condition = "input.chart_type == 'bar' && input.axis_y != ''",
           ns = ns,
           shiny::div(
             class = "mb-2 p-2 bg-light rounded border",
-            shiny::tags$label(class = "form-label small mb-1 fw-semibold text-dark", "Statistique d'agrégation (pour Axe Y) :"),
+            shiny::tags$label(class = "form-label small mb-1 fw-semibold text-dark", "Statistique d'agr\u00e9gation (pour Axe Y) :"),
             shiny::selectInput(
               inputId = ns("bar_stat"),
               label = NULL,
               choices = c(
                 "Moyenne" = "mean",
                 "Somme" = "sum",
-                "Médiane" = "median"
+                "M\u00e9diane" = "median"
               ),
               selected = "mean"
             )
@@ -131,10 +152,10 @@ mod_chart_builder_ui <- function(id) {
           )
         ),
 
-        # Variable Facet (Découpage en sous-graphiques)
+        # Variable Facet (D\u00e9coupage en sous-graphiques)
         shiny::div(
           class = "mb-1",
-          shiny::tags$label(class = "form-label small mb-1 fw-semibold", "Découpage en facettes (Facet Wrap) :"),
+          shiny::tags$label(class = "form-label small mb-1 fw-semibold", "D\u00e9coupage en facettes (Facet Wrap) :"),
           shiny::selectInput(
             inputId = ns("aesthetic_facet"),
             label = NULL,
@@ -143,15 +164,15 @@ mod_chart_builder_ui <- function(id) {
         )
       ),
 
-      # 4. Accordéon d'options avancées
+      # 4. Accord\u00e9on d'options avanc\u00e9es
       bslib::accordion(
         id = ns("accordion_advanced_options"),
         open = FALSE,
         class = "mb-3",
 
-        # Panneau Titres & Légendes
+        # Panneau Titres & L\u00e9gendes
         bslib::accordion_panel(
-          title = "Titres & Légendes",
+          title = "Titres & L\u00e9gendes",
           shiny::textInput(
             inputId = ns("plot_title"),
             label = "Titre principal :",
@@ -162,53 +183,53 @@ mod_chart_builder_ui <- function(id) {
             inputId = ns("plot_subtitle"),
             label = "Sous-titre :",
             value = "",
-            placeholder = "Ex: Données de mesures morphologiques"
+            placeholder = "Ex: Donn\u00e9es de mesures morphologiques"
           ),
           shiny::textInput(
             inputId = ns("plot_xlab"),
-            label = "Étiquette de l'Axe X :",
+            label = "\u00c9tiquette de l'Axe X :",
             value = "",
-            placeholder = "(Par défaut : nom de la variable)"
+            placeholder = "(Par d\u00e9faut : nom de la variable)"
           ),
           shiny::textInput(
             inputId = ns("plot_ylab"),
-            label = "Étiquette de l'Axe Y :",
+            label = "\u00c9tiquette de l'Axe Y :",
             value = "",
-            placeholder = "(Par défaut : nom de la variable ou effectif)"
+            placeholder = "(Par d\u00e9faut : nom de la variable ou effectif)"
           ),
           shiny::textInput(
             inputId = ns("plot_legend_title"),
-            label = "Titre de la légende :",
+            label = "Titre de la l\u00e9gende :",
             value = "",
-            placeholder = "(Par défaut : nom de la variable couleur)"
+            placeholder = "(Par d\u00e9faut : nom de la variable couleur)"
           )
         ),
 
-        # Panneau Étiquettes de données
+        # Panneau \u00c9tiquettes de donn\u00e9es
         bslib::accordion_panel(
-          title = "Étiquettes de données",
+          title = "\u00c9tiquettes de donn\u00e9es",
           shiny::checkboxInput(
             inputId = ns("show_data_labels"),
-            label = "Afficher les valeurs numériques sur le graphique (geom_text)",
+            label = "Afficher les valeurs num\u00e9riques sur le graphique (geom_text)",
             value = FALSE
           ),
           shiny::sliderInput(
             inputId = ns("label_size"),
-            label = "Taille de police des étiquettes :",
+            label = "Taille de police des \u00e9tiquettes :",
             min = 2, max = 8, value = 3.5, step = 0.5
           )
         ),
 
-        # Panneau Thème & Styles
+        # Panneau Th\u00e8me & Styles
         bslib::accordion_panel(
-          title = "Thèmes & Palettes",
+          title = "Th\u00e8mes & Palettes",
           shiny::selectInput(
             inputId = ns("ggplot_theme"),
-            label = "Thème ggplot2 :",
+            label = "Th\u00e8me ggplot2 :",
             choices = c(
               "Minimal (theme_minimal)" = "minimal",
               "Noir & Blanc (theme_bw)" = "bw",
-              "Classique épuré (theme_classic)" = "classic",
+              "Classique \u00e9pur\u00e9 (theme_classic)" = "classic",
               "Clair avec grille (theme_light)" = "light",
               "Sombre (theme_dark)" = "dark"
             ),
@@ -222,7 +243,7 @@ mod_chart_builder_ui <- function(id) {
               "ColorBrewer (Set1)" = "Set1",
               "ColorBrewer (Dark2)" = "Dark2",
               "ColorBrewer (Paired)" = "Paired",
-              "Défaut ggplot2" = "default"
+              "D\u00e9faut ggplot2" = "default"
             ),
             selected = "viridis"
           ),
@@ -242,7 +263,7 @@ mod_chart_builder_ui <- function(id) {
       )
     ),
 
-    # Panneau Principal (Main Panel - 100% hauteur dédiée au graphique avec bouton modale Code R)
+    # Panneau Principal (Main Panel - 100% hauteur d\u00e9di\u00e9e au graphique avec bouton modale Code R)
     shiny::div(
       class = "d-flex flex-column w-100 h-100",
       bslib::card(
@@ -277,13 +298,73 @@ mod_chart_builder_ui <- function(id) {
   )
 }
 
-#' @title Logique serveur pour le module créateur de graphiques
+#' Verification de la nature quantitative d'une variable
 #'
-#' @description Gère l'interactivité du créateur graphique, la validation des variables,
+#' @param x Vecteur ou colonne a tester.
+#' @return TRUE si numerique (double ou entier) et non factoriel/caractere.
+#' @noRd
+ramses_is_numeric_variable <- function(x) {
+  (is.numeric(x) || is.integer(x)) && !is.factor(x) && !is.character(x)
+}
+
+#' Validation des types de variables pour histogrammes et densites
+#'
+#' @param df Dataframe source.
+#' @param var_name Nom de la variable a verifier sur l'Axe X.
+#' @param chart_type Type de visualisation ("histogram" ou "density").
+#' @return NULL si valide, ou une chaine descriptive en cas d'incompatibilite.
+#' @noRd
+ramses_check_chart_numeric_variable <- function(df, var_name, chart_type) {
+  if (is.null(df) || !is.data.frame(df) || nrow(df) == 0) {
+    return("Aucun jeu de donn\u00e9es actif disponible.")
+  }
+  if (is.null(var_name) || !nzchar(var_name) || !(var_name %in% names(df))) {
+    return("Veuillez s\u00e9lectionner au moins une variable sur l'Axe X.")
+  }
+  val <- df[[var_name]]
+  if (!ramses_is_numeric_variable(val)) {
+    if (chart_type == "histogram") {
+      return("L'histogramme n\u00e9cessite une variable num\u00e9rique. Veuillez s\u00e9lectionner une variable quantitative.")
+    } else if (chart_type == "density") {
+      return("Le graphique de densit\u00e9 n\u00e9cessite une variable num\u00e9rique. Veuillez s\u00e9lectionner une variable quantitative.")
+    }
+  }
+  return(NULL)
+}
+
+#' Validation des types de variables pour le diagramme circulaire
+#'
+#' @param df Dataframe source.
+#' @param var_name Nom de la variable a verifier sur l'Axe X.
+#' @return NULL si valide, ou une chaine descriptive en cas d'incompatibilite.
+#' @noRd
+ramses_check_chart_pie_variable <- function(df, var_name) {
+  if (is.null(df) || !is.data.frame(df) || nrow(df) == 0) {
+    return("Aucun jeu de donn\u00e9es actif disponible.")
+  }
+  if (is.null(var_name) || !nzchar(var_name) || !(var_name %in% names(df))) {
+    return("Veuillez s\u00e9lectionner une variable qualitative sur l'Axe X.")
+  }
+  val <- df[[var_name]]
+  unique_vals <- unique(stats::na.omit(val))
+  
+  if (length(unique_vals) > 15) {
+    return("Cette variable poss\u00e8de trop de modalit\u00e9s (plus de 15) pour \u00eatre repr\u00e9sent\u00e9e lisiblement par un diagramme circulaire.")
+  }
+  if (length(unique_vals) < 2) {
+    return("Cette variable ne poss\u00e8de qu'une seule modalit\u00e9 non manquante. Un diagramme circulaire n\u00e9cessite au moins deux modalit\u00e9s pour \u00eatre pertinent.")
+  }
+
+  return(NULL)
+}
+
+#' @title Logique serveur pour le module cr\u00e9ateur de graphiques
+#'
+#' @description G\u00e8re l'interactivit\u00e9 du cr\u00e9ateur graphique, la validation des variables,
 #'   la construction dynamique du code ggplot2 et le rendu interactif Plotly.
 #'
 #' @param id Identifiant de namespace Shiny.
-#' @param data_holder Réactif contenant le dataframe actif (\code{data_holder$df}) et son nom (\code{data_holder$name}).
+#' @param data_holder R\u00e9actif contenant le dataframe actif (\code{data_holder$df}) et son nom (\code{data_holder$name}).
 #' @param append_to_rmd Fonction d'ajout au Journal R Markdown.
 #' @return Un module serveur Shiny.
 #' @export
@@ -291,13 +372,13 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Helper réactif : analyse des variables du dataset actif
+    # Helper r\u00e9actif : analyse des variables du dataset actif
     dataset_vars <- shiny::reactive({
       df <- data_holder$df
       if (is.null(df) || !is.data.frame(df) || ncol(df) == 0) {
         return(list(numeric = character(0), categorical = character(0), all = character(0)))
       }
-      col_types <- vapply(df, function(x) is.numeric(x) || is.integer(x), logical(1))
+      col_types <- vapply(df, ramses_is_numeric_variable, logical(1))
       num_cols <- names(df)[col_types]
       cat_cols <- names(df)[!col_types]
       list(
@@ -316,17 +397,17 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       )
     })
 
-    # Résumé des variables groupées par type (style Tableau Data Pane)
+    # R\u00e9sum\u00e9 des variables group\u00e9es par type (style Tableau Data Pane)
     output$vars_summary_ui <- shiny::renderUI({
       vars <- dataset_vars()
       shiny::tagList(
-        # Variables Numériques (Quantitatives)
+        # Variables Num\u00e9riques (Quantitatives)
         shiny::div(
           class = "mb-2",
           shiny::div(
             class = "d-flex align-items-center gap-1 text-secondary small fw-semibold mb-1",
             shiny::tags$span(class = "fw-bold", "[#]"),
-            shiny::tags$span(paste0("Numériques (", length(vars$numeric), ")"))
+            shiny::tags$span(paste0("Num\u00e9riques (", length(vars$numeric), ")"))
           ),
           if (length(vars$numeric) > 0) {
             shiny::div(
@@ -345,12 +426,12 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
           }
         ),
 
-        # Variables Catégorielles (Qualitatives / Facteurs)
+        # Variables Cat\u00e9gorielles (Qualitatives / Facteurs)
         shiny::div(
           shiny::div(
             class = "d-flex align-items-center gap-1 text-secondary small fw-semibold mb-1",
             shiny::tags$span(class = "fw-bold", "[Aa]"),
-            shiny::tags$span(paste0("Catégorielles (", length(vars$categorical), ")"))
+            shiny::tags$span(paste0("Cat\u00e9gorielles (", length(vars$categorical), ")"))
           ),
           if (length(vars$categorical) > 0) {
             shiny::div(
@@ -371,26 +452,26 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       )
     })
 
-    # Mise à jour dynamique des choix des listes déroulantes dès que le dataset change
+    # Mise \u00e0 jour dynamique des choix des listes d\u00e9roulantes d\u00e8s que le dataset change
     shiny::observeEvent(data_holder$df, {
       vars <- dataset_vars()
-      req(length(vars$all) > 0)
+      shiny::req(length(vars$all) > 0)
 
       # Choix pour Axe X
-      current_x <- isolate(input$axis_x)
+      current_x <- shiny::isolate(input$axis_x)
       sel_x <- if (!is.null(current_x) && current_x %in% vars$all) current_x else vars$all[1]
       shiny::updateSelectInput(
         session = session,
         inputId = "axis_x",
         choices = c(
-          list("Numériques" = vars$numeric),
-          list("Catégorielles" = vars$categorical)
+          list("Num\u00e9riques" = vars$numeric),
+          list("Cat\u00e9gorielles" = vars$categorical)
         ),
         selected = sel_x
       )
 
       # Choix pour Axe Y
-      current_y <- isolate(input$axis_y)
+      current_y <- shiny::isolate(input$axis_y)
       sel_y <- if (!is.null(current_y) && (current_y == "" || current_y %in% vars$all)) {
         current_y
       } else if (length(vars$numeric) >= 2) {
@@ -404,63 +485,69 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         inputId = "axis_y",
         choices = c(
           c("(Aucun - 1D / distribution)" = ""),
-          list("Numériques" = vars$numeric),
-          list("Catégorielles" = vars$categorical)
+          list("Num\u00e9riques" = vars$numeric),
+          list("Cat\u00e9gorielles" = vars$categorical)
         ),
         selected = sel_y
       )
 
       # Choix Couleur
-      current_col <- isolate(input$aesthetic_color)
+      current_col <- shiny::isolate(input$aesthetic_color)
       sel_col <- if (!is.null(current_col) && current_col %in% vars$all) current_col else ""
       shiny::updateSelectInput(
         session = session,
         inputId = "aesthetic_color",
         choices = c(
           c("(Aucune)" = ""),
-          list("Catégorielles" = vars$categorical),
-          list("Numériques" = vars$numeric)
+          list("Cat\u00e9gorielles" = vars$categorical),
+          list("Num\u00e9riques" = vars$numeric)
         ),
         selected = sel_col
       )
 
       # Choix Taille
-      current_sz <- isolate(input$aesthetic_size)
+      current_sz <- shiny::isolate(input$aesthetic_size)
       sel_sz <- if (!is.null(current_sz) && current_sz %in% vars$numeric) current_sz else ""
       shiny::updateSelectInput(
         session = session,
         inputId = "aesthetic_size",
         choices = c(
           c("(Aucune)" = ""),
-          list("Numériques" = vars$numeric)
+          list("Num\u00e9riques" = vars$numeric)
         ),
         selected = sel_sz
       )
 
       # Choix Facet
-      current_fct <- isolate(input$aesthetic_facet)
+      current_fct <- shiny::isolate(input$aesthetic_facet)
       sel_fct <- if (!is.null(current_fct) && current_fct %in% vars$categorical) current_fct else ""
       shiny::updateSelectInput(
         session = session,
         inputId = "aesthetic_facet",
         choices = c(
           c("(Aucun)" = ""),
-          list("Catégorielles" = vars$categorical)
+          list("Cat\u00e9gorielles" = vars$categorical)
         ),
         selected = sel_fct
       )
     }, ignoreNULL = FALSE)
 
-    # Ajustement automatique des sélections quand le type de graphique change
+    # Ajustement automatique des s\u00e9lections quand le type de graphique change
     shiny::observeEvent(input$chart_type, {
       vars <- dataset_vars()
       chart <- input$chart_type
 
       if (chart %in% c("histogram", "density")) {
-        # Si histogramme ou densité, Axe Y est optionnel / implicite
+        # Si histogramme ou densit\u00e9, Axe Y est optionnel / implicite
         shiny::updateSelectInput(session, "axis_y", selected = "")
         if (length(vars$numeric) > 0 && !(input$axis_x %in% vars$numeric)) {
           shiny::updateSelectInput(session, "axis_x", selected = vars$numeric[1])
+        }
+      } else if (chart == "pie") {
+        # Diagramme circulaire : Axe Y desactive/vide, Axe X preferentiellement qualitatif
+        shiny::updateSelectInput(session, "axis_y", selected = "")
+        if (length(vars$categorical) > 0 && !(input$axis_x %in% vars$categorical)) {
+          shiny::updateSelectInput(session, "axis_x", selected = vars$categorical[1])
         }
       } else if (chart == "bar") {
         if (length(vars$categorical) > 0 && !(input$axis_x %in% vars$categorical)) {
@@ -495,11 +582,12 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       type_labels <- c(
         scatter = "Nuage de points",
         bar = "Diagramme en barres",
-        boxplot = "Boîte à moustaches",
+        pie = "Diagramme circulaire",
+        boxplot = "Bo\u00eete \u00e0 moustaches",
         violin = "Diagramme en violon",
         histogram = "Histogramme",
         line = "Courbe / Ligne",
-        density = "Densité",
+        density = "Densit\u00e9",
         heatmap = "Carte thermique"
       )
       lbl <- type_labels[[input$chart_type]]
@@ -507,7 +595,7 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       shiny::tags$span(class = "badge bg-dark text-white", lbl)
     })
 
-    # Générateur de code ggplot2 réactif
+    # G\u00e9n\u00e9rateur de code ggplot2 r\u00e9actif
     generated_code <- shiny::reactive({
       df <- data_holder$df
       df_name <- data_holder$name
@@ -527,20 +615,88 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
 
       # Validation de base
       if (is.null(df) || !is.data.frame(df) || nrow(df) == 0) {
-        return("# Aucun jeu de données actif disponible.")
+        return("# Aucun jeu de donn\u00e9es actif disponible.")
       }
       if (is.null(x_var) || x_var == "" || !(x_var %in% names(df))) {
-        return("# En attente de la sélection des variables pour générer le code ggplot2...")
+        return("# En attente de la s\u00e9lection des variables pour g\u00e9n\u00e9rer le code ggplot2...")
       }
 
       has_y <- !is.null(y_var) && y_var != "" && (y_var %in% names(df))
-      x_is_num <- is.numeric(df[[x_var]]) || is.integer(df[[x_var]])
-      y_is_num <- if (has_y) is.numeric(df[[y_var]]) || is.integer(df[[y_var]]) else FALSE
+      x_is_num <- ramses_is_numeric_variable(df[[x_var]])
+      y_is_num <- if (has_y) ramses_is_numeric_variable(df[[y_var]]) else FALSE
 
-      # Validation spécifique selon le type de graphique
+      # Validation specifique selon le type de graphique
+      if (chart_type %in% c("histogram", "density")) {
+        num_err <- ramses_check_chart_numeric_variable(df, x_var, chart_type)
+        if (!is.null(num_err)) {
+          return(paste0("# ", num_err))
+        }
+      } else if (chart_type == "pie") {
+        pie_err <- ramses_check_chart_pie_variable(df, x_var)
+        if (!is.null(pie_err)) {
+          return(paste0("# ", pie_err))
+        }
+
+        pie_metric_choice <- if (!is.null(input$pie_metric) && input$pie_metric != "") input$pie_metric else "count"
+        code_lines <- c(
+          "library(dplyr)",
+          "library(ggplot2)",
+          "library(plotly)",
+          "",
+          "# Pre-agregation des donnees pour le diagramme circulaire",
+          paste0("df_pie <- ", ramses_code_symbol(df_name), " %>%"),
+          paste0("  dplyr::filter(!is.na(", ramses_code_symbol(x_var), ")) %>%"),
+          paste0("  dplyr::count(", ramses_code_symbol(x_var), ", name = 'N') %>%"),
+          paste0("  dplyr::mutate("),
+          paste0("    Pct = round(N / sum(N) * 100, 1),"),
+          if (identical(pie_metric_choice, "percent")) {
+            paste0("    Label = paste0(", ramses_code_symbol(x_var), ", ' \u2014 ', format(Pct, decimal.mark = ','), ' %')")
+          } else {
+            paste0("    Label = paste0(", ramses_code_symbol(x_var), ", ' \u2014 ', N)")
+          },
+          paste0("  )"),
+          "",
+          paste0("p <- ggplot(data = df_pie, aes(x = '', y = N, fill = ", ramses_code_symbol(x_var), ")) +"),
+          paste0("  geom_col(width = 1, color = 'white', alpha = ", alpha_val, ") +"),
+          paste0("  coord_polar(theta = 'y', start = 0) +"),
+          paste0("  geom_text(aes(label = Label), position = position_stack(vjust = 0.5), size = ", label_size, ") +")
+        )
+
+        if (palette_choice == "viridis") {
+          code_lines <- c(code_lines, "  scale_fill_viridis_d(option = 'D') +")
+        } else if (palette_choice %in% c("Set1", "Dark2", "Paired")) {
+          code_lines <- c(code_lines, paste0("  scale_fill_brewer(palette = '", palette_choice, "') +"))
+        }
+
+        title_str <- if (!is.null(input$plot_title) && input$plot_title != "") input$plot_title else paste0("Diagramme circulaire : ", x_var)
+        subtitle_str <- if (!is.null(input$plot_subtitle) && input$plot_subtitle != "") input$plot_subtitle else NULL
+        legend_str <- if (!is.null(input$plot_legend_title) && input$plot_legend_title != "") input$plot_legend_title else x_var
+
+        labs_parts <- c(paste0("title = ", ramses_code_string(title_str)))
+        if (!is.null(subtitle_str)) labs_parts <- c(labs_parts, paste0("subtitle = ", ramses_code_string(subtitle_str)))
+        labs_parts <- c(labs_parts, paste0("fill = ", ramses_code_string(legend_str)))
+        code_lines <- c(code_lines, paste0("  labs(", paste(labs_parts, collapse = ", "), ") +"))
+        code_lines <- c(code_lines, "  theme_void()")
+
+        if (!is.null(facet_var) && facet_var != "" && facet_var %in% names(df)) {
+          code_lines[length(code_lines)] <- paste0(code_lines[length(code_lines)], " +")
+          code_lines <- c(code_lines, paste0("  facet_wrap(~ ", ramses_code_symbol(facet_var), ")"))
+        }
+
+        code_lines <- c(
+          code_lines,
+          "",
+          "# Rendu interactif avec Plotly",
+          "interactive_plot <- plotly::layout(plotly::ggplotly(p), font = list(family = \"IBM Plex Sans\"))",
+          "interactive_plot"
+        )
+
+        return(paste(code_lines, collapse = "\n"))
+      }
+
       needs_y <- chart_type %in% c("scatter", "line", "violin", "heatmap")
       if (needs_y && !has_y) {
-        return(paste0("# Veuillez sélectionner une variable pour l'Axe Y afin de générer le code du graphique '", chart_type, "'."))
+        return(paste0("# Veuillez s\u00e9lectionner une variable pour l'Axe Y afin de g\u00e9n\u00e9rer le code du graphique '", chart_type, "'."))
       }
 
       # Identification du cas Boxplot et Barplot
@@ -550,25 +706,25 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
 
       if (chart_type == "boxplot") {
         if (!has_y) {
-          # CAS 1 : Seule la variable X est renseignée et X est continue
+          # CAS 1 : Seule la variable X est renseign\u00e9e et X est continue
           if (!x_is_num) {
-            return("# Pour une boîte à moustaches univariée (sans Axe Y), la variable de l'Axe X doit être quantitative continue.")
+            return("# Pour une bo\u00eete \u00e0 moustaches univari\u00e9e (sans Axe Y), la variable de l'Axe X doit \u00eatre quantitative continue.")
           }
           is_boxplot_univariate <- TRUE
         } else {
           if (x_is_num && !y_is_num) {
-            # CAS 3 : Variable X continue et variable Y catégorielle -> inversion
+            # CAS 3 : Variable X continue et variable Y cat\u00e9gorielle -> inversion
             is_boxplot_inverted <- TRUE
           } else if (!x_is_num && !y_is_num) {
-            return("# Pour une boîte à moustaches, au moins l'une des deux variables doit être quantitative continue.")
+            return("# Pour une bo\u00eete \u00e0 moustaches, au moins l'une des deux variables doit \u00eatre quantitative continue.")
           }
         }
       }
 
       bar_stat_choice <- if (!is.null(input$bar_stat) && input$bar_stat != "") input$bar_stat else "mean"
-      bar_stat_label <- switch(bar_stat_choice, "mean" = "Moyenne", "sum" = "Somme", "median" = "Médiane", "Moyenne")
+      bar_stat_label <- switch(bar_stat_choice, "mean" = "Moyenne", "sum" = "Somme", "median" = "M\u00e9diane", "Moyenne")
 
-      # Construction du code de pré-agrégation si Barplot avec Y
+      # Construction du code de pr\u00e9-agr\u00e9gation si Barplot avec Y
       code_lines <- c(
         if (is_bar_aggregated) "library(dplyr)" else NULL,
         "library(ggplot2)",
@@ -582,13 +738,15 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         if (!is.null(col_var) && col_var != "" && col_var %in% names(df)) {
           agg_grp_vars <- c(agg_grp_vars, col_var)
         }
+        agg_grp_code <- paste(vapply(agg_grp_vars, ramses_code_symbol, character(1)), collapse = ", ")
+        agg_var_name <- paste0(y_var, "_", bar_stat_choice)
         code_lines <- c(
           code_lines,
-          paste0("# Pré-agrégation des données pour le diagramme en barres (", bar_stat_label, ")"),
-          paste0("df_agg <- ", df_name, " %>%"),
-          paste0("  dplyr::filter(!is.na(", x_var, "), !is.na(", y_var, ")) %>%"),
-          paste0("  dplyr::group_by(", paste(agg_grp_vars, collapse = ", "), ") %>%"),
-          paste0("  dplyr::summarise(", y_var, "_", bar_stat_choice, " = ", bar_stat_choice, "(", y_var, ", na.rm = TRUE), .groups = 'drop')"),
+          paste0("# Pre-agregation des donnees pour le diagramme en barres (", bar_stat_label, ")"),
+          paste0("df_agg <- ", ramses_code_symbol(df_name), " %>%"),
+          paste0("  dplyr::filter(!is.na(", ramses_code_symbol(x_var), "), !is.na(", ramses_code_symbol(y_var), ")) %>%"),
+          paste0("  dplyr::group_by(", agg_grp_code, ") %>%"),
+          paste0("  dplyr::summarise(", ramses_code_symbol(agg_var_name), " = ", bar_stat_choice, "(", ramses_code_symbol(y_var), ", na.rm = TRUE), .groups = 'drop')"),
           ""
         )
       }
@@ -596,41 +754,41 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       # Construction de l'aes()
       if (chart_type == "boxplot" && is_boxplot_univariate) {
         # CAS 1 : Mappe automatiquement la variable X sur l'axe Y : aes(x = "", y = VariableX)
-        aes_parts <- c('x = ""', paste0("y = ", x_var))
+        aes_parts <- c('x = ""', paste0("y = ", ramses_code_symbol(x_var)))
       } else if (chart_type == "boxplot" && is_boxplot_inverted) {
-        # CAS 3 : Variable X continue et variable Y catégorielle -> aes(x = VariableY, y = VariableX)
-        aes_parts <- c(paste0("x = ", y_var), paste0("y = ", x_var), paste0("group = ", y_var))
+        # CAS 3 : Variable X continue et variable Y categorielle -> aes(x = VariableY, y = VariableX)
+        aes_parts <- c(paste0("x = ", ramses_code_symbol(y_var)), paste0("y = ", ramses_code_symbol(x_var)), paste0("group = ", ramses_code_symbol(y_var)))
       } else if (chart_type %in% c("boxplot", "violin") && has_y) {
-        aes_parts <- c(paste0("x = ", x_var), paste0("y = ", y_var), paste0("group = ", x_var))
+        aes_parts <- c(paste0("x = ", ramses_code_symbol(x_var)), paste0("y = ", ramses_code_symbol(y_var)), paste0("group = ", ramses_code_symbol(x_var)))
       } else if (is_bar_aggregated) {
-        aes_parts <- c(paste0("x = ", x_var), paste0("y = ", y_var, "_", bar_stat_choice))
+        aes_parts <- c(paste0("x = ", ramses_code_symbol(x_var)), paste0("y = ", ramses_code_symbol(paste0(y_var, "_", bar_stat_choice))))
       } else {
         # CAS standard
-        aes_parts <- c(paste0("x = ", x_var))
+        aes_parts <- c(paste0("x = ", ramses_code_symbol(x_var)))
         if (has_y) {
-          aes_parts <- c(aes_parts, paste0("y = ", y_var))
+          aes_parts <- c(aes_parts, paste0("y = ", ramses_code_symbol(y_var)))
         }
       }
 
       if (!is.null(col_var) && col_var != "" && col_var %in% names(df)) {
         if (chart_type %in% c("bar", "histogram", "density", "boxplot", "violin")) {
-          aes_parts <- c(aes_parts, paste0("fill = ", col_var))
+          aes_parts <- c(aes_parts, paste0("fill = ", ramses_code_symbol(col_var)))
         } else {
-          aes_parts <- c(aes_parts, paste0("color = ", col_var))
+          aes_parts <- c(aes_parts, paste0("color = ", ramses_code_symbol(col_var)))
         }
       }
       if (!is.null(size_var) && size_var != "" && size_var %in% names(df) && chart_type == "scatter") {
-        aes_parts <- c(aes_parts, paste0("size = ", size_var))
+        aes_parts <- c(aes_parts, paste0("size = ", ramses_code_symbol(size_var)))
       }
 
       aes_str <- paste(aes_parts, collapse = ", ")
-      data_source_str <- if (is_bar_aggregated) "df_agg" else df_name
+      data_source_str <- if (is_bar_aggregated) "df_agg" else ramses_code_symbol(df_name)
       code_lines <- c(
         code_lines,
         paste0("p <- ggplot(data = ", data_source_str, ", aes(", aes_str, ")) +")
       )
 
-      # Couche géométrique (geom_...)
+      # Couche geometrique (geom_...)
       has_col_aes <- !is.null(col_var) && col_var != "" && col_var %in% names(df)
       geom_line <- switch(
         chart_type,
@@ -649,14 +807,14 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       )
       code_lines <- c(code_lines, geom_line)
 
-      # Étiquettes de données (Data Labels)
+      # Etiquettes de donnees (Data Labels)
       if (isTRUE(show_labels)) {
         if (is_bar_aggregated) {
-          code_lines <- c(code_lines, paste0("  geom_text(aes(label = round(", y_var, "_", bar_stat_choice, ", 2)), vjust = -0.5, size = ", label_size, if (has_col_aes) ", position = position_dodge(width = 0.9)" else "", ") +"))
+          code_lines <- c(code_lines, paste0("  geom_text(aes(label = round(", ramses_code_symbol(paste0(y_var, "_", bar_stat_choice)), ", 2)), vjust = -0.5, size = ", label_size, if (has_col_aes) ", position = position_dodge(width = 0.9)" else "", ") +"))
         } else {
           target_label_var <- if (chart_type == "boxplot" && (is_boxplot_univariate || is_boxplot_inverted)) x_var else y_var
           if (!is.null(target_label_var) && target_label_var != "" && target_label_var %in% names(df) && is.numeric(df[[target_label_var]])) {
-            code_lines <- c(code_lines, paste0("  geom_text(aes(label = round(", target_label_var, ", 2)), vjust = -0.5, size = ", label_size, ") +"))
+            code_lines <- c(code_lines, paste0("  geom_text(aes(label = round(", ramses_code_symbol(target_label_var), ", 2)), vjust = -0.5, size = ", label_size, ") +"))
           }
         }
       }
@@ -683,7 +841,7 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         input$plot_title
       } else {
         if (chart_type == "boxplot" && is_boxplot_univariate) {
-          paste0("Boîte à moustaches : ", x_var)
+          paste0("Boite a moustaches : ", x_var)
         } else if (is_bar_aggregated) {
           paste0(bar_stat_label, " de ", y_var, " selon ", x_var)
         } else {
@@ -708,27 +866,27 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
 
       legend_str <- if (!is.null(input$plot_legend_title) && input$plot_legend_title != "") input$plot_legend_title else col_var
 
-      labs_parts <- c(paste0("title = \"", title_str, "\""))
-      if (!is.null(subtitle_str)) labs_parts <- c(labs_parts, paste0("subtitle = \"", subtitle_str, "\""))
-      labs_parts <- c(labs_parts, paste0("x = \"", xlab_str, "\""))
-      labs_parts <- c(labs_parts, paste0("y = \"", ylab_str, "\""))
+      labs_parts <- c(paste0("title = ", ramses_code_string(title_str)))
+      if (!is.null(subtitle_str)) labs_parts <- c(labs_parts, paste0("subtitle = ", ramses_code_string(subtitle_str)))
+      labs_parts <- c(labs_parts, paste0("x = ", ramses_code_string(xlab_str)))
+      labs_parts <- c(labs_parts, paste0("y = ", ramses_code_string(ylab_str)))
       if (!is.null(legend_str) && legend_str != "") {
         if (chart_type %in% c("bar", "histogram", "density", "boxplot", "violin")) {
-          labs_parts <- c(labs_parts, paste0("fill = \"", legend_str, "\""))
+          labs_parts <- c(labs_parts, paste0("fill = ", ramses_code_string(legend_str)))
         } else {
-          labs_parts <- c(labs_parts, paste0("color = \"", legend_str, "\""))
+          labs_parts <- c(labs_parts, paste0("color = ", ramses_code_string(legend_str)))
         }
       }
       code_lines <- c(code_lines, paste0("  labs(", paste(labs_parts, collapse = ", "), ") +"))
 
-      # Thème
-      theme_func <- paste0("theme_", theme_choice, "()")
+      # Theme
+      theme_func <- paste0("theme_", theme_choice, "(base_family = \"IBM Plex Sans\")")
       code_lines <- c(code_lines, paste0("  ", theme_func))
 
       # Facet
       if (!is.null(facet_var) && facet_var != "" && facet_var %in% names(df)) {
         code_lines[length(code_lines)] <- paste0(code_lines[length(code_lines)], " +")
-        code_lines <- c(code_lines, paste0("  facet_wrap(~ ", facet_var, ")"))
+        code_lines <- c(code_lines, paste0("  facet_wrap(~ ", ramses_code_symbol(facet_var), ")"))
       }
 
       # Conversion plotly
@@ -736,7 +894,7 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         code_lines,
         "",
         "# Rendu interactif avec Plotly",
-        "interactive_plot <- plotly::ggplotly(p)",
+        "interactive_plot <- plotly::layout(plotly::ggplotly(p), font = list(family = \"IBM Plex Sans\"))",
         "interactive_plot"
       )
 
@@ -764,7 +922,7 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
           ),
           shiny::div(
             class = "mb-2 d-flex justify-content-between align-items-center small text-muted",
-            shiny::tags$span("Ce code est mis à jour réactivement en direct selon tous vos réglages esthétiques."),
+            shiny::tags$span("Ce code est mis \u00e0 jour r\u00e9activement en direct selon tous vos r\u00e9glages esth\u00e9tiques."),
             shiny::tags$span(class = "badge bg-light text-dark border", "ggplot2 + plotly")
           ),
           shiny::tags$pre(
@@ -778,15 +936,15 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
 
     # Copie du code dans le presse-papiers
     shiny::observeEvent(input$btn_copy_ggplot_code, {
-      shiny::showNotification("Code R ggplot2 copié dans le presse-papiers !", type = "message", duration = 3)
+      shiny::showNotification("Code R ggplot2 copi\u00e9 dans le presse-papiers !", type = "message", duration = 3)
     })
 
-    # Construction de l'objet ggplot2 réactif réel
+    # Construction de l'objet ggplot2 r\u00e9actif r\u00e9el
     build_ggplot_object <- shiny::reactive({
       df <- data_holder$df
       shiny::validate(
-        shiny::need(!is.null(df) && is.data.frame(df) && nrow(df) > 0, "Aucun jeu de données actif disponible."),
-        shiny::need(!is.null(input$axis_x) && input$axis_x != "" && input$axis_x %in% names(df), "Veuillez sélectionner au moins une variable sur l'Axe X.")
+        shiny::need(!is.null(df) && is.data.frame(df) && nrow(df) > 0, "Aucun jeu de donn\u00e9es actif disponible."),
+        shiny::need(!is.null(input$axis_x) && input$axis_x != "" && input$axis_x %in% names(df), "Veuillez s\u00e9lectionner au moins une variable sur l'Axe X.")
       )
 
       x_var <- input$axis_x
@@ -802,45 +960,55 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       label_size <- input$label_size
 
       has_y <- !is.null(y_var) && y_var != "" && (y_var %in% names(df))
-      x_is_num <- is.numeric(df[[x_var]]) || is.integer(df[[x_var]])
-      y_is_num <- if (has_y) is.numeric(df[[y_var]]) || is.integer(df[[y_var]]) else FALSE
+      x_is_num <- ramses_is_numeric_variable(df[[x_var]])
+      y_is_num <- if (has_y) ramses_is_numeric_variable(df[[y_var]]) else FALSE
 
       # Validation stricte des variables obligatoires selon le type de graphique
-      if (chart_type %in% c("scatter", "line")) {
+      if (chart_type %in% c("histogram", "density")) {
+        num_err <- ramses_check_chart_numeric_variable(df, x_var, chart_type)
         shiny::validate(
-          shiny::need(has_y, "Ce type de graphique (2D) requiert la sélection d'une variable pour l'Axe Y (Ordonnée).")
+          shiny::need(is.null(num_err), num_err)
+        )
+      } else if (chart_type == "pie") {
+        pie_err <- ramses_check_chart_pie_variable(df, x_var)
+        shiny::validate(
+          shiny::need(is.null(pie_err), pie_err)
+        )
+      } else if (chart_type %in% c("scatter", "line")) {
+        shiny::validate(
+          shiny::need(has_y, "Ce type de graphique (2D) requiert la s\u00e9lection d'une variable pour l'Axe Y (Ordonn\u00e9e).")
         )
       } else if (chart_type == "violin") {
         shiny::validate(
-          shiny::need(has_y && y_is_num, "Le diagramme en violon requiert la sélection d'une variable quantitative pour l'Axe Y.")
+          shiny::need(has_y && y_is_num, "Le diagramme en violon requiert la s\u00e9lection d'une variable quantitative pour l'Axe Y.")
         )
       } else if (chart_type == "heatmap") {
         shiny::validate(
-          shiny::need(has_y, "La carte thermique requiert la sélection d'une variable pour l'Axe Y.")
+          shiny::need(has_y, "La carte thermique requiert la s\u00e9lection d'une variable pour l'Axe Y.")
         )
       } else if (chart_type == "boxplot") {
         if (!has_y) {
-          # CAS 1 : Seule la variable X est renseignée
+          # CAS 1 : Seule la variable X est renseign\u00e9e
           shiny::validate(
-            shiny::need(x_is_num, "Pour une boîte à moustaches univariée (sans Axe Y), la variable de l'Axe X doit être quantitative continue.")
+            shiny::need(x_is_num, "Pour une bo\u00eete \u00e0 moustaches univari\u00e9e (sans Axe Y), la variable de l'Axe X doit \u00eatre quantitative continue.")
           )
         } else {
           # CAS 2 & CAS 3 : Au moins une variable quantitative
           shiny::validate(
-            shiny::need(x_is_num || y_is_num, "Pour une boîte à moustaches, au moins l'une des deux variables (X ou Y) doit être quantitative continue.")
+            shiny::need(x_is_num || y_is_num, "Pour une bo\u00eete \u00e0 moustaches, au moins l'une des deux variables (X ou Y) doit \u00eatre quantitative continue.")
           )
         }
       }
 
-      # Détermination du mode Boxplot et Barplot
+      # D\u00e9termination du mode Boxplot et Barplot
       is_boxplot_univariate <- (chart_type == "boxplot" && !has_y)
       is_boxplot_inverted <- (chart_type == "boxplot" && has_y && x_is_num && !y_is_num)
       is_bar_aggregated <- (chart_type == "bar" && has_y && y_is_num)
 
       bar_stat_choice <- if (!is.null(input$bar_stat) && input$bar_stat != "") input$bar_stat else "mean"
-      bar_stat_label <- switch(bar_stat_choice, "mean" = "Moyenne", "sum" = "Somme", "median" = "Médiane", "Moyenne")
+      bar_stat_label <- switch(bar_stat_choice, "mean" = "Moyenne", "sum" = "Somme", "median" = "M\u00e9diane", "Moyenne")
 
-      # Préparation du jeu de données nettoyé
+      # Pr\u00e9paration du jeu de donn\u00e9es nettoy\u00e9
       clean_df <- df[!is.na(df[[x_var]]), ]
       if (has_y) {
         clean_df <- clean_df[!is.na(clean_df[[y_var]]), ]
@@ -849,8 +1017,59 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         clean_df <- clean_df[!is.na(clean_df[[col_var]]), ]
       }
 
-      # Traitement spécifique pour le Barplot avec agrégation
-      if (is_bar_aggregated) {
+      # Traitement sp\u00e9cifique pour le Barplot avec agr\u00e9gation
+      if (chart_type == "pie") {
+        pie_metric_choice <- if (!is.null(input$pie_metric) && input$pie_metric != "") input$pie_metric else "count"
+        clean_x <- clean_df[[x_var]]
+        tab <- table(clean_x)
+        mod_names <- names(tab)
+        counts <- as.numeric(tab)
+        tot <- sum(counts)
+        pcts <- if (tot > 0) round((counts / tot) * 100, 1) else rep(0, length(counts))
+
+        df_pie <- data.frame(
+          X_var = mod_names,
+          N = counts,
+          Pct = pcts,
+          stringsAsFactors = FALSE
+        )
+        names(df_pie)[1] <- x_var
+
+        if (identical(pie_metric_choice, "percent")) {
+          df_pie$Label <- paste0(df_pie[[x_var]], " \u2014 ", format(df_pie$Pct, decimal.mark = ","), " %")
+        } else {
+          df_pie$Label <- paste0(df_pie[[x_var]], " \u2014 ", df_pie$N)
+        }
+
+        p <- ggplot2::ggplot(df_pie, ggplot2::aes(x = "", y = .data[["N"]], fill = .data[[x_var]])) +
+          ggplot2::geom_col(width = 1, color = "white", alpha = alpha_val) +
+          ggplot2::coord_polar(theta = "y", start = 0) +
+          ggplot2::geom_text(
+            ggplot2::aes(label = .data[["Label"]]),
+            position = ggplot2::position_stack(vjust = 0.5),
+            size = label_size
+          )
+
+        if (palette_choice == "viridis") {
+          p <- p + ggplot2::scale_fill_viridis_d(option = "D")
+        } else if (palette_choice %in% c("Set1", "Dark2", "Paired")) {
+          p <- p + ggplot2::scale_fill_brewer(palette = palette_choice)
+        }
+
+        title_str <- if (!is.null(input$plot_title) && input$plot_title != "") input$plot_title else paste0("Diagramme circulaire : ", x_var)
+        subtitle_str <- if (!is.null(input$plot_subtitle) && input$plot_subtitle != "") input$plot_subtitle else NULL
+        legend_str <- if (!is.null(input$plot_legend_title) && input$plot_legend_title != "") input$plot_legend_title else x_var
+
+        labs_args <- list(title = title_str, fill = legend_str)
+        if (!is.null(subtitle_str)) labs_args$subtitle <- subtitle_str
+        p <- p + do.call(ggplot2::labs, labs_args) + ggplot2::theme_void()
+
+        if (!is.null(facet_var) && facet_var != "" && facet_var %in% names(df)) {
+          p <- p + ggplot2::facet_wrap(ggplot2::vars(!!rlang::sym(facet_var)))
+        }
+
+        return(p)
+      } else if (is_bar_aggregated) {
         agg_grp_vars <- x_var
         if (!is.null(col_var) && col_var != "" && col_var %in% names(clean_df)) {
           agg_grp_vars <- unique(c(agg_grp_vars, col_var))
@@ -872,12 +1091,12 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       } else {
         plot_data <- clean_df
 
-        # Préparation des aesthetics pour les autres types
+        # Pr\u00e9paration des aesthetics pour les autres types
         if (is_boxplot_univariate) {
           # CAS 1 : Boxplot 1D -> x = "", y = VariableX
           aes_args <- list(x = "", y = rlang::sym(x_var))
         } else if (is_boxplot_inverted) {
-          # CAS 3 : X continue, Y catégorielle
+          # CAS 3 : X continue, Y cat\u00e9gorielle
           plot_data[[y_var]] <- droplevels(as.factor(plot_data[[y_var]]))
           aes_args <- list(x = rlang::sym(y_var), y = rlang::sym(x_var), group = rlang::sym(y_var))
         } else if (chart_type %in% c("boxplot", "violin") && has_y) {
@@ -910,7 +1129,7 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
 
       has_col_aes <- !is.null(col_var) && col_var != "" && col_var %in% names(plot_data)
 
-      # Ajout de la géométrie
+      # Ajout de la g\u00e9om\u00e9trie
       p <- switch(
         chart_type,
         "scatter" = p + ggplot2::geom_point(alpha = alpha_val),
@@ -932,11 +1151,11 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         }
       )
 
-      # Labels de données (Data Labels)
+      # Labels de donn\u00e9es (Data Labels)
       if (isTRUE(show_labels)) {
         if (is_bar_aggregated) {
           p <- p + ggplot2::geom_text(
-            ggplot2::aes(label = round(Y_agg, 2)),
+            ggplot2::aes(label = round(.data[["Y_agg"]], 2)),
             vjust = -0.5,
             size = label_size,
             position = if (has_col_aes) ggplot2::position_dodge(width = 0.9) else "identity"
@@ -971,12 +1190,12 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         }
       }
 
-      # Titres & Légendes
+      # Titres & L\u00e9gendes
       title_str <- if (!is.null(input$plot_title) && input$plot_title != "") {
         input$plot_title
       } else {
         if (chart_type == "boxplot" && is_boxplot_univariate) {
-          paste0("Boîte à moustaches : ", x_var)
+          paste0("Bo\u00eete \u00e0 moustaches : ", x_var)
         } else if (is_bar_aggregated) {
           paste0(bar_stat_label, " de ", y_var, " selon ", x_var)
         } else {
@@ -1011,15 +1230,15 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       }
       p <- p + do.call(ggplot2::labs, labs_args)
 
-      # Thème ggplot2
+      # Th\u00e8me ggplot2
       p <- switch(
         theme_choice,
-        "minimal" = p + ggplot2::theme_minimal(),
-        "bw" = p + ggplot2::theme_bw(),
+        "minimal" = p + ggplot2::theme_minimal(base_family = "IBM Plex Sans"),
+        "bw" = p + ggplot2::theme_bw(base_family = "IBM Plex Sans"),
         "classic" = p + ggplot2::theme_classic(),
         "light" = p + ggplot2::theme_light(),
         "dark" = p + ggplot2::theme_dark(),
-        p + ggplot2::theme_minimal()
+        p + ggplot2::theme_minimal(base_family = "IBM Plex Sans")
       )
 
       # Facet
@@ -1034,8 +1253,53 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
     output$chart_output <- plotly::renderPlotly({
       p <- build_ggplot_object()
 
+      if (identical(input$chart_type, "pie")) {
+        df <- data_holder$df
+        x_var <- input$axis_x
+        if (!is.null(df) && !is.null(x_var) && x_var %in% names(df)) {
+          clean_x <- stats::na.omit(df[[x_var]])
+          tab <- table(clean_x)
+          mod_names <- names(tab)
+          counts <- as.numeric(tab)
+          tot <- sum(counts)
+          pcts <- if (tot > 0) round((counts / tot) * 100, 1) else rep(0, length(counts))
+
+          pie_metric_choice <- if (!is.null(input$pie_metric) && input$pie_metric != "") input$pie_metric else "count"
+          labels_text <- if (identical(pie_metric_choice, "percent")) {
+            paste0(mod_names, " \u2014 ", format(pcts, decimal.mark = ","), " %")
+          } else {
+            paste0(mod_names, " \u2014 ", counts)
+          }
+
+          title_str <- if (!is.null(input$plot_title) && input$plot_title != "") input$plot_title else paste0("Diagramme circulaire : ", x_var)
+
+          return(
+            plotly::plot_ly(
+              labels = mod_names,
+              values = counts,
+              type = "pie",
+              text = labels_text,
+              textinfo = "text",
+              hoverinfo = "label+value+percent",
+              opacity = input$geom_alpha,
+              marker = list(line = list(color = "#ffffff", width = 1.5))
+            ) %>%
+              plotly::layout(
+                title = list(text = title_str),
+                autosize = TRUE,
+                margin = list(l = 40, r = 40, b = 40, t = 60)
+              ) %>%
+              plotly::config(
+                displayModeBar = TRUE,
+                displaylogo = FALSE,
+                modeBarButtonsToRemove = c("sendDataToCloud", "lasso2d")
+              )
+          )
+        }
+      }
+
       tryCatch({
-        plotly::ggplotly(p) %>%
+        plotly::layout(plotly::ggplotly(p), font = list(family = "IBM Plex Sans")) %>%
           plotly::layout(
             autosize = TRUE,
             margin = list(l = 50, r = 30, b = 50, t = 60)
@@ -1049,12 +1313,12 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
         fallback_p <- ggplot2::ggplot() +
           ggplot2::annotate(
             "text", x = 0.5, y = 0.5,
-            label = paste0("Impossible d'afficher le graphique interactif :\n", e$message, "\n\nVeuillez ajuster les dimensions sélectionnées."),
+            label = paste0("Impossible d'afficher le graphique interactif :\n", e$message, "\n\nVeuillez ajuster les dimensions s\u00e9lectionn\u00e9es."),
             color = "#4B5563", size = 4, hjust = 0.5
           ) +
           ggplot2::theme_void()
 
-        plotly::ggplotly(fallback_p) %>%
+        plotly::layout(plotly::ggplotly(fallback_p), font = list(family = "IBM Plex Sans")) %>%
           plotly::layout(autosize = TRUE)
       })
     })
@@ -1074,7 +1338,7 @@ mod_chart_builder_server <- function(id, data_holder, append_to_rmd) {
       )
 
       shiny::showNotification(
-        paste0("Graphique '", title_label, "' injecté avec succès dans le Journal R Markdown !"),
+        paste0("Graphique '", title_label, "' inject\u00e9 avec succ\u00e8s dans le Journal R Markdown !"),
         type = "message",
         duration = 4
       )

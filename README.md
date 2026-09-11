@@ -1,8 +1,8 @@
 # Ramses <img src="man/figures/logo.png" align="right" height="138" alt="Ramses logo" />
 
 <!-- badges: start -->
-[![R-CMD-check](https://img.shields.io/badge/R%20CMD%20check-passing-brightgreen.svg)](https://github.com/astral-r/Ramses/actions)
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/astral-r/Ramses)
+[![R-CMD-check](https://img.shields.io/badge/R%20CMD%20check-passing-brightgreen.svg)](https://github.com/census-specs/Ramses/actions)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/census-specs/Ramses)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R-Universe](https://img.shields.io/badge/R--Universe-astral--r-orange.svg)](https://astral-r.r-universe.dev)
 <!-- badges: end -->
