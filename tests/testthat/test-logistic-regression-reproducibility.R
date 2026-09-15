@@ -64,7 +64,7 @@ test_that("1. Cible binaire avec exactement 2 modalites (pas de filtrage superfl
 
 test_that("2. Cible avec 3 modalites : filtrage reproductible et syntaxe valide", {
   df_3 <- data.frame(
-    Y = factor(c("A", "B", "C", "A", "B", "C")),
+    Y = factor(c("A", "B", "C", "B", "A", "C")),
     X = c(10, 20, 30, 15, 25, 35),
     stringsAsFactors = FALSE
   )
@@ -116,7 +116,7 @@ test_that("3. Cible avec plus de 3 modalites (>3) : filtrage exact des 2 premier
 test_that("4. Modalites contenant des espaces", {
   df_spaces <- data.frame(
     Y = c("Groupe Alpha", "Groupe Beta", "Groupe Gamma", "Groupe Alpha"),
-    X = c(1.1, 2.2, 3.3, 1.4),
+    X = c(1.1, 2.2, 3.3, 2.9),
     stringsAsFactors = FALSE
   )
 
@@ -135,7 +135,7 @@ test_that("4. Modalites contenant des espaces", {
 test_that("5. Modalites contenant des accents", {
   df_accents <- data.frame(
     Y = c("Succ\u00e8s", "\u00c9chec", "Ind\u00e9termin\u00e9", "Succ\u00e8s"),
-    X = c(12, 18, 25, 14),
+    X = c(12, 18, 25, 24),
     stringsAsFactors = FALSE
   )
 
@@ -153,7 +153,7 @@ test_that("5. Modalites contenant des accents", {
 test_that("6. Modalites contenant des apostrophes ou guillemets", {
   df_quotes <- data.frame(
     Y = c("L'option A", 'Traitement "B"', "Autre", "L'option A"),
-    X = c(5, 7, 9, 6),
+    X = c(5, 7, 9, 8),
     stringsAsFactors = FALSE
   )
 

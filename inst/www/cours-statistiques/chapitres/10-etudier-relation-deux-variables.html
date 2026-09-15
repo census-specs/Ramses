@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10. Étudier la relation entre deux variables — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link active">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 10</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Étudier la relation entre deux variables</h1>
+    <div class="course-subtitle">Comment savoir si deux variables sont liées ?</div>
+
+    <!-- 1. COMMENCER PAR DEUX PROBLÈMES CONCRETS -->
+    <h2><i class="fa-solid fa-seedling" style="color:#059669;"></i> 1. Commencer par deux problèmes concrets</h2>
+
+    <p>
+      En agronomie comme dans toute science appliquée, nous cherchons très souvent à comprendre comment deux grandeurs évoluent ensemble. Mais selon la nature de ces deux grandeurs, la méthode statistique change totalement :
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin:20px 0;">
+      <!-- Situation A -->
+      <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:18px;">
+        <div style="font-weight:700; font-size:14.5px; color:#1E40AF; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-size:12px;">Situation A</span>
+          Deux variables quantitatives
+        </div>
+        <p style="font-size:14.5px; color:#1E3A8A; font-weight:600; margin-bottom:12px; font-style:italic;">
+          « Est-ce que les parcelles les plus grandes ont tendance à avoir un meilleur rendement ? »
+        </p>
+        <ul style="margin:0; padding-left:20px; font-size:13.5px; color:#1E40AF; line-height:1.6;">
+          <li><code>superficie</code> &rarr; variable <strong>quantitative</strong> (nombre d'hectares)</li>
+          <li><code>rendement</code> &rarr; variable <strong>quantitative</strong> (tonnes par hectare)</li>
+        </ul>
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid #DBEAFE; font-size:13.5px; color:#1E40AF; font-weight:600;">
+          <i class="fa-solid fa-arrow-right"></i> Outils : <strong>Nuage de points</strong> & <strong>Corrélation</strong>
+        </div>
+      </div>
+
+      <!-- Situation B -->
+      <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:18px;">
+        <div style="font-weight:700; font-size:14.5px; color:#065F46; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+          <span style="background:#DCFCE7; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700; font-size:12px;">Situation B</span>
+          Deux variables qualitatives
+        </div>
+        <p style="font-size:14.5px; color:#064E3B; font-weight:600; margin-bottom:12px; font-style:italic;">
+          « Est-ce que le village est lié à l'utilisation d'un engrais ? »
+        </p>
+        <ul style="margin:0; padding-left:20px; font-size:13.5px; color:#065F46; line-height:1.6;">
+          <li><code>village</code> &rarr; variable <strong>qualitative</strong> (Bonabéri / Bépanda)</li>
+          <li><code>engrais</code> &rarr; variable <strong>qualitative</strong> (Oui / Non)</li>
+        </ul>
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid #DCFCE7; font-size:13.5px; color:#065F46; font-weight:600;">
+          <i class="fa-solid fa-arrow-right"></i> Outils : <strong>Tableau de contingence</strong> & <strong>Test du &chi;&sup2;</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Le principe fondamental</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:700; color:#065F46;">
+        Le choix de l'analyse dépend d'abord de la nature des deux variables que vous mettez en relation (quantitative ou qualitative).
+      </p>
+    </div>
+
+    <!-- 2. SITUATION A : DEUX VARIABLES QUANTITATIVES -->
+    <h2><i class="fa-solid fa-chart-line" style="color:#2563EB;"></i> 2. Situation A : deux variables quantitatives</h2>
+
+    <p>
+      Reprenons les 10 parcelles étudiées dans les modules précédents :
+    </p>
+
+    <!-- Tableau des 10 parcelles -->
+    <div class="table-responsive" style="max-width:580px; margin:16px 0 20px 0;">
+      <table class="table-styled" style="width:100%; border:1px solid #E5E7EB; border-collapse:collapse; text-align:center;">
+        <thead>
+          <tr style="background:#F9FAFB;">
+            <th style="padding:8px 12px; border-bottom:2px solid #E5E7EB; text-align:left;">Parcelle</th>
+            <th style="padding:8px 12px; border-bottom:2px solid #E5E7EB; text-align:left;">Village</th>
+            <th style="padding:8px 12px; border-bottom:2px solid #E5E7EB;">Superficie ($ha$)</th>
+            <th style="padding:8px 12px; border-bottom:2px solid #E5E7EB;">Rendement ($t/ha$)</th>
+          </tr>
+        </thead>
+        <tbody style="font-family:'IBM Plex Mono', monospace; font-size:13px;">
+          <tr><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P01</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bonabéri</td><td>1.2</td><td>2.8</td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P02</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bonabéri</td><td>0.8</td><td>2.4</td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P03</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bonabéri</td><td>1.5</td><td>3.1</td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P04</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bonabéri</td><td>1.0</td><td>2.7</td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P05</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bonabéri</td><td>2.0</td><td>3.4</td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P06</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bépanda</td><td>0.7</td><td>2.1</td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P07</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bépanda</td><td>1.1</td><td>2.5</td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P08</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bépanda</td><td>1.4</td><td>2.9</td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P09</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bépanda</td><td>0.9</td><td>2.3</td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">P10</td><td style="padding:6px 12px; text-align:left; font-family:'IBM Plex Sans';">Bépanda</td><td>1.8</td><td>3.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Pour visualiser ensemble deux variables quantitatives, on trace un <strong>nuage de points (scatterplot)</strong> où chaque parcelle est représentée par un point situé à l'intersection de sa superficie (en abscisse X) et de son rendement (en ordonnée Y) :
+    </p>
+
+    <!-- Graphique SVG réel : Nuage de points superficie x rendement -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:20px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <div style="font-weight:600; font-size:14px; color:#111827; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-chart-area" style="color:#2563EB;"></i> Nuage de points réel : Superficie ($ha$) vs Rendement ($t/ha$)
+      </div>
+
+      <svg viewBox="0 0 600 300" style="width:100%; height:auto; display:block; font-family:'IBM Plex Sans', sans-serif;" role="img" aria-label="Nuage de points réel montrant une forte relation positive entre superficie et rendement">
+        <!-- Grille de fond -->
+        <line x1="70" y1="40" x2="560" y2="40" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="70" y1="90" x2="560" y2="90" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="70" y1="140" x2="560" y2="140" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="70" y1="190" x2="560" y2="190" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="70" y1="240" x2="560" y2="240" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+
+        <!-- Axes X et Y -->
+        <!-- X : de 0.5 ha (x=70) à 2.2 ha (x=560) -> dx = 490 / 1.7 = 288.2 px / unit -->
+        <!-- Y : de 2.0 t/ha (y=250) à 3.6 t/ha (y=30) -> dy = 220 / 1.6 = 137.5 px / unit -->
+        <!-- Formule x = 70 + (sup - 0.5) * 288.2 -->
+        <!-- Formule y = 250 - (rdt - 2.0) * 137.5 -->
+        <line x1="70" y1="250" x2="560" y2="250" stroke="#9CA3AF" stroke-width="1.5" />
+        <line x1="70" y1="30" x2="70" y2="250" stroke="#9CA3AF" stroke-width="1.5" />
+
+        <!-- Graduations X -->
+        <text x="70" y="268" font-size="11" fill="#6B7280" text-anchor="middle">0.5</text>
+        <text x="214" y="268" font-size="11" fill="#6B7280" text-anchor="middle">1.0</text>
+        <text x="358" y="268" font-size="11" fill="#6B7280" text-anchor="middle">1.5</text>
+        <text x="502" y="268" font-size="11" fill="#6B7280" text-anchor="middle">2.0</text>
+        <text x="315" y="290" font-size="12" font-weight="600" fill="#374151" text-anchor="middle">Superficie (ha)</text>
+
+        <!-- Graduations Y -->
+        <text x="60" y="254" font-size="11" fill="#6B7280" text-anchor="end">2.0</text>
+        <text x="60" y="199" font-size="11" fill="#6B7280" text-anchor="end">2.4</text>
+        <text x="60" y="144" font-size="11" fill="#6B7280" text-anchor="end">2.8</text>
+        <text x="60" y="89" font-size="11" fill="#6B7280" text-anchor="end">3.2</text>
+        <text x="60" y="34" font-size="11" fill="#6B7280" text-anchor="end">3.6</text>
+        <text x="25" y="140" font-size="12" font-weight="600" fill="#374151" transform="rotate(-90 25 140)" text-anchor="middle">Rendement (t/ha)</text>
+
+        <!-- Droite de régression visuelle (tendance positive) -->
+        <!-- pour sup=0.6, rdt=2.12 -> x=99, y=233.5 | pour sup=2.1, rdt=3.52 -> x=531, y=41 -->
+        <line x1="99" y1="233" x2="531" y2="41" stroke="#2563EB" stroke-width="2" stroke-dasharray="4,4" opacity="0.6" />
+
+        <!-- 10 Points exacts : -->
+        <!-- P01: sup=1.2 (x=272), rdt=2.8 (y=140) -->
+        <circle cx="272" cy="140" r="5.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="272" y="130" font-size="10" font-family="'IBM Plex Mono'" fill="#1E40AF" text-anchor="middle">P01</text>
+
+        <!-- P02: sup=0.8 (x=156), rdt=2.4 (y=195) -->
+        <circle cx="156" cy="195" r="5.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="156" y="185" font-size="10" font-family="'IBM Plex Mono'" fill="#1E40AF" text-anchor="middle">P02</text>
+
+        <!-- P03: sup=1.5 (x=358), rdt=3.1 (y=99) -->
+        <circle cx="358" cy="99" r="5.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="358" y="89" font-size="10" font-family="'IBM Plex Mono'" fill="#1E40AF" text-anchor="middle">P03</text>
+
+        <!-- P04: sup=1.0 (x=214), rdt=2.7 (y=154) -->
+        <circle cx="214" cy="154" r="5.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="214" y="144" font-size="10" font-family="'IBM Plex Mono'" fill="#1E40AF" text-anchor="middle">P04</text>
+
+        <!-- P05: sup=2.0 (x=502), rdt=3.4 (y=58) -->
+        <circle cx="502" cy="58" r="5.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="502" y="48" font-size="10" font-family="'IBM Plex Mono'" fill="#1E40AF" text-anchor="middle">P05</text>
+
+        <!-- P06: sup=0.7 (x=128), rdt=2.1 (y=236) -->
+        <circle cx="128" cy="236" r="5.5" fill="#059669" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="128" y="226" font-size="10" font-family="'IBM Plex Mono'" fill="#065F46" text-anchor="middle">P06</text>
+
+        <!-- P07: sup=1.1 (x=243), rdt=2.5 (y=181) -->
+        <circle cx="243" cy="181" r="5.5" fill="#059669" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="243" y="171" font-size="10" font-family="'IBM Plex Mono'" fill="#065F46" text-anchor="middle">P07</text>
+
+        <!-- P08: sup=1.4 (x=329), rdt=2.9 (y=126) -->
+        <circle cx="329" cy="126" r="5.5" fill="#059669" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="329" y="116" font-size="10" font-family="'IBM Plex Mono'" fill="#065F46" text-anchor="middle">P08</text>
+
+        <!-- P09: sup=0.9 (x=185), rdt=2.3 (y=209) -->
+        <circle cx="185" cy="209" r="5.5" fill="#059669" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="185" y="199" font-size="10" font-family="'IBM Plex Mono'" fill="#065F46" text-anchor="middle">P09</text>
+
+        <!-- P10: sup=1.8 (x=445), rdt=3.0 (y=112) -->
+        <circle cx="445" cy="112" r="5.5" fill="#059669" stroke="#FFFFFF" stroke-width="1.5" />
+        <text x="445" y="102" font-size="10" font-family="'IBM Plex Mono'" fill="#065F46" text-anchor="middle">P10</text>
+      </svg>
+    </div>
+
+    <p>
+      Le code R correspondant est très simple :
+    </p>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>plot(
+  donnees$superficie,
+  donnees$rendement,
+  main = "Superficie et rendement",
+  xlab = "Superficie (ha)",
+  ylab = "Rendement (t/ha)"
+)</code></pre>
+    </div>
+
+    <p>
+      En observant la disposition des points, trois grandes allures peuvent apparaître :
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin:16px 0;">
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#059669; margin-bottom:6px;">
+          <i class="fa-solid fa-arrow-trend-up"></i> Tendance positive
+        </div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          Quand $X$ augmente, $Y$ a tendance à augmenter également (les points montent de gauche à droite).
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#DC2626; margin-bottom:6px;">
+          <i class="fa-solid fa-arrow-trend-down"></i> Tendance négative
+        </div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          Quand $X$ augmente, $Y$ a tendance à diminuer (les points descendent de gauche à droite).
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#6B7280; margin-bottom:6px;">
+          <i class="fa-solid fa-braille"></i> Absence de tendance claire
+        </div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          Les points sont dispersés sans alignement privilégié : la valeur de $X$ ne renseigne pas sur celle de $Y$.
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. CORRÉLATION -->
+    <h2><i class="fa-solid fa-calculator" style="color:#059669;"></i> 3. Mesurer la relation : la corrélation</h2>
+
+    <p>
+      Pour résumer numériquement l'intensité de cette liaison linéaire, on calcule le <strong>coefficient de corrélation linéaire de Pearson</strong> :
+    </p>
+
+    <div class="formula-box">
+      $$r = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2 \sum_{i=1}^n (y_i - \bar{y})^2}}$$
+    </div>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>cor(donnees$superficie, donnees$rendement)</code></pre>
+    </div>
+
+    <div class="callout callout-example" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-square-root-variable"></i> Résultat sur nos données</div>
+      <p style="font-size:14.5px; margin-bottom:0;">
+        Sur nos 10 parcelles, $r = 0{,}939$. C'est une valeur très proche de $+1$, indiquant une forte corrélation linéaire positive : les parcelles les plus grandes ont très nettement les rendements les plus élevés.
+      </p>
+    </div>
+
+    <p>
+      Le coefficient de corrélation (noté $r$) est toujours compris entre $-1$ et $+1$ :
+    </p>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-ruler-horizontal"></i> Lecture de l'échelle de corrélation</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px; line-height:1.7;">
+        <li>Proche de <strong>+1</strong> &rarr; relation linéaire positive très forte.</li>
+        <li>Proche de <strong>-1</strong> &rarr; relation linéaire négative très forte.</li>
+        <li>Proche de <strong>0</strong> &rarr; faible relation linéaire.</li>
+      </ul>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Nuance indispensable</div>
+      <p style="font-size:14.5px; margin-bottom:0;">
+        Une corrélation proche de 0 ne signifie pas forcément « aucune relation » : elle indique surtout l'absence de <strong>relation linéaire</strong> (la relation pourrait par exemple être courbe en forme de cloche).
+      </p>
+    </div>
+
+    <!-- 4. CORRÉLATION != CAUSALITÉ -->
+    <h2><i class="fa-solid fa-link-slash" style="color:#DC2626;"></i> 4. Corrélation &ne; Causalité</h2>
+
+    <div class="callout callout-warning" style="margin:20px 0; border-left:4px solid #DC2626;">
+      <div class="callout-title" style="color:#991B1B;"><i class="fa-solid fa-shield-halved"></i> Règle d'or en statistique</div>
+      <p style="font-size:15.5px; margin-bottom:8px; font-weight:700; color:#991B1B;">
+        « Deux variables peuvent être liées sans que l'une soit forcément la cause de l'autre. »
+      </p>
+      <p style="font-size:14px; margin-bottom:0; color:#4B5563;">
+        <em>Exemple :</em> Une forte corrélation entre la superficie d'une parcelle et son rendement ne prouve pas que la grande taille « fabrique » du rendement. Cela peut s'expliquer par un troisième facteur : les exploitations les plus grandes disposent souvent de meilleurs moyens matériels, de semences améliorées ou d'un encadrement technique supérieur.
+      </p>
+    </div>
+
+    <!-- 5. TESTER LA CORRÉLATION -->
+    <h2><i class="fa-solid fa-flask" style="color:#2563EB;"></i> 5. Tester la corrélation</h2>
+
+    <p>
+      La valeur $r = 0{,}94$ observée sur seulement 10 parcelles est-elle le reflet d'une véritable relation ou d'un coup de chance de l'échantillonnage ? On utilise un test statistique :
+    </p>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>cor.test(donnees$superficie, donnees$rendement)</code></pre>
+    </div>
+
+    <p>
+      Ce test évalue si la relation linéaire observée fournit suffisamment d'éléments pour rejeter l'hypothèse d'absence de corrélation dans la population ($H_0 : \rho = 0$). Si la p-value est inférieure à $0{,}05$, on conclut que la corrélation est statistiquement significative.
+    </p>
+
+    <!-- 6. SITUATION B : DEUX VARIABLES QUALITATIVES -->
+    <h2><i class="fa-solid fa-table-cells" style="color:#059669;"></i> 6. Situation B : deux variables qualitatives</h2>
+
+    <p>
+      Considérons maintenant une autre question agricole : <em>« Est-ce que le village est lié à l'utilisation d'un engrais ? »</em>
+    </p>
+
+    <div class="table-responsive" style="max-width:420px; margin:16px 0 20px 0;">
+      <table class="table-styled" style="width:100%; border:1px solid #E5E7EB; border-collapse:collapse; text-align:center;">
+        <thead>
+          <tr style="background:#F9FAFB;">
+            <th style="padding:8px 12px; border-bottom:2px solid #E5E7EB; text-align:left;">Village</th>
+            <th style="padding:8px 12px; border-bottom:2px solid #E5E7EB;">Utilisation d'engrais</th>
+          </tr>
+        </thead>
+        <tbody style="font-size:13.5px;">
+          <tr><td style="padding:6px 12px; text-align:left; font-weight:600;">Bonabéri</td><td><span class="badge" style="background:#DCFCE7; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">Oui</span></td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-weight:600;">Bonabéri</td><td><span class="badge" style="background:#DCFCE7; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">Oui</span></td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-weight:600;">Bonabéri</td><td><span class="badge" style="background:#FEE2E2; color:#991B1B; padding:2px 8px; border-radius:4px; font-weight:700;">Non</span></td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-weight:600;">Bonabéri</td><td><span class="badge" style="background:#DCFCE7; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">Oui</span></td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-weight:600;">Bonabéri</td><td><span class="badge" style="background:#FEE2E2; color:#991B1B; padding:2px 8px; border-radius:4px; font-weight:700;">Non</span></td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-weight:600;">Bépanda</td><td><span class="badge" style="background:#FEE2E2; color:#991B1B; padding:2px 8px; border-radius:4px; font-weight:700;">Non</span></td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-weight:600;">Bépanda</td><td><span class="badge" style="background:#FEE2E2; color:#991B1B; padding:2px 8px; border-radius:4px; font-weight:700;">Non</span></td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-weight:600;">Bépanda</td><td><span class="badge" style="background:#DCFCE7; color:#065F46; padding:2px 8px; border-radius:4px; font-weight:700;">Oui</span></td></tr>
+          <tr><td style="padding:6px 12px; text-align:left; font-weight:600;">Bépanda</td><td><span class="badge" style="background:#FEE2E2; color:#991B1B; padding:2px 8px; border-radius:4px; font-weight:700;">Non</span></td></tr>
+          <tr style="background:#FAFAFA;"><td style="padding:6px 12px; text-align:left; font-weight:600;">Bépanda</td><td><span class="badge" style="background:#FEE2E2; color:#991B1B; padding:2px 8px; border-radius:4px; font-weight:700;">Non</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Pour poser la question statistique, on utilise la notion d'<strong>indépendance</strong> :
+    </p>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comments"></i> Comprendre l'indépendance avec des mots simples</div>
+      <p style="font-size:14.5px; margin-bottom:8px;">
+        • <strong>Indépendance :</strong> Si la proportion d'agriculteurs utilisant l'engrais est similaire quel que soit le village (par exemple 40% à Bonabéri et 40% à Bépanda), les deux variables sont indépendantes.
+      </p>
+      <p style="font-size:14.5px; margin-bottom:0;">
+        • <strong>Association :</strong> Si l'utilisation d'engrais est nettement plus fréquente dans un village que dans l'autre (par exemple 60% à Bonabéri contre 20% à Bépanda), les variables peuvent être associées.
+      </p>
+    </div>
+
+    <!-- 7. TABLEAU DE CONTINGENCE -->
+    <h2><i class="fa-solid fa-table" style="color:#4B5563;"></i> 7. Le tableau de contingence</h2>
+
+    <p>
+      Pour croiser deux variables qualitatives, on construit un <strong>tableau de contingence (ou tableau croisé)</strong> :
+    </p>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>table(donnees$village, donnees$engrais)</code></pre>
+    </div>
+
+    <!-- Tableau croisé réel -->
+    <div class="table-responsive" style="max-width:520px; margin:16px 0 20px 0;">
+      <table class="table-styled" style="width:100%; border:1px solid #E5E7EB; border-collapse:collapse; text-align:center;">
+        <thead>
+          <tr style="background:#F9FAFB;">
+            <th style="padding:10px; border-bottom:2px solid #E5E7EB; text-align:left;">Village \ Engrais</th>
+            <th style="padding:10px; border-bottom:2px solid #E5E7EB; color:#065F46;">Oui</th>
+            <th style="padding:10px; border-bottom:2px solid #E5E7EB; color:#991B1B;">Non</th>
+            <th style="padding:10px; border-bottom:2px solid #E5E7EB; font-weight:700;">Total Ligne</th>
+          </tr>
+        </thead>
+        <tbody style="font-size:14px;">
+          <tr>
+            <td style="padding:8px 12px; text-align:left; font-weight:600;">Bonabéri</td>
+            <td style="padding:8px 12px; font-weight:700; color:#065F46;">3 <span style="font-size:12px; color:#6B7280; font-weight:400;">(60%)</span></td>
+            <td style="padding:8px 12px; color:#4B5563;">2 <span style="font-size:12px; color:#6B7280;">(40%)</span></td>
+            <td style="padding:8px 12px; font-weight:700; background:#FAFAFA;">5</td>
+          </tr>
+          <tr style="background:#FAFAFA;">
+            <td style="padding:8px 12px; text-align:left; font-weight:600;">Bépanda</td>
+            <td style="padding:8px 12px; color:#4B5563;">1 <span style="font-size:12px; color:#6B7280;">(20%)</span></td>
+            <td style="padding:8px 12px; font-weight:700; color:#991B1B;">4 <span style="font-size:12px; color:#6B7280; font-weight:400;">(80%)</span></td>
+            <td style="padding:8px 12px; font-weight:700; background:#F3F4F6;">5</td>
+          </tr>
+          <tr style="border-top:2px solid #E5E7EB; font-weight:700; background:#F9FAFB;">
+            <td style="padding:8px 12px; text-align:left;">Total Colonne</td>
+            <td style="padding:8px 12px;">4</td>
+            <td style="padding:8px 12px;">6</td>
+            <td style="padding:8px 12px; color:#2563EB;">10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Pour afficher ces proportions par ligne en pourcentages dans R :
+    </p>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>prop.table(table(donnees$village, donnees$engrais), 1) * 100</code></pre>
+    </div>
+
+    <!-- Graphique SVG : Diagramme en barres groupées -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:20px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <div style="font-weight:600; font-size:14px; color:#111827; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-chart-column" style="color:#059669;"></i> Répartition de l'utilisation d'engrais par village
+      </div>
+
+      <svg viewBox="0 0 540 220" style="width:100%; height:auto; display:block; font-family:'IBM Plex Sans', sans-serif;" role="img" aria-label="Diagramme en barres comparant l'utilisation d'engrais à Bonabéri et Bépanda">
+        <!-- Grille Y -->
+        <line x1="60" y1="40" x2="480" y2="40" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="60" y1="80" x2="480" y2="80" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="60" y1="120" x2="480" y2="120" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="60" y1="160" x2="480" y2="160" stroke="#F3F4F6" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="60" y1="170" x2="480" y2="170" stroke="#9CA3AF" stroke-width="1.5" />
+        <line x1="60" y1="30" x2="60" y2="170" stroke="#9CA3AF" stroke-width="1.5" />
+
+        <!-- Graduations Y (0 à 4 parcelles) -->
+        <text x="50" y="174" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+        <text x="50" y="139" font-size="11" fill="#6B7280" text-anchor="end">1</text>
+        <text x="50" y="104" font-size="11" fill="#6B7280" text-anchor="end">2</text>
+        <text x="50" y="69" font-size="11" fill="#6B7280" text-anchor="end">3</text>
+        <text x="50" y="34" font-size="11" fill="#6B7280" text-anchor="end">4</text>
+        <text x="25" y="100" font-size="11" font-weight="600" fill="#374151" transform="rotate(-90 25 100)" text-anchor="middle">Nb parcelles</text>
+
+        <!-- GROUPE 1 : BONABERI (x centre = 180) -->
+        <!-- Barre Engrais OUI : N=3 (hauteur = 3 * 35 = 105px -> y=65) -->
+        <rect x="130" y="65" width="45" height="105" fill="#059669" rx="3" />
+        <text x="152" y="58" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">3</text>
+        <!-- Barre Engrais NON : N=2 (hauteur = 2 * 35 = 70px -> y=100) -->
+        <rect x="185" y="100" width="45" height="70" fill="#9CA3AF" rx="3" />
+        <text x="207" y="93" font-size="12" font-weight="700" fill="#4B5563" text-anchor="middle">2</text>
+        <text x="180" y="192" font-size="13" font-weight="700" fill="#1F2937" text-anchor="middle">Bonabéri</text>
+
+        <!-- GROUPE 2 : BEPANDA (x centre = 360) -->
+        <!-- Barre Engrais OUI : N=1 (hauteur = 1 * 35 = 35px -> y=135) -->
+        <rect x="310" y="135" width="45" height="35" fill="#059669" rx="3" />
+        <text x="332" y="128" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">1</text>
+        <!-- Barre Engrais NON : N=4 (hauteur = 4 * 35 = 140px -> y=30) -->
+        <rect x="365" y="30" width="45" height="140" fill="#9CA3AF" rx="3" />
+        <text x="387" y="23" font-size="12" font-weight="700" fill="#4B5563" text-anchor="middle">4</text>
+        <text x="360" y="192" font-size="13" font-weight="700" fill="#1F2937" text-anchor="middle">Bépanda</text>
+
+        <!-- Légende -->
+        <rect x="380" y="10" width="12" height="12" fill="#059669" rx="2" />
+        <text x="398" y="20" font-size="11" fill="#374151">Engrais : Oui</text>
+        <rect x="470" y="10" width="12" height="12" fill="#9CA3AF" rx="2" />
+        <text x="488" y="20" font-size="11" fill="#374151">Engrais : Non</text>
+      </svg>
+    </div>
+
+    <!-- 8. TEST DU CHI-DEUX D'INDÉPENDANCE -->
+    <h2><i class="fa-solid fa-superscript" style="color:#2563EB;"></i> 8. Le test du $\chi^2$ d'indépendance</h2>
+
+    <p>
+      Pour tester formellement si la différence de répartition observée dépasse les simples fluctuations d'échantillonnage, on applique le <strong>test du $\chi^2$ (Chi-deux) d'indépendance</strong> :
+    </p>
+
+    <div class="formula-box">
+      $$\chi^2 = \sum_{i=1}^r \sum_{j=1}^c \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \quad \text{avec } E_{ij} = \frac{\text{Total ligne } i \times \text{Total colonne } j}{N_{\text{total}}}$$
+    </div>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>chisq.test(table(donnees$village, donnees$engrais))</code></pre>
+    </div>
+
+    <p>
+      Le test compare les effectifs observés aux effectifs théoriques qui apparaîtraient en cas d'indépendance parfaite :
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin:20px 0;">
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:8px; padding:18px;">
+        <div style="font-weight:700; font-size:14.5px; color:#374151; margin-bottom:8px;">
+          <span style="background:#E5E7EB; color:#1F2937; padding:2px 8px; border-radius:4px; font-weight:700;">$H_0$</span> Hypothèse nulle
+        </div>
+        <p style="font-size:14px; color:#1F2937; margin-bottom:0; font-weight:600;">
+          « Les deux variables qualitatives sont indépendantes. »
+        </p>
+        <p style="font-size:13px; color:#6B7280; margin-top:8px; margin-bottom:0;">
+          Le village où se trouve la parcelle n'a pas d'influence sur la probabilité d'utiliser de l'engrais.
+        </p>
+      </div>
+
+      <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:18px;">
+        <div style="font-weight:700; font-size:14.5px; color:#1E40AF; margin-bottom:8px;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700;">$H_1$</span> Hypothèse alternative
+        </div>
+        <p style="font-size:14px; color:#1E3A8A; margin-bottom:0; font-weight:600;">
+          « Les deux variables qualitatives ne sont pas indépendantes. »
+        </p>
+        <p style="font-size:13px; color:#1E40AF; margin-top:8px; margin-bottom:0;">
+          Il existe une association entre le village et le recours à l'engrais.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-example" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-magnifying-glass"></i> Décision sur la p-value</div>
+      <p style="font-size:14px; margin-bottom:6px;">
+        • <strong>Si $p < 0{,}05$ :</strong> Rejet de $H_0$ &rarr; il existe une association statistiquement significative entre les variables.
+      </p>
+      <p style="font-size:14px; margin-bottom:0;">
+        • <strong>Si $p \ge 0{,}05$ :</strong> On ne rejette pas $H_0$ &rarr; les données ne permettent pas de conclure à une association statistiquement significative.
+      </p>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-circle-exclamation"></i> Rigueur de rédaction</div>
+      <p style="font-size:14px; margin-bottom:0;">
+        Ne dites jamais : <em>« p &ge; 0,05 prouve que les variables sont totalement indépendantes »</em>. On dit simplement qu'on ne détecte pas de liaison significative avec les données disponibles.
+      </p>
+    </div>
+
+    <!-- 9. ATTENTION AUX EFFECTIFS FAIBLES -->
+    <h2><i class="fa-solid fa-shield-halved" style="color:#D97706;"></i> 9. Attention aux effectifs faibles</h2>
+
+    <p>
+      Le test du &chi;&sup2; repose sur une approximation mathématique qui exige des effectifs théoriques suffisants dans chaque case du tableau.
+    </p>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Limites des petits effectifs</div>
+      <p style="font-size:14px; margin-bottom:0;">
+        Le test du &chi;&sup2; utilise des effectifs attendus. Lorsque certains effectifs sont trop faibles (par exemple sur notre échantillon de 10 parcelles où les effectifs attendus sont de 2 et 3), le &chi;&sup2; peut ne pas être fiable.
+      </p>
+    </div>
+
+    <p>
+      Dans cette situation, l'alternative classique est le <strong>test exact de Fisher</strong>, qui calcule exactement la probabilité sans faire d'approximation :
+    </p>
+
+    <div class="code-block-container" style="margin:16px 0;">
+      <pre style="background:#1F2937; color:#F9FAFB; padding:16px; border-radius:6px; font-family:'IBM Plex Mono', monospace; font-size:13.5px; overflow-x:auto;"><code>fisher.test(table(donnees$village, donnees$engrais))</code></pre>
+    </div>
+
+    <!-- 10. TABLEAU DE CHOIX -->
+    <h2><i class="fa-solid fa-diagram-project" style="color:#059669;"></i> 10. Tableau de choix de l'analyse</h2>
+
+    <p>
+      Ce tableau récapitule la démarche systématique à adopter :
+    </p>
+
+    <div class="table-responsive" style="margin:20px 0;">
+      <table class="table-styled" style="width:100%; border:1px solid #E5E7EB; border-collapse:collapse; text-align:left;">
+        <thead>
+          <tr style="background:#1F2937; color:#FFFFFF;">
+            <th style="padding:12px; font-weight:600;">Type des variables</th>
+            <th style="padding:12px; font-weight:600;">Question posée</th>
+            <th style="padding:12px; font-weight:600;">Représentation graphique</th>
+            <th style="padding:12px; font-weight:600;">Analyse principale</th>
+          </tr>
+        </thead>
+        <tbody style="font-size:14px;">
+          <tr>
+            <td style="padding:10px 12px; font-weight:600; color:#1E40AF; border-bottom:1px solid #E5E7EB;">
+              Quantitative + Quantitative
+            </td>
+            <td style="padding:10px 12px; border-bottom:1px solid #E5E7EB;">
+              Existe-t-il une relation linéaire entre les grandeurs ?
+            </td>
+            <td style="padding:10px 12px; border-bottom:1px solid #E5E7EB;">
+              Nuage de points (Scatterplot)
+            </td>
+            <td style="padding:10px 12px; font-weight:700; color:#1E40AF; border-bottom:1px solid #E5E7EB;">
+              Corrélation (Pearson / Spearman)
+            </td>
+          </tr>
+          <tr style="background:#FAFAFA;">
+            <td style="padding:10px 12px; font-weight:600; color:#065F46; border-bottom:1px solid #E5E7EB;">
+              Qualitative + Qualitative
+            </td>
+            <td style="padding:10px 12px; border-bottom:1px solid #E5E7EB;">
+              Les modalités sont-elles associées ou indépendantes ?
+            </td>
+            <td style="padding:10px 12px; border-bottom:1px solid #E5E7EB;">
+              Barres groupées ou empilées
+            </td>
+            <td style="padding:10px 12px; font-weight:700; color:#065F46; border-bottom:1px solid #E5E7EB;">
+              Test du &chi;&sup2; d'indépendance (ou Fisher)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bullseye"></i> Réflexe méthodologique</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:700; color:#065F46;">
+        Avant de choisir un test, commencez toujours par identifier le type de chaque variable.
+      </p>
+    </div>
+
+    <!-- 11. ET DANS RAMSES ? -->
+    <h2><i class="fa-solid fa-laptop-code" style="color:#111827;"></i> 11. Et dans Ramses ?</h2>
+
+    <p>
+      Dans Ramses, ces deux situations disposent d'outils dédiés accessibles directement depuis la barre de navigation :
+    </p>
+
+    <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:20px 0;">
+      <!-- A. Deux variables quantitatives dans Ramses -->
+      <div style="margin-bottom:20px;">
+        <div style="font-weight:700; font-size:14.5px; color:#1E40AF; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-chart-line"></i> 1. Analyser deux variables quantitatives
+        </div>
+        <ul style="margin:0; padding-left:22px; font-size:14px; color:#374151; line-height:1.6;">
+          <li><strong>Matrice de corrélation :</strong> Rendez-vous dans <strong>« Statistiques Descriptives »</strong> &rarr; <strong>« Matrice de Corrélation »</strong>. Sélectionnez vos variables (ex : <code>superficie</code> et <code>rendement</code>), choisissez la méthode (<strong>Pearson</strong> ou <strong>Spearman</strong>), et cochez <em>« Calculer et afficher les p-values »</em>.</li>
+          <li><strong>Modélisation & Régression :</strong> Pour quantifier la relation prédictive, rendez-vous dans le menu <strong>« Modèles de régression »</strong>.</li>
+          <li><strong>Nuage de points :</strong> Dans l'onglet <strong>« Visualisation »</strong> (Chart Builder), choisissez le type <em>Nuage de points</em>.</li>
+        </ul>
+      </div>
+
+      <!-- B. Deux variables qualitatives dans Ramses -->
+      <div>
+        <div style="font-weight:700; font-size:14.5px; color:#065F46; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-table-cells"></i> 2. Croiser deux variables qualitatives
+        </div>
+        <ul style="margin:0; padding-left:22px; font-size:14px; color:#374151; line-height:1.6;">
+          <li><strong>Tableaux Croisés descriptifs :</strong> Rendez-vous dans <strong>« Statistiques Descriptives »</strong> &rarr; <strong>« Tableaux Croisés »</strong> pour afficher les effectifs, les pourcentages par ligne (% Ligne) ou par colonne (% Col) et le diagramme de répartition bivariée.</li>
+          <li><strong>Tests d'indépendance :</strong> Rendez-vous dans <strong>« Tests Statistiques »</strong> &rarr; <strong>« Tests de Contingence »</strong>. Choisissez votre variable en ligne (ex : <code>village</code>) et en colonne (ex : <code>engrais</code>).</li>
+          <li><strong>Alternatives pour petits effectifs :</strong> Dans la liste déroulante <em>« Test d'indépendance / association : »</em>, Ramses vous permet de basculer instantanément entre le <strong>« Test du Chi-deux (chisq.test) »</strong> (avec ou sans correction de Yates) et le <strong>« Test exact de Fisher (fisher.test) »</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-graduation-cap"></i> À retenir sur l'outil</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#065F46;">
+        Ramses réalise les calculs, mais c'est à vous de reconnaître la structure de vos variables et de poser la bonne question.
+      </p>
+    </div>
+
+    <!-- 12. PETIT EXERCICE -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#D97706;"></i> 12. Petit exercice : quel test choisir ?</h2>
+
+    <p>
+      Pour chacune des situations agronomiques suivantes, identifiez le type des variables et choisissez l'analyse statistique adaptée :
+    </p>
+
+    <!-- Exercice 1 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <div style="font-weight:700; font-size:14.5px; color:#111827; margin-bottom:8px;">
+        Situation 1 : Âge de l'exploitant et Rendement
+      </div>
+      <p style="font-size:14px; color:#374151; margin-bottom:14px;">
+        « Je veux savoir si l'âge de l'agriculteur ($années$) et le rendement obtenu ($t/ha$) sont liés. »
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="quiz-btn quiz-module10-q1-btn" data-answer="correct">
+          <i class="fa-regular fa-circle"></i> Corrélation (deux variables quantitatives).
+        </button>
+        <button class="quiz-btn quiz-module10-q1-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> Test du &chi;&sup2; d'indépendance (deux variables qualitatives).
+        </button>
+        <button class="quiz-btn quiz-module10-q1-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> Test t de Student pour échantillons appariés.
+        </button>
+      </div>
+      <div id="quiz-module10-q1-feedback" class="quiz-feedback" style="display:none; margin-top:12px; padding:12px 16px; border-radius:6px; font-size:14px;"></div>
+    </div>
+
+    <!-- Exercice 2 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <div style="font-weight:700; font-size:14.5px; color:#111827; margin-bottom:8px;">
+        Situation 2 : Village et Utilisation d'engrais
+      </div>
+      <p style="font-size:14px; color:#374151; margin-bottom:14px;">
+        « Je veux savoir si le village (Nom du village) et l'utilisation d'engrais (Oui / Non) sont associés. »
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="quiz-btn quiz-module10-q2-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> Corrélation linéaire de Pearson.
+        </button>
+        <button class="quiz-btn quiz-module10-q2-btn" data-answer="correct">
+          <i class="fa-regular fa-circle"></i> Test du &chi;&sup2; d'indépendance (deux variables qualitatives).
+        </button>
+        <button class="quiz-btn quiz-module10-q2-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> ANOVA à un facteur.
+        </button>
+      </div>
+      <div id="quiz-module10-q2-feedback" class="quiz-feedback" style="display:none; margin-top:12px; padding:12px 16px; border-radius:6px; font-size:14px;"></div>
+    </div>
+
+    <!-- Exercice 3 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <div style="font-weight:700; font-size:14.5px; color:#111827; margin-bottom:8px;">
+        Situation 3 : Superficie et Rendement
+      </div>
+      <p style="font-size:14px; color:#374151; margin-bottom:14px;">
+        « Je veux savoir si la superficie ($ha$) et le rendement ($t/ha$) sont liés. »
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="quiz-btn quiz-module10-q3-btn" data-answer="correct">
+          <i class="fa-regular fa-circle"></i> Corrélation (deux variables quantitatives).
+        </button>
+        <button class="quiz-btn quiz-module10-q3-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> Test du &chi;&sup2; d'indépendance.
+        </button>
+        <button class="quiz-btn quiz-module10-q3-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> Test exact de Fisher.
+        </button>
+      </div>
+      <div id="quiz-module10-q3-feedback" class="quiz-feedback" style="display:none; margin-top:12px; padding:12px 16px; border-radius:6px; font-size:14px;"></div>
+    </div>
+
+    <!-- Exercice 4 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+      <div style="font-weight:700; font-size:14.5px; color:#111827; margin-bottom:8px;">
+        Situation 4 : Sexe et Équipement agricole
+      </div>
+      <p style="font-size:14px; color:#374151; margin-bottom:14px;">
+        « Je veux savoir si le sexe de l'exploitant (Homme / Femme) et la possession d'un équipement agricole motorisé (Possède / Ne possède pas) sont associés. »
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="quiz-btn quiz-module10-q4-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> Corrélation linéaire de Pearson.
+        </button>
+        <button class="quiz-btn quiz-module10-q4-btn" data-answer="wrong">
+          <i class="fa-regular fa-circle"></i> ANOVA à mesures répétées.
+        </button>
+        <button class="quiz-btn quiz-module10-q4-btn" data-answer="correct">
+          <i class="fa-regular fa-circle"></i> Test du &chi;&sup2; d'indépendance (deux variables qualitatives).
+        </button>
+      </div>
+      <div id="quiz-module10-q4-feedback" class="quiz-feedback" style="display:none; margin-top:12px; padding:12px 16px; border-radius:6px; font-size:14px;"></div>
+    </div>
+
+    <!-- 13. À RETENIR -->
+    <h2><i class="fa-solid fa-bookmark" style="color:#059669;"></i> 13. À retenir</h2>
+
+    <div class="callout callout-remember" style="margin-top:16px;">
+      <div class="callout-title"><i class="fa-solid fa-check-double"></i> Les points clés du chapitre</div>
+      <ul style="margin:10px 0 10px 0; padding-left:22px; font-size:14.5px; line-height:1.7; color:#065F46;">
+        <li><strong>Deux variables quantitatives</strong> &rarr; penser à la <strong>corrélation</strong> (et au nuage de points).</li>
+        <li><strong>Deux variables qualitatives</strong> &rarr; penser au <strong>test du &chi;&sup2; d'indépendance</strong> (et au tableau de contingence).</li>
+        <li><strong>Effectifs faibles</strong> &rarr; pour les variables qualitatives à petits effectifs attendus, penser au <strong>test exact de Fisher</strong>.</li>
+        <li><strong>Toujours commencer par identifier le type des variables.</strong></li>
+      </ul>
+      <div style="border-top:1px solid #A7F3D0; padding-top:10px; margin-top:8px; font-weight:700; font-size:15px; color:#065F46;">
+        « Le bon test commence par la bonne question et la bonne identification des variables. »
+      </div>
+    </div>
+
+    <div class="chapter-nav-footer">
+      <a href="09-comparer-3-groupes-ou-plus.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">09. Comparer 3 groupes ou plus</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">11. Exploiter ses résultats et rédiger un article</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

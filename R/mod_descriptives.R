@@ -80,7 +80,8 @@ mod_descriptives_quanti_ui <- function(id) {
         bslib::nav_panel(
           title = "Tableau des statistiques",
           bslib::card_body(
-            padding = 0,
+            padding = "1rem",
+            shiny::uiOutput(ns("quanti_tiles")),
             DT::dataTableOutput(ns("table_quanti"))
           )
         ),
@@ -165,7 +166,8 @@ mod_descriptives_quali_ui <- function(id) {
         bslib::nav_panel(
           title = "Table des effectifs & pourcentages",
           bslib::card_body(
-            padding = 0,
+            padding = "1rem",
+            shiny::uiOutput(ns("quali_tiles")),
             DT::dataTableOutput(ns("table_quali"))
           )
         ),
@@ -1023,6 +1025,42 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
       shiny::tags$span(class = "text-muted small", paste0("Dataset : ", data_holder$name))
     })
 
+    output$quanti_tiles <- shiny::renderUI({
+      shiny::req(quanti_state$ready, quanti_state$vars, data_holder$df)
+      df <- data_holder$df
+      vars <- quanti_state$vars[quanti_state$vars %in% names(df)]
+      if (length(vars) == 0) return(NULL)
+
+      target_var <- vars[1]
+      sub_vec <- df[[target_var]]
+      vals <- sub_vec[!is.na(sub_vec)]
+      n_val <- length(vals)
+      if (n_val == 0) return(NULL)
+
+      m_val <- mean(vals)
+      med_val <- stats::median(vals)
+      sd_val <- if (n_val > 1) stats::sd(vals) else NA_real_
+      min_val <- min(vals)
+      max_val <- max(vals)
+
+      tiles <- list(
+        list(label = "Effectif (n)", value = as.character(n_val), subtext = paste0("NA = ", sum(is.na(sub_vec)))),
+        list(label = "Moyenne", value = round(m_val, 2), subtext = if (!is.na(sd_val) && m_val != 0) paste0("CV = ", round((sd_val / m_val) * 100, 1), " %") else NULL),
+        list(label = "M\u00e9diane", value = round(med_val, 2), subtext = paste0("IQR = ", round(stats::IQR(vals), 2))),
+        list(label = "\u00c9cart-type", value = if (!is.na(sd_val)) round(sd_val, 2) else "\u2014", subtext = if (!is.na(sd_val)) paste0("Var = ", round(sd_val^2, 2)) else NULL),
+        list(label = "Minimum", value = round(min_val, 2), subtext = "Valeur min"),
+        list(label = "Maximum", value = round(max_val, 2), subtext = "Valeur max")
+      )
+
+      title_txt <- if (length(vars) > 1) {
+        paste0("R\u00e9sum\u00e9 : ", target_var, " (premi\u00e8re variable)")
+      } else {
+        paste0("R\u00e9sum\u00e9 statistique : ", target_var)
+      }
+
+      ramses_result_tiles(tiles, title = title_txt)
+    })
+
     output$table_quanti <- DT::renderDataTable({
       shiny::req(quanti_state$ready, quanti_state$vars, data_holder$df)
       df <- data_holder$df
@@ -1296,6 +1334,37 @@ mod_descriptives_server <- function(id, data_holder, append_to_rmd) {
         ),
         shiny::tags$span(class = "badge bg-success", "Fr\u00e9quences & Pourcentages")
       )
+    })
+
+    output$quali_tiles <- shiny::renderUI({
+      shiny::req(quali_state$ready, quali_state$var, data_holder$df)
+      df <- data_holder$df
+      v <- quali_state$var
+      if (!(v %in% names(df))) return(NULL)
+
+      raw_vec <- df[[v]]
+      valid_vec <- raw_vec[!is.na(raw_vec)]
+      n_total <- length(valid_vec)
+      if (n_total == 0) return(NULL)
+
+      tab <- table(valid_vec)
+      n_modalites <- length(tab)
+      if (n_modalites == 0) return(NULL)
+
+      max_idx <- which.max(tab)
+      mode_name <- names(tab)[max_idx]
+      mode_n <- as.numeric(tab[max_idx])
+      mode_pct <- round((mode_n / n_total) * 100, 1)
+
+      tiles <- list(
+        list(label = "Effectif total (N)", value = as.character(n_total), subtext = paste0("NA = ", sum(is.na(raw_vec)))),
+        list(label = "Modalit\u00e9s", value = as.character(n_modalites), subtext = "Cat\u00e9gories distinctes"),
+        list(label = "Modalit\u00e9 dominante", value = as.character(mode_name), subtext = "Mode", status = "primary"),
+        list(label = "Effectif dominant", value = as.character(mode_n), subtext = "Fr\u00e9quence absolue"),
+        list(label = "Part dominante", value = paste0(mode_pct, " %"), subtext = "Pourcentage relatif")
+      )
+
+      ramses_result_tiles(tiles, title = paste0("R\u00e9sum\u00e9 cat\u00e9goriel : ", v))
     })
 
     output$table_quali <- DT::renderDataTable({

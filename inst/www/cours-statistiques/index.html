@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apprendre les statistiques avec Ramses — De la question de terrain à une analyse statistique compréhensible</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="katex/katex.min.css">
+  <script defer src="katex/katex.min.js"></script>
+  <script defer src="katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <!-- Barre latérale de navigation -->
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-seedling"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée avec Ramses</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher un module, test...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Accueil & Méthode</div>
+      <a href="index.html" class="nav-link active">
+        <i class="fa-solid fa-house"></i> 00. Accueil de la formation
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="chapitres/01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="chapitres/02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="chapitres/02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="chapitres/03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="chapitres/04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="chapitres/05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="chapitres/05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="chapitres/06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="chapitres/07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="chapitres/08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="chapitres/08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="chapitres/09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="chapitres/09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="chapitres/10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="chapitres/10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="chapitres/11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="chapitres/12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="chapitres/13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="chapitres/14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses">
+        <i class="fa-solid fa-arrow-left"></i> Retour à Ramses
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenu Principal -->
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <span>Ramses 1.0</span> &nbsp;/&nbsp; <span>Aide & Formation</span> &nbsp;/&nbsp; <strong>Module 0 : Accueil du cours</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="chapitres/01-bienvenue-ramses.html" class="btn-action" style="background:#2563EB; color:#FFFFFF; border:none;">
+          <i class="fa-solid fa-play"></i> Commencer le Module 1
+        </a>
+        <button class="btn-action btn-return-ramses">
+          <i class="fa-solid fa-arrow-left"></i> Retour à Ramses
+        </button>
+      </div>
+    </div>
+
+    <!-- TITRE ET SOUS-TITRE OFFICIELS DU MODULE 0 -->
+    <h1 class="course-title">Apprendre les statistiques avec Ramses</h1>
+    <div class="course-subtitle">De la question de terrain à une analyse statistique compréhensible</div>
+
+    <!-- MESSAGE CENTRAL ET PARCOURS EN FLUX -->
+    <div class="callout callout-ramses" style="margin-top:20px; border-left:4px solid #2563EB;">
+      <div class="callout-title" style="font-size:16px; color:#1E40AF;">
+        <i class="fa-solid fa-lightbulb"></i> Le principe fondamental de la démarche
+      </div>
+      <p style="font-size:15.5px; font-weight:600; color:#1F2937; margin-bottom:12px;">
+        « On ne commence pas par une formule ou un test statistique. On commence par une question. »
+      </p>
+      <p style="margin-bottom:16px; color:#4B5563; font-size:14px;">
+        Chaque analyse statistique suit un fil conducteur rigoureux et naturel, de la parcelle d'expérimentation jusqu'à la conclusion décisionnelle :
+      </p>
+
+      <!-- Chaîne méthodologique visuelle -->
+      <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; background:#FFFFFF; padding:14px 12px; border-radius:8px; border:1px solid #DBEAFE;">
+        <span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; padding:6px 12px; border-radius:6px; font-size:13px; border:1px solid #BFDBFE;">Question</span>
+        <i class="fa-solid fa-arrow-right" style="color:#93C5FD; font-size:12px;"></i>
+        <span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; padding:6px 12px; border-radius:6px; font-size:13px; border:1px solid #BFDBFE;">Données</span>
+        <i class="fa-solid fa-arrow-right" style="color:#93C5FD; font-size:12px;"></i>
+        <span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; padding:6px 12px; border-radius:6px; font-size:13px; border:1px solid #BFDBFE;">Compréhension</span>
+        <i class="fa-solid fa-arrow-right" style="color:#93C5FD; font-size:12px;"></i>
+        <span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; padding:6px 12px; border-radius:6px; font-size:13px; border:1px solid #BFDBFE;">Analyse</span>
+        <i class="fa-solid fa-arrow-right" style="color:#93C5FD; font-size:12px;"></i>
+        <span style="background:#EFF6FF; color:#1D4ED8; font-weight:700; padding:6px 12px; border-radius:6px; font-size:13px; border:1px solid #BFDBFE;">Résultat</span>
+        <i class="fa-solid fa-arrow-right" style="color:#93C5FD; font-size:12px;"></i>
+        <span style="background:#ECFDF5; color:#065F46; font-weight:700; padding:6px 12px; border-radius:6px; font-size:13px; border:1px solid #A7F3D0;">Interprétation</span>
+        <i class="fa-solid fa-arrow-right" style="color:#A7F3D0; font-size:12px;"></i>
+        <span style="background:#ECFDF5; color:#065F46; font-weight:700; padding:6px 14px; border-radius:6px; font-size:13px; border:1px solid #059669;">Conclusion</span>
+      </div>
+    </div>
+
+    <!-- 1. BIENVENUE DANS LA FORMATION -->
+    <h2><i class="fa-solid fa-hand-wave" style="color:#2563EB;"></i> 1. Bienvenue dans la formation</h2>
+    <p>
+      Bienvenue dans le parcours interactif d'apprentissage des méthodes statistiques avec <strong>Ramses 1.0</strong>.
+      Cette formation a été conçue pour réconcilier la rigueur statistique avec la réalité du terrain agronomique et biologique.
+    </p>
+    <p>
+      <strong>Ramses</strong> est une plateforme logicielle complète conçue pour vous accompagner à chaque étape de votre démarche d'investigation :
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin:16px 0 20px;">
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:14px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1E40AF; margin-bottom:4px;"><i class="fa-solid fa-magnifying-glass-chart"></i> Comprendre ses données</div>
+        <div style="font-size:13px; color:#4B5563;">Explorer les variables, déceler les formats et vérifier la propreté du fichier avant tout calcul.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:14px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1E40AF; margin-bottom:4px;"><i class="fa-solid fa-diagram-project"></i> Choisir une analyse adaptée</div>
+        <div style="font-size:13px; color:#4B5563;">Identifier la méthode statistique juste (descriptive, test paramétrique, non-paramétrique ou corrélation) selon la question.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:14px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1E40AF; margin-bottom:4px;"><i class="fa-solid fa-gears"></i> Réaliser l'analyse</div>
+        <div style="font-size:13px; color:#4B5563;">Exécuter le calcul avec fiabilité grâce au moteur R intégré sans barrière de programmation.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:14px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#065F46; margin-bottom:4px;"><i class="fa-solid fa-chart-line"></i> Comprendre les résultats</div>
+        <div style="font-size:13px; color:#4B5563;">Donner du sens aux p-values, moyennes, intervalles de confiance et graphiques générés.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:14px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#065F46; margin-bottom:4px;"><i class="fa-solid fa-file-lines"></i> Présenter clairement</div>
+        <div style="font-size:13px; color:#4B5563;">Structurer vos tableaux et figures pour vos rapports d'expertise et articles scientifiques.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-shield-halved"></i> Une précision essentielle</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        <strong>Ramses ne remplace jamais le raisonnement du chercheur ou du praticien.</strong> L'outil élimine la complexité technique et le risque d'erreur de calcul, mais c'est vous qui formulez la question biologique et donnez du sens aux conclusions.
+      </p>
+    </div>
+
+    <!-- 2. UNE FORMATION BASÉE SUR DES PROBLÈMES RÉELS -->
+    <h2><i class="fa-solid fa-wheat-awn" style="color:#059669;"></i> 2. Une formation basée sur des problèmes réels</h2>
+    <p>
+      Chaque module de ce cours s'appuie sur une situation agricole concrète que tout expérimentateur ou gestionnaire rencontre sur le terrain. 
+      Toutes les analyses répondent à une question précise :
+    </p>
+
+    <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:18px; margin:16px 0 24px;">
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+        <li style="display:flex; align-items:flex-start; gap:10px; font-size:14.5px;">
+          <i class="fa-solid fa-circle-question" style="color:#2563EB; margin-top:4px;"></i>
+          <div><strong>« Mes deux variétés de maïs donnent-elles le même rendement ? »</strong> <span style="color:#6B7280;">&rarr; Comparaison de deux moyennes indépendantes (Module 08)</span></div>
+        </li>
+        <li style="display:flex; align-items:flex-start; gap:10px; font-size:14.5px;">
+          <i class="fa-solid fa-circle-question" style="color:#2563EB; margin-top:4px;"></i>
+          <div><strong>« Quel village compte le plus grand nombre de producteurs ? »</strong> <span style="color:#6B7280;">&rarr; Effectifs et pourcentages de variables qualitatives (Module 03)</span></div>
+        </li>
+        <li style="display:flex; align-items:flex-start; gap:10px; font-size:14.5px;">
+          <i class="fa-solid fa-circle-question" style="color:#2563EB; margin-top:4px;"></i>
+          <div><strong>« Le rendement est-il lié à la superficie de la parcelle ? »</strong> <span style="color:#6B7280;">&rarr; Corrélation et régression linéaire (Module 10)</span></div>
+        </li>
+        <li style="display:flex; align-items:flex-start; gap:10px; font-size:14.5px;">
+          <i class="fa-solid fa-circle-question" style="color:#2563EB; margin-top:4px;"></i>
+          <div><strong>« Trois variétés sous fertilisation donnent-elles des rendements différents ? »</strong> <span style="color:#6B7280;">&rarr; Analyse de variance ANOVA et comparaisons multiples (Module 09)</span></div>
+        </li>
+        <li style="display:flex; align-items:flex-start; gap:10px; font-size:14.5px;">
+          <i class="fa-solid fa-circle-question" style="color:#2563EB; margin-top:4px;"></i>
+          <div><strong>« Le recours à l'engrais est-il associé au village d'origine ? »</strong> <span style="color:#6B7280;">&rarr; Tableau de contingence et test d'indépendance du Chi-2 (Module 10)</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 3. LE PARCOURS DE FORMATION (LES 11 MODULES) -->
+    <h2><i class="fa-solid fa-list-check" style="color:#2563EB;"></i> 3. Le parcours de formation : les 11 modules</h2>
+    <p>
+      Suivez les 11 chapitres dans l'ordre pour acquérir une autonomie complète, des premiers résumés jusqu'à la rédaction de vos résultats scientifiques :
+    </p>
+
+    <div class="cards-grid">
+      <!-- 01 -->
+      <a href="chapitres/01-bienvenue-ramses.html" class="chapter-card">
+        <div class="card-num">Chapitre 01</div>
+        <div class="card-title">Bienvenue dans Ramses : de mon problème à mes premières données</div>
+        <div class="card-desc">Découvrir les données, calculer une moyenne avec R, lire un graphique réel et réaliser l'analyse dans Ramses.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 10 min</span>
+          <span>Découverte &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 02 -->
+      <a href="chapitres/02-comprendre-mes-variables.html" class="chapter-card">
+        <div class="card-num">Chapitre 02</div>
+        <div class="card-title">Comprendre mes variables : quelles informations contient mon fichier ?</div>
+        <div class="card-desc">Variables qualitatives vs quantitatives, pièges des codes chiffrés, comptages et diagramme en barres.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 15 min</span>
+          <span>Variables &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 03 -->
+      <a href="chapitres/03-compter-et-resumer-mes-donnees.html" class="chapter-card">
+        <div class="card-num">Chapitre 03</div>
+        <div class="card-title">Compter et résumer mes données</div>
+        <div class="card-desc">Comment passer d'une liste brute de données à un tableau clair ? Effectifs, pourcentages et diagramme en barres.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 15 min</span>
+          <span>Comptage &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 04 -->
+      <a href="chapitres/04-mesurer-une-variable-quantitative.html" class="chapter-card">
+        <div class="card-num">Chapitre 04</div>
+        <div class="card-title">Mesurer une variable quantitative</div>
+        <div class="card-desc">Comment résumer une série de nombres simplement ? Moyenne, médiane, min, max, écart-type, histogramme et boxplot.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 20 min</span>
+          <span>Quantitatif &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 05 -->
+      <a href="chapitres/05-visualiser-mes-donnees.html" class="chapter-card">
+        <div class="card-num">Chapitre 05</div>
+        <div class="card-title">Visualiser mes données</div>
+        <div class="card-desc">Quel graphique choisir pour mieux comprendre mes données ? Barplot, histogramme, boxplot comparatif et nuage de points.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 20 min</span>
+          <span>Graphiques &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 06 -->
+      <a href="chapitres/06-pourquoi-statistiques-incertitude.html" class="chapter-card">
+        <div class="card-num">Chapitre 06</div>
+        <div class="card-title">Pourquoi les statistiques ne donnent-elles pas toujours une réponse certaine ?</div>
+        <div class="card-desc">Comprendre simplement l'échantillon, la variabilité et l'incertitude. Pourquoi un résultat d'échantillon n'est jamais absolu.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 15 min</span>
+          <span>Incertitude &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 07 -->
+      <a href="chapitres/07-comprendre-hypothese-pvalue.html" class="chapter-card">
+        <div class="card-num">Chapitre 07</div>
+        <div class="card-title">Comprendre l'hypothèse et la p-value</div>
+        <div class="card-desc">Comment décider si une différence observée est probablement due au hasard ? L'hypothèse nulle H₀, H₁ et le seuil α = 0,05.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 20 min</span>
+          <span>p-value &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 08 -->
+      <a href="chapitres/08-comparer-groupes-quel-test.html" class="chapter-card">
+        <div class="card-num">Chapitre 08</div>
+        <div class="card-title">Comparer des groupes : quel test choisir ?</div>
+        <div class="card-desc">Un seul groupe, des groupes indépendants ou des groupes appariés ? Test de Student, Wilcoxon, Mann-Whitney et conditions de validité.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 20 min</span>
+          <span>Comparaisons &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 09 -->
+      <a href="chapitres/09-comparer-3-groupes-ou-plus.html" class="chapter-card">
+        <div class="card-num">Chapitre 09</div>
+        <div class="card-title">Comparer 3 groupes ou plus</div>
+        <div class="card-desc">ANOVA à un facteur, gestion de l'inflation de l'erreur globale, tests post-hoc (Tukey) et alternative non paramétrique de Kruskal-Wallis.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 20 min</span>
+          <span>ANOVA &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 10 -->
+      <a href="chapitres/10-etudier-relation-deux-variables.html" class="chapter-card">
+        <div class="card-num">Chapitre 10</div>
+        <div class="card-title">Étudier la relation entre deux variables</div>
+        <div class="card-desc">Corrélation de Pearson, régression linéaire, nuages de points, tableau de contingence et test d'indépendance du Chi-2 / Fisher.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 25 min</span>
+          <span>Bivarié &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 11 -->
+      <a href="chapitres/11-exploiter-resultats-rediger-article.html" class="chapter-card" style="border: 2px solid #059669;">
+        <div class="card-num" style="background:#ECFDF5; color:#065F46;">Chapitre 11 &bull; Synthèse finale</div>
+        <div class="card-title" style="color:#065F46;">Exploiter ses résultats et rédiger un article</div>
+        <div class="card-desc">Du résultat statistique à une présentation scientifique claire : tableaux de synthèse, figures aux normes, pièges d'interprétation et rédaction.</div>
+        <div class="card-footer-info">
+          <span><i class="fa-regular fa-clock"></i> 25 min</span>
+          <span style="font-weight:700; color:#059669;">Rédaction &rarr;</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- 4. COMMENT APPRENDRE -->
+    <h2><i class="fa-solid fa-graduation-cap" style="color:#059669;"></i> 4. Comment apprendre avec cette formation ?</h2>
+    <p>
+      Chaque chapitre est structuré selon une progression pédagogique en 8 temps, éprouvée pour garantir une compréhension durable sans surcharge :
+    </p>
+
+    <!-- Cycle visuel -->
+    <div style="background:#F9FAFB; border:1px solid var(--border); border-radius:8px; padding:18px; margin:16px 0 20px;">
+      <div style="font-weight:700; color:#1F2937; margin-bottom:10px; font-size:14.5px;">
+        <i class="fa-solid fa-arrows-spin" style="color:#2563EB;"></i> Le cycle d'apprentissage en 8 étapes :
+      </div>
+      <div style="font-family:var(--font-mono); font-size:13.5px; color:#374151; background:#FFFFFF; padding:12px 16px; border-radius:6px; border:1px solid #E5E7EB; line-height:1.8;">
+        <strong>Problème</strong> &rarr; <strong>Données</strong> &rarr; <strong>Observation</strong> &rarr; <strong>Question</strong> &rarr; <strong>Solution</strong> &rarr; <strong>Résultat</strong> &rarr; <strong>Interprétation</strong> &rarr; <strong>Ramses</strong>
+      </div>
+      <p style="margin-top:12px; margin-bottom:0; font-size:14.5px; color:#1E40AF; font-weight:600;">
+        « Je comprends d'abord &rarr; je vois un exemple &rarr; je découvre le code R &rarr; je refais l'analyse en quelques clics dans Ramses. »
+      </p>
+    </div>
+
+    <!-- 5. R ET RAMSES -->
+    <h2><i class="fa-brands fa-r-project" style="color:#2563EB;"></i> 5. R et Ramses : une approche complémentaire</h2>
+    <p>
+      <strong>R</strong> est le langage statistique le plus reconnu et le plus fiable au monde pour la recherche agronomique.
+      Dans chaque module, nous vous montrons la commande R correspondante pour que vous compreniez ce qui se passe sous le capot :
+    </p>
+
+    <pre><code># Exemple : calcul de la moyenne en R
+mean(donnees$rendement)</code></pre>
+
+    <div class="callout callout-info" style="margin-top:14px;">
+      <div class="callout-title"><i class="fa-solid fa-circle-check"></i> Pas besoin de coder !</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        <strong>Vous pouvez aussi réaliser cette analyse directement dans Ramses, sans écrire une seule ligne de code.</strong>
+        Ramses et R ne s'opposent pas : Ramses exécute le même moteur R certifié, tout en vous offrant une interface visuelle claire, intuitive et sans risque d'erreur de syntaxe.
+      </p>
+    </div>
+
+    <!-- 6. POUR QUI ? -->
+    <h2><i class="fa-solid fa-users" style="color:#1F2937;"></i> 6. À qui s'adresse cette formation ?</h2>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin:16px 0 24px;">
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:16px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1F2937; margin-bottom:6px;"><i class="fa-solid fa-user-graduate" style="color:#2563EB;"></i> Étudiants & stagiaires</div>
+        <div style="font-size:13.5px; color:#4B5563;">Pour analyser vos mémoires de licence, master ou thèses d'ingénieur avec rigueur.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:16px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1F2937; margin-bottom:6px;"><i class="fa-solid fa-microscope" style="color:#059669;"></i> Chercheurs débutants</div>
+        <div style="font-size:13.5px; color:#4B5563;">Pour structurer vos protocoles expérimentaux et valider vos jeux de données avant publication.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:16px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1F2937; margin-bottom:6px;"><i class="fa-solid fa-wheat-awn" style="color:#D97706;"></i> Agronomes & techniciens</div>
+        <div style="font-size:13.5px; color:#4B5563;">Pour évaluer l'efficacité de nouvelles variétés, traitements ou pratiques culturales en milieu paysan.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:16px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700; color:#1F2937; margin-bottom:6px;"><i class="fa-solid fa-chart-pie" style="color:#8B5CF6;"></i> Professionnels de données</div>
+        <div style="font-size:13.5px; color:#4B5563;">Pour les personnes souhaitant comprendre et interpréter leurs données sans commencer par des mathématiques complexes.</div>
+      </div>
+    </div>
+
+    <!-- 7. CONSEIL AU DÉBUTANT -->
+    <h2><i class="fa-solid fa-compass" style="color:#D97706;"></i> 7. Le conseil d'or pour bien démarrer</h2>
+
+    <div class="callout callout-warning" style="margin-top:14px; border-left:4px solid #D97706;">
+      <div class="callout-title" style="font-size:16px; color:#92400E;">
+        <i class="fa-solid fa-triangle-exclamation"></i> Ne cherchez pas à mémoriser tous les tests statistiques !
+      </div>
+      <p style="font-size:15px; margin-bottom:12px; color:#1F2937;">
+        Face à un nouveau tableau de données, commencez toujours par vous poser ces <strong>4 questions simples</strong> dans l'ordre :
+      </p>
+      <ol style="margin-left:20px; font-size:14.5px; color:#1F2937; display:flex; flex-direction:column; gap:6px;">
+        <li><strong>Quelle est ma question précise ?</strong> (ex. <em>« La variété B produit-elle plus que la variété A ? »</em>)</li>
+        <li><strong>Quelles sont mes variables ?</strong> (ex. <code>variete</code> et <code>rendement</code>)</li>
+        <li><strong>Quel est le type de mes variables ?</strong> (ex. <code>variete</code> est qualitative à 2 modalités, <code>rendement</code> est quantitative continue)</li>
+        <li><strong>Que veux-je comparer ou étudier ?</strong> (ex. <em>« Comparer la moyenne de rendement entre 2 groupes indépendants »</em>)</li>
+      </ol>
+      <p style="margin-top:12px; margin-bottom:0; font-weight:700; color:#92400E; font-size:14.5px;">
+        &rarr; Une fois ces 4 réponses posées, le choix de l'analyse (dans Ramses comme en R) devient évident et automatique !
+      </p>
+    </div>
+
+    <!-- 8. BOUTON DE DÉMARRAGE -->
+    <div style="text-align:center; margin:40px 0 30px; background:#FFFFFF; border:1px solid var(--border); border-radius:12px; padding:32px 20px; box-shadow:var(--shadow-md);">
+      <h3 style="margin-top:0; font-size:20px; color:var(--primary-dark);">Prêt à explorer vos données avec méthode ?</h3>
+      <p style="color:var(--text-muted); font-size:15px; max-width:540px; margin:8px auto 22px;">
+        Commencez par le Module 1 pour découvrir comment formuler votre premier problème agronomique et manipuler vos premières observations.
+      </p>
+      <a href="chapitres/01-bienvenue-ramses.html" class="btn-action" style="background:#2563EB; color:#FFFFFF; font-size:16px; padding:12px 28px; border-radius:8px; font-weight:700; display:inline-flex; align-items:center; gap:10px; border:none; box-shadow:0 4px 6px -1px rgba(37, 99, 235, 0.3);">
+        <i class="fa-solid fa-play"></i> Commencer le Module 1 &rarr;
+      </a>
+    </div>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03. Compter et résumer mes données — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link active">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 03</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Compter et résumer mes données</h1>
+    <div class="course-subtitle">Comment passer d'une liste brute de données à un tableau clair et exploitable ?</div>
+
+    <!-- ÉTAPE 1 — UNE VRAIE QUESTION -->
+    <h2><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> Étape 1 — Une vraie question</h2>
+
+    <p>Partons d'une situation de terrain très concrète :</p>
+
+    <div class="callout callout-try">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question de l'animateur agricole</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Nous suivons un total de 10 parcelles de maïs. Certaines sont situées à Bonabéri et d'autres à Bépanda. Mais au juste, combien de parcelles avons-nous dans chaque village ? »
+      </p>
+    </div>
+
+    <p>Avant de regarder les calculs informatiques, prenez deux secondes : comment feriez-vous vous-même avec une feuille de papier et un stylo ?</p>
+    <p>Vous feriez une marque pour chaque parcelle croisée, puis vous compteriez le total. C'est exactement ce que nous allons automatiser !</p>
+
+    <!-- ÉTAPE 2 — OBSERVER LES DONNÉES -->
+    <h2><i class="fa-solid fa-eye" style="color:#059669;"></i> Étape 2 — Observer les données</h2>
+
+    <p>Rappelons les données de nos 10 parcelles que nous suivons depuis le début :</p>
+    <ul>
+      <li>Chaque <strong>ligne</strong> représente une observation (une parcelle précise) ;</li>
+      <li>La colonne <code>village</code> est une <strong>variable qualitative</strong> (elle désigne des noms de lieux).</li>
+    </ul>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:20%;">Parcelle</th>
+            <th style="width:30%;">Village</th>
+            <th style="width:25%; text-align:right;">Superficie (ha)</th>
+            <th style="width:25%; text-align:right;">Rendement (t/ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>P01</strong></td>
+            <td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td>
+            <td style="text-align:right;">1.2</td>
+            <td style="text-align:right;">2.8</td>
+          </tr>
+          <tr>
+            <td><strong>P02</strong></td>
+            <td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td>
+            <td style="text-align:right;">0.8</td>
+            <td style="text-align:right;">2.4</td>
+          </tr>
+          <tr>
+            <td><strong>P03</strong></td>
+            <td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td>
+            <td style="text-align:right;">1.5</td>
+            <td style="text-align:right;">3.1</td>
+          </tr>
+          <tr>
+            <td><strong>P04</strong></td>
+            <td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td>
+            <td style="text-align:right;">1.0</td>
+            <td style="text-align:right;">2.7</td>
+          </tr>
+          <tr>
+            <td><strong>P05</strong></td>
+            <td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td>
+            <td style="text-align:right;">2.0</td>
+            <td style="text-align:right;">3.4</td>
+          </tr>
+          <tr>
+            <td><strong>P06</strong></td>
+            <td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td>
+            <td style="text-align:right;">0.7</td>
+            <td style="text-align:right;">2.1</td>
+          </tr>
+          <tr>
+            <td><strong>P07</strong></td>
+            <td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td>
+            <td style="text-align:right;">1.1</td>
+            <td style="text-align:right;">2.5</td>
+          </tr>
+          <tr>
+            <td><strong>P08</strong></td>
+            <td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td>
+            <td style="text-align:right;">1.4</td>
+            <td style="text-align:right;">2.9</td>
+          </tr>
+          <tr>
+            <td><strong>P09</strong></td>
+            <td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td>
+            <td style="text-align:right;">0.9</td>
+            <td style="text-align:right;">2.3</td>
+          </tr>
+          <tr>
+            <td><strong>P10</strong></td>
+            <td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td>
+            <td style="text-align:right;">1.8</td>
+            <td style="text-align:right;">3.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>En observant la colonne <code>village</code>, nous remarquons tout de suite que :</p>
+    <ul>
+      <li>Le mot <strong>Bonabéri</strong> apparaît plusieurs fois ;</li>
+      <li>Le mot <strong>Bépanda</strong> apparaît plusieurs fois.</li>
+    </ul>
+
+    <p style="font-weight:600; color:var(--primary-dark);">Comment pouvons-nous compter automatiquement ces valeurs sans faire d'erreur ?</p>
+
+    <!-- ÉTAPE 3 — LES EFFECTIFS -->
+    <h2><i class="fa-solid fa-list-ol" style="color:#D97706;"></i> Étape 3 — La notion d'effectif</h2>
+
+    <p>En statistique, on donne un nom très simple à ce décompte :</p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-calculator"></i> L'effectif en un mot</div>
+      <p style="font-size:15px; margin-bottom:0;">
+        <strong>Effectif :</strong> c'est tout simplement le <strong>nombre d'observations</strong> qui appartiennent à une catégorie donnée.
+      </p>
+    </div>
+
+    <p>Construisons notre tableau d'effectifs pour les villages :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Village</th>
+            <th style="text-align:right;">Effectif (nombre de parcelles)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Bonabéri</strong></td>
+            <td style="text-align:right; font-weight:700; color:#065F46;">5</td>
+          </tr>
+          <tr>
+            <td><strong>Bépanda</strong></td>
+            <td style="text-align:right; font-weight:700; color:#1E40AF;">5</td>
+          </tr>
+          <tr style="background:#F9FAFB; font-weight:bold;">
+            <td>Total</td>
+            <td style="text-align:right;">10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Rien de sorcier : <strong>5 parcelles sont à Bonabéri</strong> et <strong>5 parcelles sont à Bépanda</strong>. La somme des effectifs donne bien notre total de 10 parcelles.</p>
+
+    <!-- 4. LE REEL CODE R -->
+    <h2><i class="fa-brands fa-r-project" style="color:#2563EB;"></i> 4. Le code R pour compter automatiquement</h2>
+
+    <p>Pour faire ce comptage dans <strong>R</strong>, nous utilisons une commande très courte et très puissante appelée <code>table()</code> :</p>
+
+    <pre><code># Création de nos données
+donnees &lt;- data.frame(
+  parcelle   = c("P01","P02","P03","P04","P05","P06","P07","P08","P09","P10"),
+  village    = c("Bonabéri","Bonabéri","Bonabéri","Bonabéri","Bonabéri","Bépanda","Bépanda","Bépanda","Bépanda","Bépanda"),
+  superficie = c(1.2, 0.8, 1.5, 1.0, 2.0, 0.7, 1.1, 1.4, 0.9, 1.8),
+  rendement  = c(2.8, 2.4, 3.1, 2.7, 3.4, 2.1, 2.5, 2.9, 2.3, 3.0)
+)
+
+# 1. Compter les effectifs de chaque village
+table(donnees$village)</code></pre>
+
+    <p>Voici la réponse exacte affichée dans la console R :</p>
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+Bépanda Bonabéri 
+      5        5 
+    </div>
+
+    <p style="font-size:13.5px; color:var(--text-muted);">
+      La fonction <code>table()</code> a parcouru la colonne <code>village</code>, a identifié chaque nom distinct, et a compté son nombre d'apparitions.
+    </p>
+
+    <!-- 5. FAIRE COMPRENDRE LE POURCENTAGE -->
+    <h2><i class="fa-solid fa-percent" style="color:#059669;"></i> 5. Faire parler les effectifs : le pourcentage</h2>
+
+    <p>Savoir qu'il y a 5 parcelles à Bonabéri est utile. Mais si vous avez 3 450 parcelles, les chiffres bruts deviennent difficiles à comparer de tête.</p>
+    <p>C'est pourquoi on calcule un <strong>pourcentage</strong> (la part de chaque groupe par rapport au tout).</p>
+
+    <div class="formula-box" style="text-align:center;">
+      $$\text{Pourcentage} = \frac{\text{Partie (Effectif du groupe)}}{\text{Total (Effectif global)}} \times 100$$
+    </div>
+
+    <p>Faisons le calcul pas à pas avec notre exemple :</p>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="border-left:4px solid #059669;">
+        <h4><i class="fa-solid fa-wheat-awn" style="color:#059669;"></i> Pour Bonabéri</h4>
+        <div style="font-size:15px; margin:8px 0;">
+          $$\frac{5}{10} \times 100 = 0{,}5 \times 100 = 50\,\%$$
+        </div>
+        <p style="font-size:13px; color:#4B5563; margin-bottom:0;">
+          5 parcelles sur 10 représentent exactement la moitié, soit <strong>50 %</strong>.
+        </p>
+      </div>
+
+      <div class="comparison-box" style="border-left:4px solid #2563EB;">
+        <h4><i class="fa-solid fa-wheat-awn" style="color:#2563EB;"></i> Pour Bépanda</h4>
+        <div style="font-size:15px; margin:8px 0;">
+          $$\frac{5}{10} \times 100 = 0{,}5 \times 100 = 50\,\%$$
+        </div>
+        <p style="font-size:13px; color:#4B5563; margin-bottom:0;">
+          5 parcelles sur 10 représentent également la moitié, soit <strong>50 %</strong>.
+        </p>
+      </div>
+    </div>
+
+    <p>Dans <strong>R</strong>, nous pouvons obtenir ces pourcentages directement grâce à la fonction <code>prop.table()</code> :</p>
+
+    <pre><code># 2. Calculer les pourcentages avec R
+prop.table(table(donnees$village)) * 100</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+Bépanda Bonabéri 
+     50       50 
+    </div>
+
+    <p style="font-size:13.5px; color:var(--text-muted);">
+      <code>prop.table()</code> calcule la proportion (0.5 et 0.5), puis multiplier par 100 donne les pourcentages finaux.
+    </p>
+
+    <!-- 6. EFFECTIF VS POURCENTAGE -->
+    <h2><i class="fa-solid fa-scale-balanced" style="color:#D97706;"></i> 6. Synthèse : Effectif vs Pourcentage</h2>
+
+    <p>Regroupons ces deux informations dans un tableau récapitulatif propre et complet :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Village</th>
+            <th style="text-align:right;">Effectif ($N$)</th>
+            <th style="text-align:right;">Pourcentage ($\%$)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Bonabéri</strong></td>
+            <td style="text-align:right; font-weight:600;">5</td>
+            <td style="text-align:right; font-weight:600; color:#065F46;">50 %</td>
+          </tr>
+          <tr>
+            <td><strong>Bépanda</strong></td>
+            <td style="text-align:right; font-weight:600;">5</td>
+            <td style="text-align:right; font-weight:600; color:#1E40AF;">50 %</td>
+          </tr>
+          <tr style="background:#F9FAFB; font-weight:bold; border-top:2px solid var(--border);">
+            <td>Total</td>
+            <td style="text-align:right;">10</td>
+            <td style="text-align:right;">100 %</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-compass"></i> La règle à retenir</div>
+      <p style="margin-bottom:0;">
+        • <strong>L'effectif</strong> nous dit <em>combien</em> nous avons d'observations (un décompte brut).<br>
+        • <strong>Le pourcentage</strong> nous dit <em>quelle part du total</em> elles représentent (une comparaison équitable).
+      </p>
+    </div>
+
+    <!-- 7. UN VRAI GRAPHIQUE INTERACTIF -->
+    <h2><i class="fa-solid fa-chart-column" style="color:#059669;"></i> 7. Le graphique : voir la répartition en un coup d'œil</h2>
+
+    <p>Un tableau résume bien, mais un graphique permet à n'importe quel interlocuteur de comprendre immédiatement la répartition.</p>
+    <p>Voici le diagramme en barres exact de nos données. Vous pouvez basculer entre l'affichage des <strong>Effectifs</strong> et des <strong>Pourcentages</strong> :</p>
+
+    <!-- Carte Graphique Interactif avec SVG vectoriel précis -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Répartition des parcelles selon le village</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Variable qualitative : <code>village</code> (Échantillon total = 10 parcelles)</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button id="btn-show-counts" class="chart-toggle-btn active">Afficher l'Effectif ($N$)</button>
+          <button id="btn-show-pct" class="chart-toggle-btn">Afficher le Pourcentage ($\%$)</button>
+        </div>
+      </div>
+
+      <!-- VUE 1 : EFFECTIFS -->
+      <div id="chart-view-counts">
+        <svg class="chart-container-svg" viewBox="0 0 620 280" xmlns="http://www.w3.org/2000/svg">
+          <rect width="620" height="280" fill="#FAFAFA" rx="8" />
+
+          <!-- Grille Y (0 à 6) -->
+          <line x1="70" y1="210" x2="570" y2="210" stroke="#E5E7EB" stroke-width="1.5" />
+          <line x1="70" y1="175" x2="570" y2="175" stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="140" x2="570" y2="140" stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="105" x2="570" y2="105" stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="70"  x2="570" y2="70"  stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="35"  x2="570" y2="35"  stroke="#F3F4F6" stroke-width="1" />
+
+          <!-- Graduations Y -->
+          <text x="58" y="214" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+          <text x="58" y="179" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">1</text>
+          <text x="58" y="144" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2</text>
+          <text x="58" y="109" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3</text>
+          <text x="58" y="74"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">4</text>
+          <text x="58" y="39"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">5</text>
+          <text x="22" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 22 125)">Effectif (parcelles)</text>
+
+          <!-- BARRE 1 : BONABERI = 5 -->
+          <g>
+            <rect x="150" y="35" width="130" height="175" fill="#059669" rx="4" />
+            <text x="215" y="24" font-family="'IBM Plex Sans', sans-serif" font-size="14" font-weight="700" fill="#065F46" text-anchor="middle">5 parcelles</text>
+            <text x="215" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Bonabéri</text>
+          </g>
+
+          <!-- BARRE 2 : BEPANDA = 5 -->
+          <g>
+            <rect x="360" y="35" width="130" height="175" fill="#2563EB" rx="4" />
+            <text x="425" y="24" font-family="'IBM Plex Sans', sans-serif" font-size="14" font-weight="700" fill="#1E40AF" text-anchor="middle">5 parcelles</text>
+            <text x="425" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Bépanda</text>
+          </g>
+
+          <!-- Noms sous les barres -->
+          <text x="215" y="235" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Bonabéri</text>
+          <text x="425" y="235" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Bépanda</text>
+          <text x="320" y="265" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#6B7280" text-anchor="middle">Village d'implantation</text>
+        </svg>
+      </div>
+
+      <!-- VUE 2 : POURCENTAGES -->
+      <div id="chart-view-pct" style="display:none;">
+        <svg class="chart-container-svg" viewBox="0 0 620 280" xmlns="http://www.w3.org/2000/svg">
+          <rect width="620" height="280" fill="#FAFAFA" rx="8" />
+
+          <!-- Grille Y (0% à 60%) -->
+          <line x1="70" y1="210" x2="570" y2="210" stroke="#E5E7EB" stroke-width="1.5" />
+          <line x1="70" y1="175" x2="570" y2="175" stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="140" x2="570" y2="140" stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="105" x2="570" y2="105" stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="70"  x2="570" y2="70"  stroke="#F3F4F6" stroke-width="1" />
+          <line x1="70" y1="35"  x2="570" y2="35"  stroke="#F3F4F6" stroke-width="1" />
+
+          <!-- Graduations Y (%) -->
+          <text x="58" y="214" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0 %</text>
+          <text x="58" y="179" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">10 %</text>
+          <text x="58" y="144" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">20 %</text>
+          <text x="58" y="109" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">30 %</text>
+          <text x="58" y="74"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">40 %</text>
+          <text x="58" y="39"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">50 %</text>
+          <text x="22" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 22 125)">Pourcentage (%)</text>
+
+          <!-- BARRE 1 : BONABERI = 50% -->
+          <g>
+            <rect x="150" y="35" width="130" height="175" fill="#059669" rx="4" />
+            <text x="215" y="24" font-family="'IBM Plex Sans', sans-serif" font-size="14" font-weight="700" fill="#065F46" text-anchor="middle">50 %</text>
+            <text x="215" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Bonabéri</text>
+          </g>
+
+          <!-- BARRE 2 : BEPANDA = 50% -->
+          <g>
+            <rect x="360" y="35" width="130" height="175" fill="#2563EB" rx="4" />
+            <text x="425" y="24" font-family="'IBM Plex Sans', sans-serif" font-size="14" font-weight="700" fill="#1E40AF" text-anchor="middle">50 %</text>
+            <text x="425" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Bépanda</text>
+          </g>
+
+          <!-- Noms sous les barres -->
+          <text x="215" y="235" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Bonabéri</text>
+          <text x="425" y="235" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Bépanda</text>
+          <text x="320" y="265" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#6B7280" text-anchor="middle">Village d'implantation</text>
+        </svg>
+      </div>
+
+      <div style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:10px;">
+        Le graphique montre une répartition parfaitement équilibrée entre les deux zones d'étude.
+      </div>
+    </div>
+
+    <p>Le code R pour tracer ce diagramme est très accessible :</p>
+
+    <pre><code># 3. Tracer le graphique en barres des effectifs
+barplot(
+  table(donnees$village),
+  main = "Nombre de parcelles par village",
+  xlab = "Village",
+  ylab = "Effectif"
+)</code></pre>
+
+    <!-- 8. L'INTERPRETATION -->
+    <h2><i class="fa-solid fa-pen-fancy" style="color:#D97706;"></i> 8. Interpréter le résultat : donner du sens aux chiffres</h2>
+
+    <p>Une bonne analyse statistique ne s'arrête jamais au calcul d'un chiffre ou au tracé d'un graphique : <strong>le plus important est de savoir expliquer ce que cela signifie</strong> dans un rapport ou devant des collègues.</p>
+
+    <div class="callout callout-agri">
+      <div class="callout-title"><i class="fa-solid fa-file-lines"></i> Exemple de phrase d'interprétation pour votre rapport</div>
+      <p style="font-size:15px; margin-bottom:0; line-height:1.6; color:#065F46;">
+        « Sur les 10 parcelles étudiées, 5 sont situées à Bonabéri, soit 50 %, et 5 à Bépanda, soit également 50 %. L'échantillon d'observation est donc parfaitement équilibré entre les deux terroirs. »
+      </p>
+    </div>
+
+    <!-- 9. AVEC RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 9. Et maintenant, faisons la même chose dans Ramses</h2>
+
+    <p>Dans Ramses, vous obtenez ce tableau complet et ce graphique en quelques clics sans toucher au clavier :</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-folder-open" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir le jeu de données</div>
+          <div class="step-desc">Dans l'onglet <strong>« Jeu de données »</strong>, observez l'en-tête de la colonne <code>village</code> qui porte le badge <strong>[Aa]</strong> (variable qualitative).</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-pie" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Accéder aux statistiques descriptives qualitatives</div>
+          <div class="step-desc">Dans la barre de menu principale, cliquez sur <strong>« Statistiques Descriptives »</strong>, puis sélectionnez <strong>« Variables Qualitatives »</strong>.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-list-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Choisir la variable et les options</div>
+          <div class="step-desc">
+            Dans le panneau de gauche :<br>
+            • Sélectionnez <code>village</code> dans <em>« Variable qualitative : »</em> ;<br>
+            • Cochez <strong>« Effectifs (N) »</strong> et <strong>« Pourcentages (%) »</strong> ;<br>
+            • Laissez le type de graphique sur <strong>« Diagramme en barres »</strong>.
+          </div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Lancer le calcul</div>
+          <div class="step-desc">Cliquez sur le bouton <strong>« Calculer & Journaliser »</strong>.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-square-poll-vertical" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">5. Consulter les résultats générés</div>
+          <div class="step-desc">
+            Ramses affiche immédiatement :<br>
+            • Le tableau récapitulatif sous l'onglet <strong>« Table des effectifs & pourcentages »</strong> ;<br>
+            • Le diagramme interactif sous l'onglet <strong>« Diagramme de distribution »</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. PETIT DÉFI INTERACTIF -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 10. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px;">
+        Une enquête agronomique porte sur un groupe de <strong>20 producteurs</strong>.<br>
+        <strong>12 producteurs</strong> viennent du village A et <strong>8 producteurs</strong> viennent du village B.
+      </p>
+      <p style="font-weight:600; color:#1F2937;">Quel est le pourcentage de producteurs issus du village A ?</p>
+
+      <div class="quiz-options">
+        <button class="quiz-btn quiz-option-btn" data-correct="false">20 %</button>
+        <button class="quiz-btn quiz-option-btn" data-correct="false">40 %</button>
+        <button class="quiz-btn quiz-option-btn" data-correct="true">60 %</button>
+        <button class="quiz-btn quiz-option-btn" data-correct="false">80 %</button>
+      </div>
+
+      <div id="quiz-feedback-box" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 11. RAPPEL FINAL -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-bookmark"></i> À retenir absolument</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:8px;">
+        • <strong>Effectif</strong> &rarr; Combien ? (le nombre d'observations dans une catégorie)<br>
+        • <strong>Pourcentage</strong> &rarr; Quelle part du total ? (une comparaison relative : $\frac{\text{Effectif}}{\text{Total}} \times 100$)<br>
+        • <strong>Graphique</strong> &rarr; Comment visualiser rapidement la répartition ? (diagramme en barres)
+      </p>
+      <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+        « Quand une variable contient des catégories, je peux commencer par les compter avant de chercher à aller plus loin. »
+      </p>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="02-comprendre-mes-variables.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">02. Comprendre mes variables : quelles informations contient mon fichier ?</span>
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">04. Mesurer une variable quantitative</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

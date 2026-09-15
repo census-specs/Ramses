@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02. Comprendre mes variables : quelles informations contient mon fichier ? — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link active">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 02</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Comprendre mes variables : quelles informations contient mon fichier ?</h1>
+    <div class="course-subtitle">Apprendre à reconnaître simplement les différents types de données et savoir quoi en faire</div>
+
+    <!-- NOTRE HISTOIRE -->
+    <p>Dans le module précédent, nous avons découvert notre fichier agricole. Nous avons vu que <strong>chaque ligne représente une observation</strong> (une parcelle) et que <strong>chaque colonne représente une information</strong>.</p>
+    
+    <p>Mais regardons maintenant attentivement les noms de nos colonnes :</p>
+    <div style="display:flex; gap:12px; margin:16px 0 20px; flex-wrap:wrap;">
+      <span class="chart-badge" style="font-size:13px; padding:6px 14px; background:#F3F4F6;"><i class="fa-solid fa-location-dot" style="color:#2563EB;"></i> Village</span>
+      <span class="chart-badge" style="font-size:13px; padding:6px 14px; background:#F3F4F6;"><i class="fa-solid fa-ruler-combined" style="color:#D97706;"></i> Superficie</span>
+      <span class="chart-badge" style="font-size:13px; padding:6px 14px; background:#F3F4F6;"><i class="fa-solid fa-wheat-awn" style="color:#059669;"></i> Rendement</span>
+    </div>
+
+    <p style="font-size:16px; font-weight:600; color:var(--primary-dark);">Peut-on vraiment traiter ces trois informations de la même manière ?</p>
+
+    <p>Posons-nous une question toute simple :</p>
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-circle-question"></i> Peut-on calculer la moyenne du village ?</div>
+      <p style="font-size:16px; font-weight:700; color:#B45309; margin-bottom:8px;">❌ Non.</p>
+      <p style="margin-bottom:0;">
+        Pourquoi ? Parce que l'opération <strong>Bonabéri + Bépanda</strong> n'a strictement aucun sens mathématique.<br>
+        En revanche, additionner <strong>1,2 ha + 0,8 ha</strong> pour obtenir 2,0 hectares a un sens physique immédiat et concret.
+      </p>
+    </div>
+
+    <p>C'est exactement cette différence fondamentale que nous allons explorer ensemble.</p>
+
+    <!-- 1. REPRENDRE LE PETIT JEU DE DONNEES -->
+    <h2><i class="fa-solid fa-table" style="color:#2563EB;"></i> 1. Notre tableau de départ</h2>
+
+    <p>Reprenons le tableau de nos 10 parcelles de maïs issu du premier module :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:20%;">Parcelle</th>
+            <th style="width:26%;">Village</th>
+            <th style="width:27%; text-align:right;">Superficie (ha)</th>
+            <th style="width:27%; text-align:right;">Rendement (t/ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>P01</strong></td>
+            <td>Bonabéri</td>
+            <td style="text-align:right;">1,2</td>
+            <td style="text-align:right;"><strong>2,8</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P02</strong></td>
+            <td>Bonabéri</td>
+            <td style="text-align:right;">0,8</td>
+            <td style="text-align:right;"><strong>2,4</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P03</strong></td>
+            <td>Bonabéri</td>
+            <td style="text-align:right;">1,5</td>
+            <td style="text-align:right;"><strong>3,1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P04</strong></td>
+            <td>Bonabéri</td>
+            <td style="text-align:right;">1,0</td>
+            <td style="text-align:right;"><strong>2,7</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P05</strong></td>
+            <td>Bonabéri</td>
+            <td style="text-align:right;">2,0</td>
+            <td style="text-align:right;"><strong>3,4</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P06</strong></td>
+            <td>Bépanda</td>
+            <td style="text-align:right;">0,7</td>
+            <td style="text-align:right;"><strong>2,1</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P07</strong></td>
+            <td>Bépanda</td>
+            <td style="text-align:right;">1,1</td>
+            <td style="text-align:right;"><strong>2,5</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P08</strong></td>
+            <td>Bépanda</td>
+            <td style="text-align:right;">1,4</td>
+            <td style="text-align:right;"><strong>2,9</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P09</strong></td>
+            <td>Bépanda</td>
+            <td style="text-align:right;">0,9</td>
+            <td style="text-align:right;"><strong>2,3</strong></td>
+          </tr>
+          <tr>
+            <td><strong>P10</strong></td>
+            <td>Bépanda</td>
+            <td style="text-align:right;">1,8</td>
+            <td style="text-align:right;"><strong>3,0</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. PREMIERE QUESTION -->
+    <h2><i class="fa-solid fa-lightbulb" style="color:#D97706;"></i> 2. La question clé : quelles colonnes peut-on additionner ou moyenner ?</h2>
+
+    <p>Regardons le contenu de chaque colonne une par une :</p>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="border-left: 4px solid #2563EB;">
+        <h4><i class="fa-solid fa-tag" style="color:#2563EB;"></i> Colonne Village</h4>
+        <p style="font-size:14px; margin-bottom:6px;">Contenu : <strong>Bonabéri</strong>, <strong>Bépanda</strong></p>
+        <p style="font-size:13px; color:#4B5563; margin-bottom:0;">
+          Ce sont des noms, des étiquettes, des <strong>catégories</strong>. On ne peut pas les additionner, mais on peut les compter.
+        </p>
+      </div>
+
+      <div class="comparison-box" style="border-left: 4px solid #059669;">
+        <h4><i class="fa-solid fa-hashtag" style="color:#059669;"></i> Colonnes Superficie & Rendement</h4>
+        <p style="font-size:14px; margin-bottom:6px;">Contenu : <strong>0,7 ; 1,2 ; 2,8 ; 3,4...</strong></p>
+        <p style="font-size:13px; color:#4B5563; margin-bottom:0;">
+          Ce sont de véritables <strong>nombres</strong>. On peut les additionner, en calculer la moyenne, trouver le minimum ou le maximum.
+        </p>
+      </div>
+    </div>
+
+    <p>Nous venons de découvrir sans le savoir les <strong>deux grandes familles de données</strong> en statistique.</p>
+
+    <!-- 3. VARIABLE QUALITATIVE -->
+    <h2><i class="fa-solid fa-font" style="color:#2563EB;"></i> 3. Première famille : la variable qualitative</h2>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-bullseye"></i> Définition simple</div>
+      <p style="margin-bottom:0; font-size:15px;">
+        <strong>Une variable qualitative décrit une catégorie, un groupe ou une caractéristique.</strong>
+      </p>
+    </div>
+
+    <p>En agriculture et dans la vie courante, nous utilisons des variables qualitatives tous les jours :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:35%;">Exemple de variable</th>
+            <th style="width:65%;">Catégories possibles (modalités)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Village</strong></td>
+            <td>Bonabéri, Bépanda, Dibombari...</td>
+          </tr>
+          <tr>
+            <td><strong>Sexe de l'agriculteur</strong></td>
+            <td>Femme, Homme</td>
+          </tr>
+          <tr>
+            <td><strong>Variété de maïs</strong></td>
+            <td>CMS 8704, KASAI, Expérimentale A...</td>
+          </tr>
+          <tr>
+            <td><strong>Type de sol</strong></td>
+            <td>Argileux, Sableux, Limoneux</td>
+          </tr>
+          <tr>
+            <td><strong>Utilisation d'engrais</strong></td>
+            <td>Oui, Non</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Posons-nous deux questions très simples :</p>
+    <ul>
+      <li><strong>Peut-on calculer la moyenne du village ?</strong> &rarr; <span style="color:#DC2626; font-weight:700;">❌ Non</span>, cela n'a aucun sens.</li>
+      <li><strong>Peut-on compter combien de parcelles sont à Bonabéri ?</strong> &rarr; <span style="color:#059669; font-weight:700;">✅ Oui, absolument !</span></li>
+    </ul>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Règle d'or</div>
+      <p style="margin-bottom:0;">
+        Avec une variable qualitative, <strong>on ne calcule pas de moyenne : on compte des effectifs</strong> (le nombre de fois où chaque catégorie apparaît) et <strong>on calcule des pourcentages</strong> (la part de chaque catégorie).
+      </p>
+    </div>
+
+    <!-- 4. VARIABLE QUANTITATIVE -->
+    <h2><i class="fa-solid fa-arrow-up-1-9" style="color:#059669;"></i> 4. Deuxième famille : la variable quantitative</h2>
+
+    <div class="callout callout-agri">
+      <div class="callout-title"><i class="fa-solid fa-bullseye"></i> Définition simple</div>
+      <p style="margin-bottom:0; font-size:15px;">
+        <strong>Une variable quantitative est une information numérique sur laquelle on peut effectuer des calculs mathématiques (somme, moyenne, écarts).</strong>
+      </p>
+    </div>
+
+    <p>Quelques exemples très fréquents :</p>
+    <ul>
+      <li><strong>Le rendement :</strong> 2,1 ; 2,8 ; 3,4 t/ha.</li>
+      <li><strong>La superficie :</strong> 0,7 ; 1,2 ; 2,0 hectares.</li>
+      <li><strong>La dose d'engrais apportée :</strong> 50, 100, 150 kg/ha.</li>
+      <li><strong>Le nombre de sacs récoltés :</strong> 14, 22, 35 sacs.</li>
+      <li><strong>L'âge de l'agriculteur :</strong> 32, 45, 58 ans.</li>
+    </ul>
+
+    <p>Posons la question :</p>
+    <p><strong>Peut-on calculer le rendement moyen ?</strong> &rarr; <span style="color:#059669; font-weight:700;">✅ Oui !</span></p>
+
+    <p>Demandons à <strong>R</strong> de faire ce calcul à partir de notre colonne <code>rendement</code> :</p>
+
+    <pre><code># Création de notre tableau dans R
+donnees &lt;- data.frame(
+  parcelle   = c("P01","P02","P03","P04","P05","P06","P07","P08","P09","P10"),
+  village    = c("Bonabéri","Bonabéri","Bonabéri","Bonabéri","Bonabéri","Bépanda","Bépanda","Bépanda","Bépanda","Bépanda"),
+  superficie = c(1.2, 0.8, 1.5, 1.0, 2.0, 0.7, 1.1, 1.4, 0.9, 1.8),
+  rendement  = c(2.8, 2.4, 3.1, 2.7, 3.4, 2.1, 2.5, 2.9, 2.3, 3.0)
+)
+
+# Calcul de la moyenne de la colonne rendement
+mean(donnees$rendement)</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+      [1] 2.72
+    </div>
+
+    <p style="font-size:13px; color:var(--text-muted);">
+      Dans ce code, le symbole dollar (<code>donnees$rendement</code>) dit simplement à R : <em>« Va dans le tableau appelé <strong>donnees</strong> et prends uniquement la colonne <strong>rendement</strong> »</em>. R calcule alors la moyenne arithmétique : <strong>2,72 t/ha</strong>.
+    </p>
+
+    <!-- 5. FAIRE UNE PETITE EXPERIENCE -->
+    <h2><i class="fa-solid fa-gamepad" style="color:#D97706;"></i> 5. Faisons une petite expérience</h2>
+
+    <p>Pour être certain d'avoir bien saisi la nuance, testez-vous avec ce petit récapitulatif :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Type d'information</th>
+            <th style="text-align:center;">Peut-on calculer la moyenne ?</th>
+            <th>Opération recommandée</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Village</strong></td>
+            <td>Qualitative (catégorie)</td>
+            <td style="text-align:center; color:#DC2626; font-weight:700;">❌ Non</td>
+            <td>Compter les effectifs et pourcentages</td>
+          </tr>
+          <tr>
+            <td><strong>Superficie (ha)</strong></td>
+            <td>Quantitative (mesure)</td>
+            <td style="text-align:center; color:#059669; font-weight:700;">✅ Oui</td>
+            <td>Moyenne, minimum, maximum</td>
+          </tr>
+          <tr>
+            <td><strong>Rendement (t/ha)</strong></td>
+            <td>Quantitative (mesure)</td>
+            <td style="text-align:center; color:#059669; font-weight:700;">✅ Oui</td>
+            <td>Moyenne, dispersion</td>
+          </tr>
+          <tr>
+            <td><strong>Variété de maïs</strong></td>
+            <td>Qualitative (nom)</td>
+            <td style="text-align:center; color:#DC2626; font-weight:700;">❌ Non</td>
+            <td>Nombre de parcelles par variété</td>
+          </tr>
+          <tr>
+            <td><strong>Âge de l'exploitant</strong></td>
+            <td>Quantitative (nombre d'années)</td>
+            <td style="text-align:center; color:#059669; font-weight:700;">✅ Oui</td>
+            <td>Âge moyen de l'échantillon</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Voyez comme c'est simple : inutile d'apprendre des formules par cœur, il suffit de se demander : <em>« Est-ce que cette information se mesure ou se classe ? »</em></p>
+
+    <!-- 6. UNE SUBTILITE IMPORTANTE MAIS SIMPLE -->
+    <h2><i class="fa-solid fa-triangle-exclamation" style="color:#D97706;"></i> 6. Une subtilité importante : les chiffres qui ne sont pas des nombres !</h2>
+
+    <p>Voici un piège très fréquent rencontré dans les fichiers de données :</p>
+    <p>Parfois, pour gagner du temps lors de la saisie, un enquêteur enregistre des codes numériques à la place de mots :</p>
+
+    <div class="formula-box" style="font-family:var(--font-sans); text-align:left; line-height:1.8;">
+      Code <strong>1</strong> = Homme<br>
+      Code <strong>2</strong> = Femme
+    </div>
+
+    <p>Si vous demandez la moyenne de cette colonne à un ordinateur, il répondra par exemple <code>1.5</code> sans hésiter !</p>
+    <p>Mais que signifie une moyenne de 1.5 pour le sexe d'une personne ? <strong>Absolument rien.</strong></p>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Le piège à éviter</div>
+      <p style="margin-bottom:0; font-size:15px; font-weight:600; color:#92400E;">
+        Ce n'est pas parce qu'une colonne contient des chiffres qu'elle représente forcément une quantité !
+      </p>
+      <p style="margin-top:6px; margin-bottom:0; font-size:13.5px;">
+        Si le chiffre est un code (1 = Homme, 2 = Femme, ou un numéro d'identifiant), la variable reste <strong>qualitative</strong>.
+      </p>
+    </div>
+
+    <!-- 7. FAIRE VOIR LES DONNEES -->
+    <h2><i class="fa-solid fa-shapes" style="color:#2563EB;"></i> 7. Voir la différence en un coup d'œil</h2>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="text-align:center;">
+        <span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; font-size:12px; margin-bottom:10px;">Variable Qualitative</span>
+        <h4 style="justify-content:center; font-size:18px;">Village</h4>
+        <div style="display:flex; justify-content:center; gap:10px; margin:16px 0;">
+          <span style="background:#F3F4F6; padding:8px 16px; border-radius:6px; font-weight:600; color:#1F2937; border:1px solid #E5E7EB;">Bonabéri</span>
+          <span style="background:#F3F4F6; padding:8px 16px; border-radius:6px; font-weight:600; color:#1F2937; border:1px solid #E5E7EB;">Bépanda</span>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:0;">On classe et on compte les individus.</p>
+      </div>
+
+      <div class="comparison-box" style="text-align:center;">
+        <span class="chart-badge" style="background:#ECFDF5; color:#065F46; font-size:12px; margin-bottom:10px;">Variable Quantitative</span>
+        <h4 style="justify-content:center; font-size:18px;">Rendement</h4>
+        <div style="display:flex; justify-content:center; gap:8px; margin:16px 0; font-family:var(--font-mono); font-weight:600; color:#059669; flex-wrap:wrap;">
+          <span>2,1</span> &mdash; <span>2,4</span> &mdash; <span>2,8</span> &mdash; <span>3,1</span> &mdash; <span>3,4</span>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:0;">On mesure et on calcule des indicateurs.</p>
+      </div>
+    </div>
+
+    <!-- 8. UN VRAI GRAPHIQUE -->
+    <h2><i class="fa-solid fa-chart-column" style="color:#059669;"></i> 8. Un vrai graphique pour notre variable qualitative</h2>
+
+    <p>Dans le module 1, nous avions tracé un histogramme pour notre variable quantitative (le rendement).</p>
+    <p>Comment représenter maintenant notre variable qualitative : <strong>Combien de parcelles appartiennent à chaque village ?</strong></p>
+    <p>Nous utilisons un <strong>diagramme en barres</strong> :</p>
+
+    <!-- Carte graphique SVG pour la variable qualitative -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Diagramme en barres : répartition des parcelles par village</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Variable qualitative : <code>village</code> (Effectifs totaux = 10)</div>
+        </div>
+        <span class="chart-badge"><i class="fa-solid fa-chart-simple"></i> Variable qualitative</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+        <rect width="600" height="280" fill="#FAFAFA" rx="8" />
+
+        <!-- Lignes horizontales de l'axe des effectifs (0 à 6) -->
+        <line x1="70" y1="210" x2="550" y2="210" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="70" y1="175" x2="550" y2="175" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="140" x2="550" y2="140" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="105" x2="550" y2="105" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="70"  x2="550" y2="70"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="35"  x2="550" y2="35"  stroke="#F3F4F6" stroke-width="1" />
+
+        <!-- Graduations Y -->
+        <text x="58" y="214" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+        <text x="58" y="179" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">1</text>
+        <text x="58" y="144" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2</text>
+        <text x="58" y="109" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3</text>
+        <text x="58" y="74"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">4</text>
+        <text x="58" y="39"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">5</text>
+        <text x="22" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 22 125)">Nombre de parcelles (Effectif)</text>
+
+        <!-- BARRE 1 : BONABERI = 5 parcelles (hauteur = 5 * 35 = 175px -> y = 35) -->
+        <g>
+          <rect x="140" y="35" width="130" height="175" fill="#059669" rx="4" />
+          <text x="205" y="25" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#065F46" text-anchor="middle">5 parcelles (50%)</text>
+          <text x="205" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">Bonabéri</text>
+        </g>
+
+        <!-- BARRE 2 : BEPANDA = 5 parcelles (hauteur = 5 * 35 = 175px -> y = 35) -->
+        <g>
+          <rect x="340" y="35" width="130" height="175" fill="#2563EB" rx="4" />
+          <text x="405" y="25" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1E40AF" text-anchor="middle">5 parcelles (50%)</text>
+          <text x="405" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">Bépanda</text>
+        </g>
+
+        <!-- Axe X -->
+        <text x="205" y="234" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Bonabéri</text>
+        <text x="405" y="234" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Bépanda</text>
+        <text x="305" y="262" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#4B5563" font-weight="600" text-anchor="middle">Modalités du village</text>
+      </svg>
+
+      <div style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:10px;">
+        Chaque barre montre le décompte exact : 5 parcelles à Bonabéri et 5 parcelles à Bépanda.
+      </div>
+    </div>
+
+    <p>Voyons le code R pour obtenir ce comptage et ce graphique :</p>
+
+    <pre><code># 1. Compter les parcelles par village (table d'effectifs)
+table(donnees$village)</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+Bépanda Bonabéri 
+      5        5 
+    </div>
+
+    <pre><code># 2. Tracer le diagramme en barres avec R
+barplot(
+  table(donnees$village),
+  col = c("#2563EB", "#059669"),
+  main = "Nombre de parcelles par village",
+  ylab = "Nombre de parcelles",
+  xlab = "Village"
+)</code></pre>
+
+    <p style="font-size:13px; color:var(--text-muted);">
+      La commande <code>table(...)</code> compte simplement combien de fois chaque village apparaît dans notre colonne. Puis <code>barplot(...)</code> prend ce comptage et le dessine en barres verticales.
+    </p>
+
+    <!-- 9. AVEC RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 9. Et avec Ramses ?</h2>
+
+    <p>Dans Ramses, vous n'avez pas besoin d'écrire ces lignes de code. Ramses identifie lui-même les types de variables et vous guide :</p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-tag"></i> Le repère visuel dans Ramses</div>
+      <p style="margin-bottom:0;">
+        Dans l'onglet <strong>« Jeu de données »</strong>, regardez l'en-tête de votre tableau :<br>
+        • Les variables qualitatives portent le badge <strong>[Aa]</strong> (texte / catégories).<br>
+        • Les variables quantitatives portent le badge <strong>[#]</strong> (nombres / mesures).
+      </p>
+    </div>
+
+    <p>Pour analyser votre variable qualitative <code>village</code> dans Ramses :</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-table-list" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Observer le jeu de données</div>
+          <div class="step-desc">Dans l'onglet <strong>« Jeu de données »</strong>, la colonne <code>village</code> porte l'indication <strong>[Aa]</strong> : Ramses sait déjà qu'il s'agit d'une variable qualitative.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-pie" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Ouvrir le menu approprié</div>
+          <div class="step-desc">Dans la barre de navigation, cliquez sur <strong>« Statistiques Descriptives »</strong>, puis sélectionnez <strong>« Variables Qualitatives »</strong>.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-square-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Sélectionner la variable</div>
+          <div class="step-desc">Dans le champ <em>« Variable qualitative : »</em>, choisissez <code>village</code>.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-column" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Choisir les options et le graphique</div>
+          <div class="step-desc">Laissez cochés <em>Effectifs (N)</em> et <em>Pourcentages (%)</em>, puis sélectionnez <em>« Diagramme en barres »</em>. Cliquez enfin sur le bouton <strong>« Calculer & Journaliser »</strong>.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-circle-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">5. Consulter les résultats</div>
+          <div class="step-desc">Ramses génère instantanément :
+            <ul style="margin-top:6px; margin-bottom:0; padding-left:20px;">
+              <li>Le tableau d'effectifs : 5 à Bonabéri (50%) et 5 à Bépanda (50%) ;</li>
+              <li>Le diagramme interactif sous l'onglet <em>« Diagramme de distribution »</em> ;</li>
+              <li>Le code R reproductible complet.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. CE QUE VOUS SAVEZ MAINTENANT -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-bullseye"></i> Ce que vous savez maintenant</div>
+      <p>Vous avez franchi une étape essentielle :</p>
+      <ul style="margin-bottom:12px; padding-left:22px;">
+        <li><strong>Reconnaître une variable qualitative</strong> : des catégories que l'on ne moyenne pas (ex: village, variété), mais que l'on compte avec <code>table()</code>.</li>
+        <li><strong>Reconnaître une variable quantitative</strong> : des valeurs numériques qui se mesurent et se moyennent (ex: rendement, superficie) avec <code>mean()</code>.</li>
+        <li><strong>Déjouer les pièges</strong> : savoir que des chiffres peuvent parfois être de simples codes (1 = Homme, 2 = Femme).</li>
+        <li><strong>Choisir le bon graphique</strong> : utiliser un diagramme en barres pour des catégories, et un histogramme pour des quantités.</li>
+        <li><strong>Utiliser Ramses</strong> : savoir naviguer entre <em>« Variables Quantitatives »</em> et <em>« Variables Qualitatives »</em> sans hésiter.</li>
+      </ul>
+      <p style="margin-bottom:0; font-weight:600; color:#065F46;">
+        &rarr; Dans le prochain épisode, nous allons explorer les indicateurs qui permettent de résumer nos variables en un clin d'œil : médiane, écart-type et valeurs extrêmes !
+      </p>
+    </div>
+
+    <!-- Navigation precedent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="01-bienvenue-ramses.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">01. Bienvenue dans Ramses : de mon problème à mes premières données</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">03. Compter et résumer mes données</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

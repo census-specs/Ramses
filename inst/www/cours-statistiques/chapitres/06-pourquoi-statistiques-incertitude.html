@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06. Pourquoi les statistiques ne donnent-elles pas toujours une réponse certaine ? — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link active">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 06</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Pourquoi les statistiques ne donnent-elles pas toujours une réponse certaine ?</h1>
+    <div class="course-subtitle">Comprendre simplement l'échantillon, la variabilité et l'incertitude</div>
+
+    <!-- 1. PARTIR D'UN PROBLÈME RÉEL -->
+    <h2><i class="fa-solid fa-seedling" style="color:#059669;"></i> 1. Partir d'un problème réel</h2>
+
+    <div class="callout callout-try" style="margin-top:16px;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question de l'agronome</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Je veux savoir si une nouvelle variété de maïs produit mieux que l'ancienne. Dois-je mesurer toutes les parcelles du pays ? »
+      </p>
+    </div>
+
+    <p>
+      La réponse est <strong>non</strong>, et c'est une excellente nouvelle ! Mesurer l'intégralité des milliers de parcelles d'un pays prendrait des années, demanderait des budgets colossaux et serait humainement impossible.
+    </p>
+
+    <p>
+      En agronomie comme dans toutes les sciences expérimentales, nous observons un groupe restreint de parcelles bien choisies : <strong>un échantillon</strong>. Mais travailler sur un échantillon introduit une question fondamentale : <em>comment être certain que ce que nous observons sur quelques parcelles est représentatif de la réalité globale ?</em>
+    </p>
+
+    <!-- 2. POPULATION ET ÉCHANTILLON -->
+    <h2><i class="fa-solid fa-users-viewfinder" style="color:#2563EB;"></i> 2. Population et échantillon</h2>
+
+    <p>Deux notions essentielles doivent être distinguées dès le départ :</p>
+
+    <div class="steps-list" style="margin:20px 0;">
+      <div class="step-item">
+        <div class="step-num" style="background:#DBEAFE; color:#1E40AF;"><i class="fa-solid fa-globe" style="font-size:13px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#1E40AF; font-size:15px;">La Population</div>
+          <div class="step-desc">
+            C'est <strong>l'ensemble total des individus ou des parcelles</strong> que l'on souhaite étudier (par exemple : toutes les parcelles de maïs de la région ou du pays).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#D1FAE5; color:#065F46;"><i class="fa-solid fa-hand-pointer" style="font-size:13px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#065F46; font-size:15px;">L'Échantillon</div>
+          <div class="step-desc">
+            C'est <strong>une petite partie de cette population</strong> que l'on observe et que l'on mesure réellement sur le terrain (par exemple : nos 10 parcelles de test).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schéma du processus inférentiel -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Le cycle de la démarche statistique</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">De la population globale à la décision agronomique</div>
+        </div>
+        <span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Schéma conceptuel</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="180" fill="#FAFAFA" rx="8" />
+
+        <!-- Étape 1 : Population -->
+        <rect x="20" y="45" width="120" height="90" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5" rx="6" />
+        <text x="80" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1E40AF" text-anchor="middle">Population</text>
+        <text x="80" y="100" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#3B82F6" text-anchor="middle">(Toutes parcelles)</text>
+
+        <!-- Flèche 1 -->
+        <path d="M 145 90 L 175 90" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arrow)" />
+        <text x="160" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="10" fill="#6B7280" text-anchor="middle">Tirage</text>
+
+        <!-- Étape 2 : Échantillon -->
+        <rect x="180" y="45" width="120" height="90" fill="#D1FAE5" stroke="#059669" stroke-width="1.5" rx="6" />
+        <text x="240" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#065F46" text-anchor="middle">Échantillon</text>
+        <text x="240" y="100" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#10B981" text-anchor="middle">(10 parcelles)</text>
+
+        <!-- Flèche 2 -->
+        <path d="M 305 90 L 335 90" stroke="#9CA3AF" stroke-width="2" />
+        <text x="320" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="10" fill="#6B7280" text-anchor="middle">Mesure</text>
+
+        <!-- Étape 3 : Observation -->
+        <rect x="340" y="45" width="120" height="90" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5" rx="6" />
+        <text x="400" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#92400E" text-anchor="middle">Observation</text>
+        <text x="400" y="100" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#D97706" text-anchor="middle">(Moyenne, SD)</text>
+
+        <!-- Flèche 3 -->
+        <path d="M 465 90 L 495 90" stroke="#9CA3AF" stroke-width="2" />
+        <text x="480" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="10" fill="#6B7280" text-anchor="middle">Inférence</text>
+
+        <!-- Étape 4 : Conclusion -->
+        <rect x="500" y="45" width="105" height="90" fill="#F3E8FF" stroke="#7C3AED" stroke-width="1.5" rx="6" />
+        <text x="552" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#6D28D9" text-anchor="middle">Conclusion</text>
+        <text x="552" y="100" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#8B5CF6" text-anchor="middle">(Généralisation)</text>
+      </svg>
+    </div>
+
+    <!-- 3. POURQUOI DEUX ÉCHANTILLONS PEUVENT DONNER DES RÉSULTATS DIFFÉRENTS -->
+    <h2><i class="fa-solid fa-dice" style="color:#D97706;"></i> 3. Pourquoi deux échantillons donnent-ils des résultats différents ?</h2>
+
+    <p>
+      Prenons une population agricole de référence dont le <strong>vrai rendement moyen est de 2,70 t/ha</strong>.
+    </p>
+
+    <p>
+      Si deux agronomes partent sur le terrain et sélectionnent chacun 5 parcelles au hasard :
+    </p>
+
+    <div class="row" style="display:flex; gap:16px; margin:20px 0; flex-wrap:wrap;">
+      <div style="flex:1; min-width:260px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:16px;">
+        <h4 style="margin-top:0; color:#065F46; font-size:15px;"><i class="fa-solid fa-user-check"></i> Échantillon 1 (Agronome A)</h4>
+        <p style="font-size:14px; margin-bottom:6px;">Valeurs récoltées : <code>2.4, 2.7, 2.8, 3.1, 3.4</code></p>
+        <div style="font-size:15px; font-weight:700; color:#065F46;">Moyenne observée = 2,88 t/ha</div>
+      </div>
+
+      <div style="flex:1; min-width:260px; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:16px;">
+        <h4 style="margin-top:0; color:#1E40AF; font-size:15px;"><i class="fa-solid fa-user-check"></i> Échantillon 2 (Agronome B)</h4>
+        <p style="font-size:14px; margin-bottom:6px;">Valeurs récoltées : <code>2.1, 2.3, 2.5, 2.9, 3.0</code></p>
+        <div style="font-size:15px; font-weight:700; color:#1E40AF;">Moyenne observée = 2,56 t/ha</div>
+      </div>
+    </div>
+
+    <p>
+      Les deux échantillons proviennent pourtant de la <strong>même population</strong> ! La moyenne obtenue varie légèrement simplement sous l'effet du tirage au sort (l'aléa d'échantillonnage).
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Message essentiel</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600;">
+        « Une différence entre deux échantillons ne signifie pas forcément qu'il existe une vraie différence dans la population. »
+      </p>
+    </div>
+
+    <!-- 4. INTRODUIRE LA NOTION DE VARIABILITÉ -->
+    <h2><i class="fa-solid fa-arrows-split-up-and-left" style="color:#8B5CF6;"></i> 4. La notion de variabilité</h2>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Constat universel</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Les données varient naturellement d'une parcelle à l'autre, et un échantillon varie aussi d'un échantillon à l'autre. »
+      </p>
+    </div>
+
+    <p>
+      Rappelons ce que nous avons vu dans les modules précédents :
+    </p>
+    <ul>
+      <li><strong>La moyenne (Module 4)</strong> donne le point central de l'échantillon mesuré ;</li>
+      <li><strong>La dispersion / l'écart-type (Module 4)</strong> montre à quel point les parcelles s'écartent naturellement autour de ce centre (fertilité du sol, pluie, exposition) ;</li>
+      <li><strong>Les graphiques (Module 5)</strong> comme le boxplot ou l'histogramme permettent de voir visuellement cette dispersion.</li>
+    </ul>
+
+    <p>
+      Comme la nature n'est pas uniforme, <strong>aucun échantillon n'est la copie parfaite de la population</strong>. Il existe toujours une marge d'incertitude.
+    </p>
+
+    <!-- 5. POURQUOI AVONS-NOUS BESOIN DES TESTS STATISTIQUES ? -->
+    <h2><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> 5. Pourquoi avons-nous besoin des tests statistiques ?</h2>
+
+    <p>Partons de la question pratique qui se pose à tout décideur :</p>
+
+    <div class="callout callout-try">
+      <div class="callout-title"><i class="fa-solid fa-circle-question"></i> La question clé</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Si deux groupes ont des moyennes différentes, comment savoir si cette différence est suffisamment importante pour ne pas être considérée comme une simple variation d'échantillonnage ? »
+      </p>
+    </div>
+
+    <p>
+      C'est exactement ici qu'intervient la statistique inférentielle :
+    </p>
+
+    <div class="callout callout-remember" style="background:#FDF2F8; border-color:#FBCFE8;">
+      <div class="callout-title" style="color:#9D174D;"><i class="fa-solid fa-shield-halved"></i> Le rôle fondamental d'un test</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#831843;">
+        Un test statistique est un outil qui nous aide à prendre cette décision de manière rigoureuse et objective.
+      </p>
+    </div>
+
+    <p>
+      Le test évalue mathématiquement si l'écart observé entre les groupes a très peu de chances d'être le fruit du hasard ou s'il s'explique facilement par la variabilité naturelle.
+    </p>
+
+    <!-- 6. PETIT EXEMPLE NUMÉRIQUE -->
+    <h2><i class="fa-solid fa-calculator" style="color:#059669;"></i> 6. Petit exemple numérique</h2>
+
+    <p>Comparons deux variétés de maïs testées sur 5 parcelles chacune :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:30%;">Variété</th>
+            <th style="width:45%;">Rendements observés (t/ha)</th>
+            <th style="width:25%; text-align:right;">Moyenne</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Variété A</strong></td>
+            <td><code>2.4 — 2.5 — 2.6 — 2.5 — 2.4</code></td>
+            <td style="text-align:right; font-weight:700; color:#065F46;">2,48 t/ha</td>
+          </tr>
+          <tr>
+            <td><strong>Variété B</strong></td>
+            <td><code>2.5 — 2.6 — 2.5 — 2.7 — 2.6</code></td>
+            <td style="text-align:right; font-weight:700; color:#1E40AF;">2,58 t/ha</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Constat : La moyenne de la <strong>Variété B</strong> ($2{,}58$) est supérieure de <strong>$0{,}10\text{ t/ha}$</strong> à celle de la <strong>Variété A</strong> ($2{,}48$). Cependant, les valeurs individuelles sont très proches et se chevauchent en grande partie.
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-scale-unbalanced"></i> Le dilemme agronomique</div>
+      <p style="font-size:15px; margin-bottom:8px; font-weight:600; color:#1E40AF;">
+        « Cette petite différence suffit-elle pour conclure que les variétés sont réellement différentes ? »
+      </p>
+      <p style="margin-bottom:0; font-size:14.5px; color:#1F2937;">
+        <strong>Réponse :</strong> À l'œil nu, il est impossible de l'affirmer avec certitude. <em>Nous avons besoin d'un outil statistique pour nous aider à répondre.</em>
+      </p>
+    </div>
+
+    <!-- 7. R ET RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 7. Calculer les moyennes et tester avec R et Ramses</h2>
+
+    <p>Pour calculer les moyennes de nos deux groupes sous R :</p>
+
+    <pre><code>variete_A <- c(2.4, 2.5, 2.6, 2.5, 2.4)
+variete_B <- c(2.5, 2.6, 2.5, 2.7, 2.6)
+
+mean(variete_A)
+# [1] 2.48
+
+mean(variete_B)
+# [1] 2.58</code></pre>
+
+    <p>
+      Pour aller plus loin et savoir si cet écart de 0,10 t/ha est statistiquement significatif, R et Ramses intègrent des modules automatisés de tests statistiques :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-flask" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir le menu des tests dans Ramses</div>
+          <div class="step-desc">
+            Dans la barre de navigation supérieure, cliquez sur le menu <strong>« Tests Statistiques »</strong> &rarr; puis sélectionnez <strong>« Comparaison de 2 Groupes »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-sliders" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Paramétrer l'analyse</div>
+          <div class="step-desc">
+            Dans le panneau de configuration gauche :<br>
+            • Dans <em>« Type de test : »</em>, Ramses propose par exemple <strong>« Deux échantillons indépendants »</strong> ;<br>
+            • Sélectionnez votre variable quantitative de rendement (Y) et votre variable de groupe (X).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Exécuter l'analyse</div>
+          <div class="step-desc">
+            Cliquez sur le bouton <strong>« Exécuter & Journaliser »</strong>. Ramses calcule automatiquement l'indicateur de décision dans l'onglet <strong>« Inférence & Décision »</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. PETIT DÉFI -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 8. Petit défi</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> Testez votre compréhension</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Pourquoi utilise-t-on souvent un échantillon plutôt que toute la population ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:560px;">
+        <button class="quiz-btn quiz-module6-btn" data-answer="wrong1">Parce qu'un échantillon est toujours plus précis.</button>
+        <button class="quiz-btn quiz-module6-btn" data-answer="correct">Parce qu'étudier toute la population peut être difficile, coûteux ou impossible.</button>
+        <button class="quiz-btn quiz-module6-btn" data-answer="wrong2">Parce qu'un échantillon supprime toute incertitude.</button>
+        <button class="quiz-btn quiz-module6-btn" data-answer="wrong3">Parce qu'un échantillon donne toujours exactement la même moyenne que la population.</button>
+      </div>
+
+      <div id="quiz-module6-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 9. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.8; margin-bottom:12px;">
+        • <strong>Population</strong> &rarr; Tout ce que je veux étudier.<br>
+        • <strong>Échantillon</strong> &rarr; Une partie de cette population.<br>
+        • <strong>Variabilité</strong> &rarr; Les résultats peuvent changer d'un échantillon à l'autre.<br>
+        • <strong>Test statistique</strong> &rarr; Outil qui aide à déterminer si une différence observée peut s'expliquer par la variation aléatoire.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Maintenant que nous savons pourquoi les tests statistiques sont nécessaires, nous pouvons découvrir comment ils fonctionnent. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="05-visualiser-mes-donnees.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">05. Visualiser mes données</span>
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">07. Comprendre l'hypothèse et la p-value</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

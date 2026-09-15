@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Module 05b — Comprendre et calculer un intervalle de confiance autour d'une moyenne.">
+  <title>05b. Les intervalles de confiance — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link active">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 05b</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Les intervalles de confiance</h1>
+    <div class="course-subtitle">« Ma moyenne est de 2,72 — mais à quel point puis-je en être sûr ? »</div>
+
+    <!-- 1. LA QUESTION DE TERRAIN -->
+    <h2><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> 1. Une question plus subtile qu'il n'y paraît</h2>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question de l'agronome</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Sur mes 10 parcelles, j'ai obtenu un rendement moyen de 2,72 t/ha. Si j'avais mesuré 1000 parcelles, aurais-je trouvé la même valeur ? »
+      </p>
+    </div>
+
+    <p>
+      La réponse est : <strong>probablement non</strong>. Nous avons déjà vu (module 06) que la moyenne varie d'un échantillon à l'autre sous l'effet du hasard de tirage. La vraie moyenne de la population (toutes les parcelles du monde) est <em>inconnue</em> — et le restera toujours.
+    </p>
+
+    <p>
+      Mais alors, plutôt que de prétendre donner une valeur exacte, la statistique propose une réponse plus honnête :
+      <strong>une fourchette de valeurs plausibles</strong>. C'est exactement ce qu'on appelle un <strong>intervalle de confiance</strong>.
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bullseye"></i> L'idée en une phrase</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#065F46;">
+        « Plutôt que d'affirmer <em>« la vraie moyenne est de 2,72 »</em>, on affirme <em>« la vraie moyenne est probablement comprise entre 2,4 et 3,0 »</em>. »
+      </p>
+    </div>
+
+    <!-- 2. LE PRINCIPE DERRIÈRE -->
+    <h2><i class="fa-solid fa-lightbulb" style="color:#D97706;"></i> 2. D'où vient cette fourchette ?</h2>
+
+    <p>
+      La logique est simple : la moyenne d'un échantillon est d'autant plus <strong>précise</strong> (proche de la vraie moyenne) que :
+    </p>
+
+    <ul style="margin:12px 0 20px 0; padding-left:22px; font-size:14.5px; line-height:1.7;">
+      <li><strong>L'échantillon est grand</strong> (beaucoup de parcelles mesurées) ;</li>
+      <li><strong>Les valeurs sont homogènes</strong> (faible écart-type, faible dispersion).</li>
+    </ul>
+
+    <p>
+      À l'inverse, un petit échantillon avec des valeurs très dispersées donnera une moyenne très incertaine.
+    </p>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="border-left:4px solid #059669;">
+        <h4><i class="fa-solid fa-check" style="color:#059669;"></i> Cas favorable</h4>
+        <p style="font-size:14px; margin-bottom:6px;">
+          $n = 100$ parcelles, écart-type faible (0,3 t/ha)
+        </p>
+        <div style="background:#ECFDF5; padding:8px 12px; border-radius:6px; font-family:var(--font-mono); font-size:14px; color:#065F46;">
+          Moyenne = 2,72 t/ha<br>
+          IC 95 % = <strong>[2,66 ; 2,78]</strong><br>
+          <span style="font-size:12.5px;">Fourchette très étroite → estimation précise</span>
+        </div>
+      </div>
+
+      <div class="comparison-box" style="border-left:4px solid #D97706;">
+        <h4><i class="fa-solid fa-triangle-exclamation" style="color:#D97706;"></i> Cas défavorable</h4>
+        <p style="font-size:14px; margin-bottom:6px;">
+          $n = 5$ parcelles, écart-type élevé (1,2 t/ha)
+        </p>
+        <div style="background:#FFFBEB; padding:8px 12px; border-radius:6px; font-family:var(--font-mono); font-size:14px; color:#92400E;">
+          Moyenne = 2,72 t/ha<br>
+          IC 95 % = <strong>[1,23 ; 4,21]</strong><br>
+          <span style="font-size:12.5px;">Fourchette très large → estimation floue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LA FORMULE -->
+    <h2><i class="fa-solid fa-square-root-variable" style="color:#2563EB;"></i> 3. La formule (simple)</h2>
+
+    <p>
+      Voici la formule de l'intervalle de confiance à 95 % autour d'une moyenne :
+    </p>
+
+    <div class="formula-box">
+      $$IC_{95\%} = \bar{x} \pm t_{0{,}975, n-1} \times \frac{s}{\sqrt{n}}$$
+    </div>
+
+    <p>
+      Décomposons chaque morceau :
+    </p>
+
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:var(--shadow-sm);">
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$\bar{x}$</span>
+          <div>La <strong>moyenne</strong> de votre échantillon (ex : 2,72 t/ha).</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$s$</span>
+          <div>L'<strong>écart-type</strong> de votre échantillon (ex : 0,40 t/ha).</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$n$</span>
+          <div>La <strong>taille</strong> de votre échantillon (ex : 10 parcelles).</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#FEF3C7; color:#92400E; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$t$</span>
+          <div>Un coefficient issu de la <strong>loi de Student</strong>, qui dépend de $n$. Pour $n \geq 30$, il vaut environ $1{,}96$.</div>
+        </li>
+      </ul>
+    </div>
+
+    <p>
+      Le terme $\frac{s}{\sqrt{n}}$ s'appelle <strong>l'erreur standard de la moyenne</strong> (notée souvent $SE$). C'est lui qui mesure l'incertitude autour de la moyenne.
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-graduation-cap"></i> Que retenir sans se perdre dans la formule ?</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Retenez surtout que plus $n$ est grand, plus l'intervalle est <strong>étroit</strong>. Et que plus $s$ est grand, plus l'intervalle est <strong>large</strong>. Le reste, Ramses et R le calculent pour vous.
+      </p>
+    </div>
+
+    <!-- 4. APPLICATION NUMÉRIQUE -->
+    <h2><i class="fa-solid fa-calculator" style="color:#059669;"></i> 4. Application à nos 10 parcelles</h2>
+
+    <p>
+      Reprenons les valeurs de notre jeu : $\bar{x} = 2{,}72$, $s = 0{,}40$, $n = 10$.
+    </p>
+
+    <ol style="margin-left:20px; margin-bottom:16px; font-size:14.5px; line-height:1.7;">
+      <li>Erreur standard : $\frac{0{,}40}{\sqrt{10}} = 0{,}126$</li>
+      <li>Coefficient $t$ pour $n=10$ (9 degrés de liberté) à 95 % : $t = 2{,}262$</li>
+      <li>Marge d'erreur : $2{,}262 \times 0{,}126 = 0{,}286$</li>
+      <li>Intervalle : $2{,}72 \pm 0{,}286 = [2{,}43\,;\,3{,}01]$</li>
+    </ol>
+
+    <div class="callout callout-remember" style="background:#ECFDF5; border-color:#A7F3D0;">
+      <div class="callout-title" style="color:#065F46;"><i class="fa-solid fa-check"></i> Résultat pour nos 10 parcelles</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#065F46;">
+        IC 95 % : [2,43 ; 3,01] t/ha
+      </p>
+    </div>
+
+    <p>
+      Ce qui se lit ainsi :
+    </p>
+
+    <div class="callout callout-try">
+      <div class="callout-title"><i class="fa-solid fa-quote-left"></i> Interprétation correcte</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        « Au vu des 10 parcelles mesurées, la vraie moyenne (celle de toute la population) est très probablement comprise entre <strong>2,43 et 3,01 t/ha</strong>. »
+      </p>
+    </div>
+
+    <!-- 5. VISUALISATION -->
+    <h2><i class="fa-solid fa-chart-line" style="color:#7C3AED;"></i> 5. Visualisation : la moyenne et sa marge</h2>
+
+    <p>
+      La façon la plus simple de représenter un IC est un <strong>graphique de moyenne avec barre d'erreur</strong> :
+    </p>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Rendement moyen et intervalle de confiance 95 %</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">n = 10, moyenne = 2,72, IC = [2,43 ; 3,01]</div>
+        </div>
+        <span class="chart-badge" style="background:#EDE9FE; color:#6D28D9; border-color:#DDD6FE;">Erreur standard</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Graphique montrant une moyenne de 2,72 avec un intervalle de confiance allant de 2,43 à 3,01 tonnes par hectare">
+        <rect width="620" height="250" fill="#FAFAFA" rx="8" />
+
+        <!-- Axe Y -->
+        <line x1="80" y1="40"  x2="560" y2="40"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="90"  x2="560" y2="90"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="140" x2="560" y2="140" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="190" x2="560" y2="190" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="230" x2="560" y2="230" stroke="#E5E7EB" stroke-width="1.5" />
+
+        <text x="70" y="234" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.0</text>
+        <text x="70" y="194" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.4</text>
+        <text x="70" y="144" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.8</text>
+        <text x="70" y="94"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.2</text>
+        <text x="70" y="44"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.6</text>
+        <text x="30" y="135" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 30 135)">Rendement (t/ha)</text>
+
+        <!-- Barre verticale : de y(2.43)=195 à y(3.01)=122 -->
+        <!-- y = 230 - (val - 2.0) * 125 -->
+        <line x1="320" y1="122" x2="320" y2="195" stroke="#7C3AED" stroke-width="3" />
+        <line x1="295" y1="122" x2="345" y2="122" stroke="#7C3AED" stroke-width="3" />
+        <line x1="295" y1="195" x2="345" y2="195" stroke="#7C3AED" stroke-width="3" />
+
+        <!-- Point moyen à y(2.72)=140 -->
+        <circle cx="320" cy="140" r="8" fill="#059669" stroke="#FFFFFF" stroke-width="2" />
+
+        <!-- Labels -->
+        <text x="360" y="126" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#6D28D9">Borne supérieure : 3,01</text>
+        <text x="360" y="146" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#065F46">Moyenne : 2,72</text>
+        <text x="360" y="199" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#6D28D9">Borne inférieure : 2,43</text>
+
+        <text x="320" y="245" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Échantillon des 10 parcelles</text>
+      </svg>
+    </div>
+
+    <!-- 6. COMMENT INTERPRÉTER UN IC -->
+    <h2><i class="fa-solid fa-comment-dots" style="color:#D97706;"></i> 6. Interprétation : dire les choses correctement</h2>
+
+    <p>
+      L'intervalle de confiance est souvent mal interprété. Voyons ce qu'il faut dire et ne pas dire.
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin:20px 0;">
+      <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:16px;">
+        <div style="font-weight:700; font-size:14px; color:#991B1B; margin-bottom:6px;">
+          <i class="fa-solid fa-circle-xmark"></i> Interprétation fausse
+        </div>
+        <p style="font-size:13.5px; color:#7F1D1D; margin:0; font-style:italic;">
+          « Il y a 95 % de chances que la vraie moyenne soit entre 2,43 et 3,01. »
+        </p>
+        <p style="font-size:12.5px; color:#991B1B; margin-top:6px; margin-bottom:0;">
+          La vraie moyenne est un nombre fixe, pas une variable aléatoire. La probabilité ne porte pas sur elle.
+        </p>
+      </div>
+
+      <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:16px;">
+        <div style="font-weight:700; font-size:14px; color:#065F46; margin-bottom:6px;">
+          <i class="fa-solid fa-circle-check"></i> Interprétation correcte
+        </div>
+        <p style="font-size:13.5px; color:#064E3B; margin:0; font-style:italic;">
+          « La méthode qui produit cet intervalle capture la vraie moyenne dans 95 % des cas. »
+        </p>
+        <p style="font-size:12.5px; color:#065F46; margin-top:6px; margin-bottom:0;">
+          C'est la <strong>méthode</strong> qui est fiable à 95 %, pas la valeur elle-même.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> En rédaction scientifique</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        En pratique, on écrit simplement : <em>« Le rendement moyen est de 2,72 t/ha (IC 95 % : 2,43–3,01) »</em>. C'est concis, honnête et reconnu par la communauté.
+      </p>
+    </div>
+
+    <!-- 7. LE LIEN AVEC LA P-VALUE -->
+    <h2><i class="fa-solid fa-link" style="color:#2563EB;"></i> 7. Le lien avec la p-value (module 07)</h2>
+
+    <p>
+      Il existe un lien élégant entre IC et p-value. Imaginez que vous vous demandiez si la vraie moyenne peut être égale à une valeur de référence, par exemple 3,0 t/ha :
+    </p>
+
+    <ul style="margin:12px 0 20px 0; padding-left:22px; font-size:14.5px; line-height:1.7;">
+      <li>Si <strong>3,0 est à l'intérieur</strong> de l'IC [2,43 ; 3,01] &rarr; impossible de rejeter cette hypothèse.</li>
+      <li>Si <strong>3,0 était à l'extérieur</strong> (par exemple IC = [2,43 ; 2,90]) &rarr; cette hypothèse serait rejetée.</li>
+    </ul>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Pont conceptuel</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Un IC à 95 % qui <strong>ne contient pas la valeur de référence</strong> revient à un test bilatéral significatif au seuil de 5 %. C'est la même information, présentée différemment.
+      </p>
+    </div>
+
+    <!-- 8. EN PRATIQUE AVEC R -->
+    <h2><i class="fa-brands fa-r-project" style="color:#1F2937;"></i> 8. Calculer un IC avec R</h2>
+
+    <p>
+      R calcule l'intervalle de confiance <strong>automatiquement</strong> avec la fonction <code>t.test()</code> :
+    </p>
+
+    <pre><code># Intervalle de confiance autour de la moyenne
+t.test(donnees$rendement)
+
+# Sortie :
+#   One Sample t-test
+#   data:  donnees$rendement
+#   t = 21.53, df = 9, p-value = 3.4e-09
+#   95 percent confidence interval:
+#     2.434  3.006    ← C'est notre IC !
+#   sample estimates:
+#     mean of x
+#     2.72</code></pre>
+
+    <p>
+      Pour un IC à un autre niveau (par exemple 99 %), on précise :
+    </p>
+
+    <pre><code>t.test(donnees$rendement, conf.level = 0.99)</code></pre>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Astuce reproductible</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Pour tracer un graphique de moyenne + barre d'erreur, on peut utiliser <code>ggplot2</code> avec <code>stat_summary(fun.data = mean_cl_normal)</code>. Ramses génère ce graphique en un clic depuis l'onglet <em>« Visualisation »</em>.
+      </p>
+    </div>
+
+    <!-- 9. DANS RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 9. Et dans Ramses ?</h2>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-line" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir les statistiques descriptives</div>
+          <div class="step-desc">
+            Rendez-vous dans <strong>« Statistiques Descriptives »</strong> &rarr; <strong>« Variables Quantitatives »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-sliders" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Cocher l'option IC</div>
+          <div class="step-desc">
+            Dans le panneau d'options, cochez la case <strong>« Intervalle de confiance à 95 % »</strong>. Vous pouvez modifier le niveau (90 %, 99 %) dans le champ dédié.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-column" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Générer le graphique avec barres d'erreur</div>
+          <div class="step-desc">
+            Dans l'onglet <strong>« Visualisation »</strong>, choisissez <em>« Graphique de moyenne avec erreur standard »</em>. Ramses trace automatiquement la moyenne et son IC.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-file-export" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Exporter dans le journal</div>
+          <div class="step-desc">
+            Chaque IC calculé est automatiquement inséré dans le rapport R Markdown avec la commande <code>t.test()</code> correspondante, garantissant la reproductibilité.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 10. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; color:#1F2937;">
+        Vous calculez un IC 95 % pour le rendement moyen d'une nouvelle variété : <strong>[3,10 ; 4,20] t/ha</strong>. Que pouvez-vous conclure si vous comparez à une référence fixée à <strong>3,0 t/ha</strong> ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:560px;">
+        <button class="quiz-btn quiz-module05b-btn" data-answer="wrong1">La vraie moyenne est exactement de 3,65 t/ha.</button>
+        <button class="quiz-btn quiz-module05b-btn" data-answer="correct">La valeur de référence 3,0 est en dehors de l'IC, ce qui suggère une différence significative avec la référence.</button>
+        <button class="quiz-btn quiz-module05b-btn" data-answer="wrong2">Il y a 95 % de chances que la vraie moyenne soit dans cet intervalle.</button>
+        <button class="quiz-btn quiz-module05b-btn" data-answer="wrong3">L'échantillon doit être jeté car les valeurs sont trop élevées.</button>
+      </div>
+
+      <div id="quiz-module05b-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 11. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">
+        • Un <strong>intervalle de confiance</strong> donne une fourchette plausible autour de la moyenne.<br>
+        • Il dépend de : la moyenne, l'écart-type, la taille de l'échantillon, et le niveau de confiance choisi.<br>
+        • Plus $n$ est grand, plus l'IC est étroit. Plus $s$ est grand, plus l'IC est large.<br>
+        • Un IC qui contient la valeur de référence &rarr; pas de différence significative. Sinon &rarr; différence significative.<br>
+        • L'interprétation correcte porte sur <strong>la méthode</strong>, pas sur une probabilité de la vraie moyenne.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Une moyenne sans intervalle de confiance, c'est une promesse sans garantie. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="chapter-nav-footer">
+      <a href="05-visualiser-mes-donnees.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">05. Visualiser mes données</span>
+      </a>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">06. Pourquoi les statistiques ne donnent-elles pas toujours une réponse certaine ?</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

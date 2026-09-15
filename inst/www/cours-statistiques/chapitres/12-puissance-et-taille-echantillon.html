@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Module 12 — Puissance statistique et taille d'échantillon : combien de parcelles faut-il pour détecter un effet ?">
+  <title>12. Puissance et taille d'échantillon — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+
+      <div class="nav-group-title">Approfondissement</div>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link active">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance & taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 12</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Puissance et taille d'échantillon</h1>
+    <div class="course-subtitle">Combien de parcelles faut-il pour détecter un effet ?</div>
+
+    <!-- 1. LA QUESTION DE TERRAIN -->
+    <h2><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> 1. La question que tout expérimentateur se pose</h2>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question concrète</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Je veux tester si une nouvelle variété de maïs est meilleure de 0,5 t/ha que l'ancienne. <strong>Combien de parcelles dois-je prévoir dans mon dispositif expérimental ?</strong> »
+      </p>
+    </div>
+
+    <p>
+      C'est l'une des questions les plus importantes en agronomie — et paradoxalement, l'une des plus négligées. Un dispositif trop petit risque de <strong>rater un effet réel</strong> (manque de puissance). Un dispositif trop grand <strong>gaspille du temps, de l'argent et des ressources</strong>.
+    </p>
+
+    <p>
+      La réponse s'appelle la <strong>taille d'échantillon requise</strong>, et elle dépend de 4 ingrédients que nous allons découvrir.
+    </p>
+
+    <!-- 2. LES DEUX TYPES D'ERREUR -->
+    <h2><i class="fa-solid fa-triangle-exclamation" style="color:#DC2626;"></i> 2. Rappel : les deux types d'erreur</h2>
+
+    <p>
+      Avant de parler de puissance, il faut comprendre les <strong>deux types d'erreur</strong> possibles dans un test statistique :
+    </p>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="border-left:4px solid #DC2626;">
+        <h4><i class="fa-solid fa-xmark" style="color:#DC2626;"></i> Erreur de type I ($\alpha$)</h4>
+        <p style="font-size:13.5px; color:#4B5563; margin-bottom:8px;">
+          Rejeter $H_0$ alors qu'elle est vraie.
+        </p>
+        <p style="font-size:13px; color:#7F1D1D; margin-bottom:0; font-style:italic;">
+          « Je déclare une différence qui n'existe pas en réalité. »
+        </p>
+        <p style="font-size:12.5px; color:#6B7280; margin-top:8px; margin-bottom:0;">
+          C'est le seuil $\alpha$ (souvent 0,05) qu'on fixe <strong>avant</strong> l'expérience.
+        </p>
+      </div>
+
+      <div class="comparison-box" style="border-left:4px solid #D97706;">
+        <h4><i class="fa-solid fa-xmark" style="color:#D97706;"></i> Erreur de type II ($\beta$)</h4>
+        <p style="font-size:13.5px; color:#4B5563; margin-bottom:8px;">
+          Ne pas rejeter $H_0$ alors qu'elle est fausse.
+        </p>
+        <p style="font-size:13px; color:#92400E; margin-bottom:0; font-style:italic;">
+          « Je rate une différence qui existe réellement. »
+        </p>
+        <p style="font-size:12.5px; color:#6B7280; margin-top:8px; margin-bottom:0;">
+          Souvent ignorée, c'est pourtant critique en agronomie.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Analogie médicale</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Imaginez un test de dépistage d'une maladie :<br>
+        • <strong>Erreur de type I</strong> = dire à un patient sain qu'il est malade (fausse alerte).<br>
+        • <strong>Erreur de type II</strong> = dire à un patient malade qu'il est sain (diagnostic raté).
+      </p>
+    </div>
+
+    <!-- 3. LA PUISSANCE -->
+    <h2><i class="fa-solid fa-gauge-high" style="color:#059669;"></i> 3. La puissance statistique</h2>
+
+    <div class="callout callout-info" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-bullseye"></i> Définition</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:700; color:#1E40AF;">
+        La <strong>puissance</strong> est la probabilité de détecter un effet réel quand il existe. Formule : Puissance $= 1 - \beta$.
+      </p>
+    </div>
+
+    <p>
+      Conventionnellement, on vise une puissance de <strong>80 %</strong> (soit $\beta = 0{,}20$). Cela signifie : « si l'effet existe vraiment, j'ai 80 % de chances de le détecter ».
+    </p>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Le piège classique</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Une étude avec une puissance de <strong>30 %</strong> a <strong>70 % de chances de rater un effet réel</strong>. Ce n'est pas une « expérience qui ne montre rien », c'est une expérience <strong>incapable</strong> de montrer quelque chose. On dit qu'elle est <em>sous-dimensionnée</em>.
+      </p>
+    </div>
+
+    <!-- 4. LES 4 INGRÉDIENTS -->
+    <h2><i class="fa-solid fa-list-check" style="color:#7C3AED;"></i> 4. Les 4 ingrédients de la puissance</h2>
+
+    <p>
+      La puissance dépend de 4 paramètres, tous liés entre eux. En connaître 3 permet de calculer le 4ᵉ :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num" style="background:#DBEAFE; color:#1E40AF;">1</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#1E40AF;">La taille d'effet ($d$ ou $\Delta$)</div>
+          <div class="step-desc">
+            L'écart <strong>réel</strong> que l'on cherche à détecter, exprimé en unités d'écart-type ou en unités naturelles.
+            <em>Exemple :</em> un gain de 0,5 t/ha.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEF3C7; color:#92400E;">2</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#92400E;">La variabilité ($\sigma$ ou $s$)</div>
+          <div class="step-desc">
+            L'écart-type attendu dans la population. Plus il est grand, plus il est difficile de détecter un petit effet.
+            <em>Exemple :</em> $s = 0{,}4$ t/ha.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#D1FAE5; color:#065F46;">3</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#065F46;">Le seuil $\alpha$</div>
+          <div class="step-desc">
+            Le risque d'erreur de type I accepté. Généralement 0,05.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#EDE9FE; color:#6D28D9;">4</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#6D28D9;">La puissance souhaitée</div>
+          <div class="step-desc">
+            La probabilité de détecter l'effet s'il existe. Généralement 0,80 (80 %).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. LA FORMULE SIMPLIFIÉE -->
+    <h2><i class="fa-solid fa-square-root-variable" style="color:#D97706;"></i> 5. La formule (simplifiée) pour 2 groupes</h2>
+
+    <p>
+      Pour comparer deux moyennes (test t à 2 groupes), une formule approchée donne la taille requise par groupe :
+    </p>
+
+    <div class="formula-box">
+      $$n \approx \frac{2 \cdot (z_{1-\alpha/2} + z_{1-\beta})^2 \cdot \sigma^2}{\Delta^2}$$
+    </div>
+
+    <p>
+      Pas de panique ! <strong>Vous n'aurez jamais à calculer cette formule à la main</strong>. Les logiciels (R, G*Power, Ramses) le font pour vous.
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> L'essentiel à retenir</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li>Si la taille d'effet est <strong>petite</strong>, il faut un <strong>grand $n$</strong>.</li>
+        <li>Si la variabilité est <strong>grande</strong>, il faut un <strong>grand $n$</strong>.</li>
+        <li>Si on veut une <strong>grande puissance</strong>, il faut un <strong>grand $n$</strong>.</li>
+        <li>Si on diminue $\alpha$, il faut un <strong>plus grand $n$</strong> pour compenser.</li>
+      </ul>
+    </div>
+
+    <!-- 6. APPLICATION NUMÉRIQUE -->
+    <h2><i class="fa-solid fa-calculator" style="color:#2563EB;"></i> 6. Application à notre essai</h2>
+
+    <p>
+      Reprenons la question du début : on veut détecter une différence de <strong>0,5 t/ha</strong> entre 2 variétés, avec un écart-type attendu de <strong>0,4 t/ha</strong>, un seuil $\alpha = 0{,}05$ et une puissance de <strong>80 %</strong>.
+    </p>
+
+    <pre><code># Calcul dans R avec la fonction power.t.test()
+power.t.test(
+  delta      = 0.5,   # taille d'effet à détecter (t/ha)
+  sd         = 0.4,   # écart-type attendu
+  sig.level  = 0.05,  # seuil alpha
+  power      = 0.80,  # puissance souhaitée
+  type       = "two.sample"  # test t à 2 groupes
+)
+
+# Résultat :
+#      n = 9.8 par groupe
+#      delta = 0.5, sd = 0.4, sig.level = 0.05, power = 0.8</code></pre>
+
+    <div class="callout callout-remember" style="background:#ECFDF5; border-color:#A7F3D0;">
+      <div class="callout-title" style="color:#065F46;"><i class="fa-solid fa-check"></i> Résultat concret</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#065F46;">
+        Il faut environ <strong>10 parcelles par variété</strong>, soit <strong>20 parcelles au total</strong>.
+      </p>
+    </div>
+
+    <p>
+      Notre essai initial avait justement 10 parcelles par groupe. La puissance était donc <strong>suffisante pour détecter un effet de 0,5 t/ha</strong>. C'est une bonne nouvelle !
+    </p>
+
+    <!-- 7. QUE SE PASSE-T-IL SI ON CHANGE LES PARAMÈTRES ? -->
+    <h2><i class="fa-solid fa-sliders" style="color:#7C3AED;"></i> 7. Sensibilité aux paramètres</h2>
+
+    <p>
+      Voyons ce qui se passe si on modifie un paramètre à la fois :
+    </p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Scénario</th>
+            <th>Taille d'effet</th>
+            <th>Écart-type</th>
+            <th>Puissance</th>
+            <th style="text-align:right;">n par groupe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Notre essai</td>
+            <td>0,5</td>
+            <td>0,4</td>
+            <td>80 %</td>
+            <td style="text-align:right; font-weight:700; color:#065F46;">10</td>
+          </tr>
+          <tr>
+            <td>Effet plus petit à détecter</td>
+            <td>0,25</td>
+            <td>0,4</td>
+            <td>80 %</td>
+            <td style="text-align:right; font-weight:700; color:#DC2626;">35</td>
+          </tr>
+          <tr>
+            <td>Variabilité plus forte</td>
+            <td>0,5</td>
+            <td>0,8</td>
+            <td>80 %</td>
+            <td style="text-align:right; font-weight:700; color:#DC2626;">35</td>
+          </tr>
+          <tr>
+            <td>Puissance plus exigeante</td>
+            <td>0,5</td>
+            <td>0,4</td>
+            <td>90 %</td>
+            <td style="text-align:right; font-weight:700; color:#D97706;">14</td>
+          </tr>
+          <tr>
+            <td>Seuil plus strict</td>
+            <td>0,5</td>
+            <td>0,4</td>
+            <td>80 % ($\alpha = 0{,}01$)</td>
+            <td style="text-align:right; font-weight:700; color:#D97706;">15</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-radiation"></i> Le message crucial</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Détecter un <strong>petit effet</strong> (0,25 t/ha) nécessite <strong>3,5 fois plus de parcelles</strong> que détecter un effet de 0,5 t/ha. En agronomie, les petits effets sont souvent ceux qui coûtent le plus cher à mettre en évidence.
+      </p>
+    </div>
+
+    <!-- 8. ANALYSE POST-HOC DE LA PUISSANCE -->
+    <h2><i class="fa-solid fa-magnifying-glass-chart" style="color:#059669;"></i> 8. Analyse post-hoc : quand on a déjà les données</h2>
+
+    <p>
+      Il arrive qu'on doive publier des résultats déjà collectés. On peut alors calculer <strong>a posteriori</strong> la puissance qu'<strong>avait</strong> l'étude :
+    </p>
+
+    <pre><code># Puissance observée a posteriori
+power.t.test(
+  n          = 10,    # effectif réel par groupe
+  delta      = 0.5,   # effet qu'on cherchait à détecter
+  sd         = 0.4,   # écart-type observé
+  sig.level  = 0.05,
+  type       = "two.sample"
+)
+
+# Résultat : power = 0.8074</code></pre>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Usage responsable</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        L'analyse post-hoc de puissance est utile pour <strong>interpréter un résultat non significatif</strong> : « nous n'avons pas détecté de différence, mais avec 10 parcelles et une puissance de 80 %, nous aurions détecté un effet de 0,5 t/ha ; un effet plus petit ne pouvait pas être mis en évidence ».
+      </p>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Ce qu'il ne faut PAS faire</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Utiliser la puissance post-hoc pour <strong>justifier un résultat significatif</strong> après coup. C'est une pratique critiquée (« <em>observed power</em> »). La puissance se calcule <strong>avant</strong> l'expérience.
+      </p>
+    </div>
+
+    <!-- 9. DANS RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 9. Et dans Ramses ?</h2>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-calculator" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir le module de dimensionnement</div>
+          <div class="step-desc">
+            Dans la barre de navigation supérieure, cliquez sur <strong>« Outils d'expérimentation »</strong> &rarr; <strong>« Calcul de taille d'échantillon »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-sliders" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Choisir le type de test</div>
+          <div class="step-desc">
+            Sélectionnez le test cible dans le menu <em>« Type de test : »</em> : test t (2 groupes), ANOVA (k groupes), corrélation, etc.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-list-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Renseigner les 4 paramètres</div>
+          <div class="step-desc">
+            • Taille d'effet à détecter (en unités naturelles ou en $d$ de Cohen) ;<br>
+            • Écart-type attendu (ou estimation préliminaire) ;<br>
+            • Seuil $\alpha$ (5 % par défaut) ;<br>
+            • Puissance souhaitée (80 % par défaut).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Obtenir la recommandation</div>
+          <div class="step-desc">
+            Ramses calcule instantanément la taille d'échantillon requise, génère une <strong>courbe de puissance</strong> (puissance en fonction de $n$) et fournit le code R correspondant pour la reproductibilité.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-graduation-cap"></i> Astuce pédagogique</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Ramses propose aussi une <strong>calculatrice inverse</strong> : « si j'ai un budget pour 30 parcelles au total, quelle est la taille d'effet minimale que je peux détecter ? » — question très utile en planification.
+      </p>
+    </div>
+
+    <!-- 10. QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 10. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; color:#1F2937;">
+        Une étude avec 5 parcelles par groupe produit un test t avec <strong>p = 0,12</strong>. L'auteur conclut « il n'y a pas de différence significative ». Que pouvez-vous dire ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:640px;">
+        <button class="quiz-btn quiz-module12-btn" data-answer="wrong1">L'auteur a raison : p > 0,05 prouve qu'il n'y a pas de différence.</button>
+        <button class="quiz-btn quiz-module12-btn" data-answer="correct">Attention : avec seulement 5 parcelles par groupe, la puissance est très faible. Il est probable que l'étude n'avait pas la capacité de détecter un effet réel.</button>
+        <button class="quiz-btn quiz-module12-btn" data-answer="wrong2">Il faut refaire le test avec un seuil alpha de 0,10.</button>
+        <button class="quiz-btn quiz-module12-btn" data-answer="wrong3">Le résultat est significatif car p est petit.</button>
+      </div>
+
+      <div id="quiz-module12-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 11. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">
+        • <strong>Puissance</strong> = probabilité de détecter un effet qui existe réellement (= 1 - β).<br>
+        • Convention : viser <strong>80 %</strong>.<br>
+        • 4 ingrédients déterminent la puissance : taille d'effet, variabilité, seuil $\alpha$, $n$.<br>
+        • Plus l'effet à détecter est <strong>petit</strong>, plus il faut de parcelles.<br>
+        • Plus la variabilité est <strong>grande</strong>, plus il faut de parcelles.<br>
+        • <strong>Un résultat non significatif sur un petit échantillon ne prouve rien</strong> : c'est peut-être un manque de puissance.<br>
+        • L'<strong>analyse de puissance se fait AVANT l'expérience</strong>, pour dimensionner correctement le dispositif.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Un dispositif bien dimensionné vaut mieux qu'une analyse sophistiquée sur des données insuffisantes. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="chapter-nav-footer">
+      <a href="11-exploiter-resultats-rediger-article.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">11. Exploiter ses résultats et rédiger un article</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">13. Limites et biais des statistiques</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

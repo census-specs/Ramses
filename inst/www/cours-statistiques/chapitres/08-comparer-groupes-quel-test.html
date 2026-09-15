@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08. Comparer des groupes : quel test choisir ? — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link active">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 08</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Comparer des groupes : quel test choisir ?</h1>
+    <div class="course-subtitle">Un seul groupe, des groupes indépendants ou des groupes appariés ?</div>
+
+    <!-- 1. PARTIR D'UN PROBLÈME RÉEL -->
+    <h2><i class="fa-solid fa-seedling" style="color:#059669;"></i> 1. Partir d'un problème réel</h2>
+
+    <div class="callout callout-try" style="margin-top:16px;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question fondamentale de l'expérimentateur</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Je veux comparer des rendements. Mais avant de choisir un test, une question est essentielle : combien de groupes est-ce que je compare et comment ces groupes sont-ils constitués ? »
+      </p>
+    </div>
+
+    <p>
+      L'erreur la plus fréquente chez les débutants est de chercher immédiatement « la formule magique » ou le nom d'un test complexe. En réalité, le secret de la réussite en statistique tient en une règle simple :
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Principe directeur</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#065F46;">
+        Le choix du test dépend d'abord de la situation expérimentale et de la structure des données.
+      </p>
+    </div>
+
+    <p>
+      L'objectif de ce module n'est pas d'apprendre par cœur des formules mathématiques, mais d'apprendre à <strong>reconnaître avec certitude la situation statistique</strong> dans laquelle vous vous trouvez.
+    </p>
+
+    <!-- 2. LES TROIS GRANDES SITUATIONS -->
+    <h2><i class="fa-solid fa-layer-group" style="color:#2563EB;"></i> 2. Les trois grandes situations</h2>
+
+    <p>
+      En agronomie et en expérimentation, vous rencontrerez principalement 3 configurations :
+    </p>
+
+    <!-- Situation 1 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:20px 0; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <span style="background:#DBEAFE; color:#1E40AF; font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px;">Situation 1</span>
+        <h3 style="margin:0; font-size:17px; color:#1E40AF;">Un seul groupe (comparaison à une référence)</h3>
+      </div>
+
+      <div class="callout callout-try" style="margin:12px 0;">
+        <p style="margin-bottom:0; font-size:14.5px; font-weight:600; color:#1E40AF;">
+          Exemple : « J'ai 20 parcelles. Le rendement moyen observé est-il différent d'une valeur de référence de 3 t/ha ? »
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin:16px 0;">
+        <svg viewBox="0 0 460 70" style="max-width:100%; height:70px;" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="15" width="170" height="40" rx="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5" />
+          <text x="105" y="39" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">1 échantillon (20 parcelles)</text>
+          
+          <path d="M 200 35 L 250 35" stroke="#4B5563" stroke-width="2" stroke-dasharray="4,4" />
+          <text x="225" y="27" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#6B7280" text-anchor="middle">vs</text>
+
+          <rect x="260" y="15" width="180" height="40" rx="6" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5" />
+          <text x="350" y="39" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#92400E" text-anchor="middle">Valeur de référence (3 t/ha)</text>
+        </svg>
+      </div>
+
+      <p style="font-size:14px; margin-bottom:8px; color:#374151;">
+        On compare la moyenne d'un seul groupe de mesures à une valeur théorique $\mu_0$, une norme historique ou un objectif fixé. L'outil paramétrique classique est le <strong>test t à un échantillon</strong> (ou son alternative non paramétrique, le <em>test de Wilcoxon à un échantillon</em>) :
+      </p>
+
+      <div class="formula-box">
+        $$t = \frac{\bar{x} - \mu_0}{\frac{s}{\sqrt{n}}} \quad \text{avec } H_0 : \mu = \mu_0 \quad \text{vs} \quad H_1 : \mu \neq \mu_0$$
+      </div>
+    </div>
+
+    <!-- Situation 2 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:20px 0; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <span style="background:#D1FAE5; color:#065F46; font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px;">Situation 2</span>
+        <h3 style="margin:0; font-size:17px; color:#065F46;">Deux groupes indépendants</h3>
+      </div>
+
+      <div class="callout callout-try" style="margin:12px 0;">
+        <p style="margin-bottom:0; font-size:14.5px; font-weight:600; color:#065F46;">
+          Exemple : « J'ai des parcelles utilisant la variété A et d'autres utilisant la variété B. Les parcelles des deux groupes sont différentes. »
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin:16px 0;">
+        <svg viewBox="0 0 460 70" style="max-width:100%; height:70px;" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="15" width="170" height="40" rx="6" fill="#D1FAE5" stroke="#059669" stroke-width="1.5" />
+          <text x="105" y="39" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#065F46" text-anchor="middle">Groupe A (Parcelles distinctes)</text>
+          
+          <path d="M 200 35 L 250 35" stroke="#4B5563" stroke-width="2" stroke-dasharray="4,4" />
+          <text x="225" y="27" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#6B7280" text-anchor="middle">vs</text>
+
+          <rect x="260" y="15" width="180" height="40" rx="6" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5" />
+          <text x="350" y="39" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#6D28D9" text-anchor="middle">Groupe B (Autres parcelles)</text>
+        </svg>
+      </div>
+
+      <p style="font-size:14px; margin-bottom:8px; color:#374151;">
+        <strong>Les observations du groupe A ne correspondent pas une par une aux observations du groupe B.</strong> Les unités expérimentales sont distinctes et sans lien direct. On utilise le <strong>test t pour échantillons indépendants</strong> (ou son alternative non paramétrique, le <em>test de Mann-Whitney / Wilcoxon rangs</em>) :
+      </p>
+
+      <div class="formula-box">
+        $$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{s_p^2 \left(\frac{1}{n_1} + \frac{1}{n_2}\right)}} \quad \text{avec } H_0 : \mu_1 = \mu_2 \quad \text{vs} \quad H_1 : \mu_1 \neq \mu_2$$
+      </div>
+    </div>
+
+    <!-- Situation 3 -->
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:20px 0; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <span style="background:#FEF3C7; color:#92400E; font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px;">Situation 3</span>
+        <h3 style="margin:0; font-size:17px; color:#92400E;">Deux groupes appariés (mesures répétées sur la même unité)</h3>
+      </div>
+
+      <div class="callout callout-try" style="margin:12px 0;">
+        <p style="margin-bottom:0; font-size:14.5px; font-weight:600; color:#92400E;">
+          Exemple : « Je mesure le rendement des mêmes parcelles avant et après l'utilisation d'une nouvelle technique agricole. »
+        </p>
+      </div>
+
+      <div style="background:#FFFDF5; border:1px dashed #FDE68A; border-radius:6px; padding:12px 18px; margin:14px 0; font-family:'IBM Plex Mono', monospace; font-size:13.5px; color:#92400E;">
+        Parcelle 1 : AVANT &rarr; APRÈS<br>
+        Parcelle 2 : AVANT &rarr; APRÈS<br>
+        Parcelle 3 : AVANT &rarr; APRÈS<br>
+        ...
+      </div>
+
+      <p style="font-size:14px; margin-bottom:8px; color:#374151;">
+        Ici, les deux mesures appartiennent à la <strong>même parcelle</strong> (ou au même producteur). Elles sont donc liées : <strong>elles sont appariées</strong>. Le test étudie directement l'évolution individuelle ($d_i = x_{i,\text{après}} - x_{i,\text{avant}}$). On utilise le <strong>test t apparié</strong> :
+      </p>
+
+      <div class="formula-box">
+        $$t = \frac{\bar{d}}{\frac{s_d}{\sqrt{n}}} \quad \text{avec } H_0 : \mu_d = 0 \quad \text{vs} \quad H_1 : \mu_d \neq 0$$
+      </div>
+    </div>
+
+    <!-- 3. COMPARAISON VISUELLE -->
+    <h2><i class="fa-solid fa-table-columns" style="color:#059669;"></i> 3. Synthèse visuelle des tests</h2>
+
+    <p>
+      Voici la vue d'ensemble pédagogique reliant chaque situation à ses outils dédiés :
+    </p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:25%;">Situation</th>
+            <th style="width:30%;">Exemple agronomique</th>
+            <th style="width:22%;">Test paramétrique</th>
+            <th style="width:23%;">Alternative non paramétrique</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 groupe</strong></td>
+            <td>Groupe vs valeur de référence</td>
+            <td><code>t à un échantillon</code></td>
+            <td><code>Wilcoxon à 1 échantillon</code></td>
+          </tr>
+          <tr>
+            <td><strong>2 groupes indépendants</strong></td>
+            <td>Variété A vs Variété B (parcelles distinctes)</td>
+            <td><code>t indépendant</code></td>
+            <td><code>Mann-Whitney (Wilcoxon)</code></td>
+          </tr>
+          <tr>
+            <td><strong>2 groupes appariés</strong></td>
+            <td>Mêmes parcelles (Avant vs Après)</td>
+            <td><code>t apparié</code></td>
+            <td><code>Wilcoxon apparié</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:13px; color:#6B7280; text-align:center;">
+      <em>Note : ce tableau constitue une grille de lecture générale pour débuter sereinement sans confusion.</em>
+    </p>
+
+    <!-- 4. PARAMÉTRIQUE VS NON PARAMÉTRIQUE -->
+    <h2><i class="fa-solid fa-scale-balanced" style="color:#7C3AED;"></i> 4. Paramétrique vs Non paramétrique</h2>
+
+    <p>
+      Pourquoi existe-t-il deux colonnes de tests pour chaque situation ?
+    </p>
+
+    <div class="row" style="display:flex; gap:16px; margin:20px 0; flex-wrap:wrap;">
+      <div style="flex:1; min-width:260px; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:16px;">
+        <h4 style="margin-top:0; color:#1E40AF; font-size:15px;"><i class="fa-solid fa-chart-area"></i> Les tests paramétriques (Tests t)</h4>
+        <p style="font-size:14px; margin-bottom:0; color:#1E3A8A;">
+          Ils reposent sur certaines conditions concernant les données (par exemple que la distribution soit proche d'une forme en cloche dite <em>normale</em>).
+        </p>
+      </div>
+
+      <div style="flex:1; min-width:260px; background:#F5F3FF; border:1px solid #DDD6FE; border-radius:8px; padding:16px;">
+        <h4 style="margin-top:0; color:#6D28D9; font-size:15px;"><i class="fa-solid fa-arrow-up-1-9"></i> Les alternatives non paramétriques (Wilcoxon, Mann-Whitney)</h4>
+        <p style="font-size:14px; margin-bottom:0; color:#5B21B6;">
+          Lorsque ces conditions ne sont pas adaptées (présence de valeurs extrêmes ou petits effectifs asymétriques), ces tests alternatifs prennent le relais de manière robuste.
+        </p>
+      </div>
+    </div>
+
+    <p style="font-size:14.5px;">
+      Retenez simplement qu'il existe <strong>plusieurs outils complémentaires pour répondre rigoureusement à une même famille de questions</strong>.
+    </p>
+
+    <!-- 5. LE RAISONNEMENT À RETENIR -->
+    <h2><i class="fa-solid fa-diagram-project" style="color:#2563EB;"></i> 5. Le raisonnement à suivre</h2>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Arbre décisionnel de qualification</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Les 4 questions ordonnées pour orienter l'analyse</div>
+        </div>
+        <span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Guide réflexe</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="340" fill="#FAFAFA" rx="8" />
+
+        <!-- Étape 1 -->
+        <rect x="210" y="15" width="200" height="36" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5" rx="6" />
+        <text x="310" y="38" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">1. Ma question agronomique</text>
+        <path d="M 310 51 L 310 70" stroke="#9CA3AF" stroke-width="2" />
+
+        <!-- Étape 2 : Combien de groupes -->
+        <rect x="195" y="72" width="230" height="36" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" rx="6" />
+        <text x="310" y="95" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#92400E" text-anchor="middle">2. Combien de groupes à comparer ?</text>
+
+        <!-- Embranchement 1 vs 2 groupes -->
+        <path d="M 230 108 L 130 140" stroke="#9CA3AF" stroke-width="2" />
+        <path d="M 390 108 L 470 140" stroke="#9CA3AF" stroke-width="2" />
+
+        <!-- 1 groupe -->
+        <rect x="30" y="145" width="200" height="42" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5" rx="6" />
+        <text x="130" y="163" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#1E40AF" text-anchor="middle">Un seul groupe</text>
+        <text x="130" y="179" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#3B82F6" text-anchor="middle">Comparaison à une valeur mu</text>
+        <path d="M 130 187 L 130 220" stroke="#9CA3AF" stroke-width="2" />
+        <rect x="30" y="222" width="200" height="38" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5" rx="6" />
+        <text x="130" y="240" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="700" fill="#1E40AF" text-anchor="middle">t à 1 échantillon</text>
+        <text x="130" y="253" font-family="'IBM Plex Sans', sans-serif" font-size="9.5" fill="#6B7280" text-anchor="middle">(ou Wilcoxon 1 échantillon)</text>
+
+        <!-- 2 groupes : indépendants ou appariés -->
+        <rect x="360" y="145" width="220" height="42" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5" rx="6" />
+        <text x="470" y="163" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">Deux groupes</text>
+        <text x="470" y="179" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#B45309" text-anchor="middle">Indépendants ou Appariés ?</text>
+
+        <path d="M 410 187 L 360 220" stroke="#059669" stroke-width="2" />
+        <path d="M 530 187 L 570 220" stroke="#7C3AED" stroke-width="2" />
+
+        <!-- 2 groupes indépendants -->
+        <rect x="260" y="222" width="190" height="46" fill="#D1FAE5" stroke="#059669" stroke-width="1.5" rx="6" />
+        <text x="355" y="241" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="700" fill="#065F46" text-anchor="middle">Indépendants</text>
+        <text x="355" y="258" font-family="'IBM Plex Sans', sans-serif" font-size="10" fill="#047857" text-anchor="middle">t indépendant / Mann-Whitney</text>
+
+        <!-- 2 groupes appariés -->
+        <rect x="470" y="222" width="140" height="46" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5" rx="6" />
+        <text x="540" y="241" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="700" fill="#6D28D9" text-anchor="middle">Appariés</text>
+        <text x="540" y="258" font-family="'IBM Plex Sans', sans-serif" font-size="10" fill="#5B21B6" text-anchor="middle">t apparié / Wilcoxon</text>
+
+        <!-- Règle d'or en bas -->
+        <rect x="80" y="290" width="460" height="34" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1" rx="6" />
+        <text x="310" y="312" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="600" fill="#1F2937" text-anchor="middle">« On ne choisit pas un test parce qu'on le connaît, mais parce qu'il correspond aux données. »</text>
+      </svg>
+    </div>
+
+    <!-- 6. PETITS EXEMPLES DE CLASSIFICATION -->
+    <h2><i class="fa-solid fa-graduation-cap" style="color:#059669;"></i> 6. Exemples d'entraînement</h2>
+
+    <div class="steps-list" style="margin:20px 0;">
+      <div class="step-item">
+        <div class="step-num" style="background:#DBEAFE; color:#1E40AF;">1</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#1E40AF;">Exemple 1 : « Je compare le rendement moyen de mes parcelles à une référence de 3 t/ha. »</div>
+          <div class="step-desc">
+            <strong>Réponse : Un seul groupe.</strong><br>
+            <em>Explication :</em> Nous n'avons qu'un seul échantillon de parcelles mesurées que nous confrontons à un nombre fixe (3 t/ha).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#D1FAE5; color:#065F46;">2</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#065F46;">Exemple 2 : « Je compare le rendement de 15 parcelles utilisant la variété A avec celui de 15 autres parcelles utilisant la variété B. »</div>
+          <div class="step-desc">
+            <strong>Réponse : Deux groupes indépendants.</strong><br>
+            <em>Explication :</em> Ce sont 30 parcelles distinctes au total (15 pour A, 15 pour B). Les mesures sont indépendantes.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEF3C7; color:#92400E;">3</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#92400E;">Exemple 3 : « Je mesure le rendement des mêmes 15 parcelles avant et après une formation technique. »</div>
+          <div class="step-desc">
+            <strong>Réponse : Deux groupes appariés.</strong><br>
+            <em>Explication :</em> Chaque parcelle est mesurée deux fois (avant et après). Les deux mesures sont appariées par parcelle.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. R -->
+    <h2><i class="fa-solid fa-code" style="color:#1F2937;"></i> 7. Les commandes correspondantes en R</h2>
+
+    <p>
+      En langage R, la syntaxe reflète directement la structure de la comparaison :
+    </p>
+
+    <h4 style="margin-bottom:6px; color:#1E40AF;"><i class="fa-solid fa-chevron-right"></i> 1. Un groupe (vs référence mu = 3)</h4>
+    <pre><code># Paramétrique
+t.test(donnees$rendement, mu = 3)
+
+# Alternative non paramétrique
+wilcox.test(donnees$rendement, mu = 3)</code></pre>
+
+    <h4 style="margin-bottom:6px; color:#065F46; margin-top:16px;"><i class="fa-solid fa-chevron-right"></i> 2. Deux groupes indépendants (Variété A vs B)</h4>
+    <pre><code># Paramétrique
+t.test(rendement ~ variete, data = donnees)
+
+# Alternative non paramétrique (Mann-Whitney)
+wilcox.test(rendement ~ variete, data = donnees)</code></pre>
+
+    <h4 style="margin-bottom:6px; color:#92400E; margin-top:16px;"><i class="fa-solid fa-chevron-right"></i> 3. Deux groupes appariés (Avant vs Après)</h4>
+    <pre><code># Paramétrique
+t.test(avant, apres, paired = TRUE)
+
+# Alternative non paramétrique
+wilcox.test(avant, apres, paired = TRUE)</code></pre>
+
+    <p style="font-size:13.5px; color:#4B5563;">
+      <em>Note : nul besoin d'apprendre par cœur tous ces arguments, l'essentiel est de savoir que ces fonctions existent.</em>
+    </p>
+
+    <!-- 8. ET DANS RAMSES ? -->
+    <h2><i class="fa-solid fa-desktop" style="color:#059669;"></i> 8. Et dans Ramses ?</h2>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-wand-magic-sparkles"></i> L'avantage de Ramses</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Vous n'avez pas besoin de mémoriser toutes ces commandes R pour utiliser Ramses. Mais comprendre votre situation expérimentale reste essentiel pour sélectionner la bonne option ! »
+      </p>
+    </div>
+
+    <p>
+      Dans Ramses, toutes ces comparaisons sont centralisées et directement accessibles sans écrire de code :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-flask" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir le module de comparaison</div>
+          <div class="step-desc">
+            Dans la barre de menu supérieure, rendez-vous dans <strong>« Tests Statistiques »</strong> &rarr; <strong>« Comparaison de 2 Groupes »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-list-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Choisir la situation dans « Type de test : »</div>
+          <div class="step-desc">
+            Le menu déroulant propose explicitement les situations fondamentales et leurs alternatives non paramétriques :
+            <ul style="margin-top:6px; margin-bottom:0; font-size:13.5px;">
+              <li><strong>Échantillon unique (comparaison à une moyenne théorique mu)</strong></li>
+              <li><strong>Deux échantillons indépendants</strong> (Test t ou Test non-paramétrique Wilcoxon / Mann-Whitney)</li>
+              <li><strong>Échantillons appariés</strong> (Test t apparié ou Test non-paramétrique Wilcoxon signé apparié)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Exécuter en un clic</div>
+          <div class="step-desc">
+            Sélectionnez vos colonnes, cliquez sur <strong>« Exécuter & Journaliser »</strong> et consultez directement la p-value et la décision dans l'onglet <strong>« Inférence & Décision »</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. PETIT DÉFI FINAL -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 9. Petit défi final</h2>
+
+    <p>Identifiez la bonne situation statistique pour chaque cas :</p>
+
+    <!-- Défi A -->
+    <div class="quiz-card" style="margin-bottom:18px;">
+      <h3 style="margin-top:0; font-size:15.5px; color:var(--primary-dark);"><i class="fa-solid fa-seedling" style="color:#059669;"></i> Cas A</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; font-weight:600; color:#1F2937;">
+        « Les mêmes producteurs sont interrogés avant et après une formation. »
+      </p>
+      <div class="quiz-options" style="flex-direction:column; max-width:520px;">
+        <button class="quiz-btn quiz-module8-a-btn" data-answer="wrong1">Un seul groupe (vs référence)</button>
+        <button class="quiz-btn quiz-module8-a-btn" data-answer="wrong2">Deux groupes indépendants</button>
+        <button class="quiz-btn quiz-module8-a-btn" data-answer="correct">Deux groupes appariés</button>
+      </div>
+      <div id="quiz-module8-a-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- Défi B -->
+    <div class="quiz-card" style="margin-bottom:18px;">
+      <h3 style="margin-top:0; font-size:15.5px; color:var(--primary-dark);"><i class="fa-solid fa-users" style="color:#2563EB;"></i> Cas B</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; font-weight:600; color:#1F2937;">
+        « Je compare 20 producteurs d'une zone avec 20 producteurs différents d'une autre zone. »
+      </p>
+      <div class="quiz-options" style="flex-direction:column; max-width:520px;">
+        <button class="quiz-btn quiz-module8-b-btn" data-answer="wrong1">Deux groupes appariés</button>
+        <button class="quiz-btn quiz-module8-b-btn" data-answer="correct">Deux groupes indépendants</button>
+        <button class="quiz-btn quiz-module8-b-btn" data-answer="wrong2">Un seul groupe (vs référence)</button>
+      </div>
+      <div id="quiz-module8-b-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- Défi C -->
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:15.5px; color:var(--primary-dark);"><i class="fa-solid fa-scale-balanced" style="color:#D97706;"></i> Cas C</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; font-weight:600; color:#1F2937;">
+        « Je compare le rendement d'un groupe à une valeur de référence. »
+      </p>
+      <div class="quiz-options" style="flex-direction:column; max-width:520px;">
+        <button class="quiz-btn quiz-module8-c-btn" data-answer="correct">Un seul groupe</button>
+        <button class="quiz-btn quiz-module8-c-btn" data-answer="wrong1">Deux groupes indépendants</button>
+        <button class="quiz-btn quiz-module8-c-btn" data-answer="wrong2">Deux groupes appariés</button>
+      </div>
+      <div id="quiz-module8-c-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 10. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Avant de choisir un test, je me demande :</div>
+      <p style="font-size:15px; line-height:1.8; margin-bottom:12px;">
+        <strong>1. Combien de groupes ai-je ?</strong><br>
+        <strong>2. Si j'en ai deux, sont-ils indépendants ou appariés ?</strong><br>
+        <strong>3. Les conditions permettent-elles d'utiliser un test paramétrique ?</strong><br>
+        <strong>4. Sinon, existe-t-il une alternative non paramétrique ?</strong>
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Ramses contient ces différents outils. Mon rôle est d'abord de comprendre ma question et la structure de mes données. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="07-comprendre-hypothese-pvalue.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">07. Comprendre l'hypothèse et la p-value</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">09. Comparer 3 groupes ou plus</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

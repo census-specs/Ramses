@@ -6,73 +6,129 @@ modal_import_data <- function() {
   shiny::modalDialog(
     title = shiny::div(
       class = "d-flex align-items-center gap-2",
-      shiny::tags$span(style = "font-weight: 600; color: #111827;", "Importer un fichier de donn\u00e9es")
+      shiny::tags$span(style = "font-weight: 600; color: #111827;", "Charger un jeu de donn\u00e9es dans Ramses")
     ),
     size = "l",
     easyClose = FALSE,
     footer = shiny::tagList(
-      shiny::modalButton("Annuler"),
-      shiny::actionButton(
-        inputId = "btn_validate_import",
-        label = "Valider et Charger",
-        class = "btn-dark"
-      )
+      shiny::modalButton("Fermer")
     ),
 
-    # S\u00e9lecteur de fichier
-    shiny::div(
-      class = "mb-3",
-      shiny::fileInput(
-        inputId = "import_file",
-        label = shiny::strong("S\u00e9lectionner un fichier sur votre poste :"),
-        accept = c(
-          ".csv", ".txt", ".tsv",
-          ".xlsx", ".xls",
-          ".sav", ".dta",
-          ".rds", ".RData"
-        ),
-        buttonLabel = "Parcourir...",
-        placeholder = "Formats accept\u00e9s : .csv, .txt, .xlsx, .xls, .sav, .dta, .rds"
-      )
-    ),
-
-    # Ligne de configuration g\u00e9n\u00e9rale (Format & Nom assign\u00e9)
-    shiny::div(
-      class = "row g-3 mb-3",
-      shiny::div(
-        class = "col-md-6",
-        shiny::selectInput(
-          inputId = "import_format",
-          label = shiny::strong("Format du fichier :"),
-          choices = c(
-            "Auto-d\u00e9tection (selon l'extension)" = "auto",
-            "Fichier texte d\u00e9limit\u00e9 (CSV, TXT)" = "csv",
-            "Feuille de calcul Excel (.xlsx, .xls)" = "excel",
-            "Fichier SPSS (.sav)" = "spss",
-            "Fichier Stata (.dta)" = "stata",
-            "Objet R s\u00e9rialis\u00e9 (.rds)" = "rds"
+    bslib::navset_card_tab(
+      id = "import_source_tabs",
+      
+      # ------------------------------------------------------------------------
+      # ONGLET 1 : OBJETS R DU WORKSPACE (.GlobalEnv)
+      # ------------------------------------------------------------------------
+      bslib::nav_panel(
+        title = shiny::HTML(paste(fontawesome::fa("database", fill = "#4B5563", height = "0.9em"), "Objets R en m\u00e9moire")),
+        value = "tab_workspace_r",
+        bslib::card_body(
+          class = "p-3",
+          shiny::div(
+            class = "d-flex justify-content-between align-items-center mb-3",
+            shiny::tags$div(
+              shiny::tags$h6(class = "fw-bold text-dark mb-1", "Jeux de donn\u00e9es disponibles dans R"),
+              shiny::tags$p(class = "text-muted small mb-0", "S\u00e9lectionnez un tableau (data.frame, tibble ou data.table) d\u00e9j\u00e0 pr\u00e9sent dans votre session R/RStudio.")
+            ),
+            shiny::actionButton(
+              inputId = "btn_refresh_workspace_datasets",
+              label = "Actualiser",
+              icon = shiny::icon("rotate"),
+              class = "btn-outline-secondary btn-sm"
+            )
           ),
-          selected = "auto"
+          
+          # Liste dynamique des objets ou message d'information
+          shiny::uiOutput("workspace_datasets_ui"),
+          
+          shiny::hr(class = "my-3"),
+          shiny::div(
+            class = "d-flex justify-content-end",
+            shiny::actionButton(
+              inputId = "btn_load_workspace_dataset",
+              label = "Charger le jeu de donn\u00e9es s\u00e9lectionn\u00e9",
+              class = "btn-dark shadow-sm"
+            )
+          )
         )
       ),
-      shiny::div(
-        class = "col-md-6",
-        shiny::textInput(
-          inputId = "import_dataset_name",
-          label = shiny::strong("Nom de l'objet R cr\u00e9\u00e9 :"),
-          value = "dataset"
+
+      # ------------------------------------------------------------------------
+      # ONGLET 2 : IMPORTATION DE FICHIER EXTERNE
+      # ------------------------------------------------------------------------
+      bslib::nav_panel(
+        title = shiny::HTML(paste(fontawesome::fa("file-arrow-up", fill = "#4B5563", height = "0.9em"), "Fichier externe")),
+        value = "tab_import_file",
+        bslib::card_body(
+          class = "p-3",
+          # S\u00e9lecteur de fichier
+          shiny::div(
+            class = "mb-3",
+            shiny::fileInput(
+              inputId = "import_file",
+              label = shiny::strong("S\u00e9lectionner un fichier sur votre poste :"),
+              accept = c(
+                ".csv", ".txt", ".tsv",
+                ".xlsx", ".xls",
+                ".sav", ".dta",
+                ".rds", ".RData"
+              ),
+              buttonLabel = "Parcourir...",
+              placeholder = "Formats accept\u00e9s : .csv, .txt, .xlsx, .xls, .sav, .dta, .rds"
+            )
+          ),
+
+          # Ligne de configuration g\u00e9n\u00e9rale (Format & Nom assign\u00e9)
+          shiny::div(
+            class = "row g-3 mb-3",
+            shiny::div(
+              class = "col-md-6",
+              shiny::selectInput(
+                inputId = "import_format",
+                label = shiny::strong("Format du fichier :"),
+                choices = c(
+                  "Auto-d\u00e9tection (selon l'extension)" = "auto",
+                  "Fichier texte d\u00e9limit\u00e9 (CSV, TXT)" = "csv",
+                  "Feuille de calcul Excel (.xlsx, .xls)" = "excel",
+                  "Fichier SPSS (.sav)" = "spss",
+                  "Fichier Stata (.dta)" = "stata",
+                  "Objet R s\u00e9rialis\u00e9 (.rds)" = "rds"
+                ),
+                selected = "auto"
+              )
+            ),
+            shiny::div(
+              class = "col-md-6",
+              shiny::textInput(
+                inputId = "import_dataset_name",
+                label = shiny::strong("Nom de l'objet R cr\u00e9\u00e9 :"),
+                value = "dataset"
+              )
+            )
+          ),
+
+          # Options dynamiques selon le format s\u00e9lectionn\u00e9
+          shiny::div(
+            class = "card bg-light border p-3 mb-2",
+            shiny::uiOutput("import_dynamic_options")
+          ),
+
+          # Retour d'information / aper\u00e7u rapide
+          shiny::uiOutput("import_preview_info"),
+
+          shiny::hr(class = "my-3"),
+          shiny::div(
+            class = "d-flex justify-content-end",
+            shiny::actionButton(
+              inputId = "btn_validate_import",
+              label = "Valider et Charger le fichier",
+              class = "btn-dark shadow-sm"
+            )
+          )
         )
       )
-    ),
-
-    # Options dynamiques selon le format s\u00e9lectionn\u00e9
-    shiny::div(
-      class = "card bg-light border p-3 mb-2",
-      shiny::uiOutput("import_dynamic_options")
-    ),
-
-    # Retour d'information / aper\u00e7u rapide
-    shiny::uiOutput("import_preview_info")
+    )
   )
 }
 
@@ -81,15 +137,27 @@ modal_import_data <- function() {
 #' @return Une structure UI Shiny bas\u00e9e sur \code{bslib::page_navbar}.
 #' @noRd
 app_ui <- function() {
-  # D\u00e9claration s\u00e9curis\u00e9e du dossier de ressources statiques pour le favicon
+  # Declaration securisee des dossiers de ressources statiques (favicon, cours-statistiques)
   res_dir <- system.file("app/www", package = "Ramses")
   if (dir.exists(res_dir)) {
     shiny::addResourcePath("ramses_res", res_dir)
   }
 
+  cours_dir <- system.file("www/cours-statistiques", package = "Ramses")
+  if (!nzchar(cours_dir) || !dir.exists(cours_dir)) {
+    cours_dir <- file.path(getwd(), "inst", "www", "cours-statistiques")
+  }
+  if (!dir.exists(cours_dir)) {
+    cours_dir <- file.path(getwd(), "Ramses", "inst", "www", "cours-statistiques")
+  }
+  if (dir.exists(cours_dir)) {
+    shiny::addResourcePath("cours_stats", cours_dir)
+  }
+
   bslib::page_navbar(
     id = "main_nav",
-    title = NULL,
+    title = "Ramses 1.0",
+    window_title = "Ramses 1.0",
     theme = bslib::bs_theme(
       version = 5,
       bg = "#FFFFFF",
@@ -103,8 +171,9 @@ app_ui <- function() {
       base_font = bslib::font_google("IBM Plex Sans")
     ),
     header = shiny::tagList(
-      # Favicon de l'application Ramses (support multi-navigateurs et mode Chromium standalone)
+      # Favicon et titre de l'application Ramses (support multi-navigateurs et mode Chromium standalone)
       shiny::tags$head(
+        shiny::tags$title("Ramses 1.0"),
         shiny::tags$link(rel = "shortcut icon", href = "ramses_res/favicon.svg"),
         shiny::tags$link(rel = "icon", type = "image/svg+xml", href = "ramses_res/favicon.svg"),
         shiny::tags$link(rel = "shortcut icon", href = "favicon.ico"),
@@ -128,12 +197,29 @@ app_ui <- function() {
               window.location.reload();
             });
             Shiny.addCustomMessageHandler('ramses_stop_app', function(msg) {
-              try {
-                window.close();
-              } catch(e) {}
-              setTimeout(function() {
-                document.body.innerHTML = '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:\'IBM Plex Sans\', sans-serif;background-color:#F9FAFB;color:#1F2937;text-align:center;padding:24px;\"><div style=\"background:#FFFFFF;border:1px solid #E5E7EB;border-radius:8px;padding:36px 44px;max-width:540px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);\"><div style=\"font-size:42px;color:#374151;margin-bottom:18px;\">&#10004;</div><h3 style=\"font-size:20px;font-weight:600;margin-bottom:12px;color:#111827;\">Ramses est arr&ecirc;t&eacute;</h3><p style=\"color:#4B5563;font-size:14px;line-height:1.55;margin-bottom:24px;\">Le serveur de l\\'application a &eacute;t&eacute; ferm&eacute; proprement.<br>Vous pouvez fermer cet onglet ou cette fen&ecirc;tre en toute s&eacute;curit&eacute;.</p><button onclick=\"window.close();\" class=\"btn btn-outline-secondary btn-sm\" style=\"font-size:13px;padding:6px 18px;border-radius:4px;cursor:pointer;\">Fermer la page</button></div></div>';
-              }, 150);
+              if (window.ramsesAPI && typeof window.ramsesAPI.quitApp === 'function') {
+                window.ramsesAPI.quitApp();
+              } else {
+                try {
+                  window.close();
+                } catch(e) {}
+                setTimeout(function() {
+                  document.body.innerHTML = '<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:\'IBM Plex Sans\', sans-serif;background-color:#F9FAFB;color:#1F2937;text-align:center;padding:24px;\"><div style=\"background:#FFFFFF;border:1px solid #E5E7EB;border-radius:8px;padding:36px 44px;max-width:540px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);\"><div style=\"font-size:42px;color:#374151;margin-bottom:18px;\">&#10004;</div><h3 style=\"font-size:20px;font-weight:600;margin-bottom:12px;color:#111827;\">Ramses est arr&ecirc;t&eacute;</h3><p style=\"color:#4B5563;font-size:14px;line-height:1.55;margin-bottom:24px;\">Le serveur de l\\'application a &eacute;t&eacute; ferm&eacute; proprement.<br>Vous pouvez fermer cet onglet ou cette fen&ecirc;tre en toute s&eacute;curit&eacute;.</p><button onclick=\"window.close();\" class=\"btn btn-outline-secondary btn-sm\" style=\"font-size:13px;padding:6px 18px;border-radius:4px;cursor:pointer;\">Fermer la page</button></div></div>';
+                }, 150);
+              }
+            });
+            Shiny.addCustomMessageHandler('open_formation_window', function(msg) {
+              var targetUrl = (msg && msg.url) ? msg.url : 'cours_stats/index.html';
+              if (window.ramsesAPI && typeof window.ramsesAPI.openExternal === 'function') {
+                var fullUrl = window.location.origin + '/' + targetUrl.replace(/^\\//, '');
+                window.ramsesAPI.openExternal(fullUrl);
+              } else {
+                try {
+                  window.open(targetUrl, '_blank');
+                } catch(e) {
+                  console.log('window.open fallback', e);
+                }
+              }
             });
           }
         });
@@ -256,10 +342,41 @@ app_ui <- function() {
           font-weight: 600 !important;
         }
 
-        /* === Masquer l'onglet 'about_page' de la barre de navigation principale === */
+        /* === Masquer les onglets speciaux de la barre de navigation principale === */
         .nav-link[data-value='about_page'],
         a[data-value='about_page'],
-        .nav-item:has(a[data-value='about_page']) {
+        .nav-item:has(a[data-value='about_page']),
+        .nav-link[data-value='cours_stats_page'],
+        a[data-value='cours_stats_page'],
+        .nav-item:has(a[data-value='cours_stats_page']) {
+          display: none !important;
+        }
+
+        /* === Bouton compact ? avec menu deroulant === */
+        .ramses-help-menu .nav-link {
+          font-weight: 700 !important;
+          color: #4B5563 !important;
+          border: 1px solid #D1D5DB !important;
+          border-radius: 9999px !important;
+          width: 28px !important;
+          height: 28px !important;
+          padding: 0 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          font-size: 0.88rem !important;
+          background-color: #FFFFFF !important;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+          transition: all 0.15s ease-in-out !important;
+        }
+        .ramses-help-menu .nav-link:hover,
+        .ramses-help-menu .nav-link:focus,
+        .ramses-help-menu.show > .nav-link {
+          color: #111827 !important;
+          background-color: #F3F4F6 !important;
+          border-color: #9CA3AF !important;
+        }
+        .ramses-help-menu .nav-link::after {
           display: none !important;
         }
         ",
@@ -678,16 +795,20 @@ app_ui <- function() {
         title = shiny::HTML(paste(fontawesome::fa("chart-pie", fill = "#6B7280", height = "0.85em"), "Tests de Proportions")),
         value = "test_prop",
         mod_tests_prop_ui("tests_module")
-      ),
-      bslib::nav_panel(
-        title = shiny::HTML(paste(fontawesome::fa("sliders", fill = "#6B7280", height = "0.85em"), "Mod\u00e8les de R\u00e9gression")),
-        value = "test_reg",
-        mod_tests_reg_ui("tests_module")
       )
     ),
 
     # =========================================================================
-    # 4. ONGLET VISUALISATION (Chart Builder)
+    # 4. MENU MOD\u00c8LES DE R\u00c9GRESSION (Menu ind\u00e9pendant)
+    # =========================================================================
+    bslib::nav_panel(
+      title = shiny::HTML(paste(fontawesome::fa("chart-line", fill = "#4B5563", height = "0.9em"), "Mod\u00e8les de r\u00e9gression")),
+      value = "regression_models",
+      mod_regression_ui("regression_module")
+    ),
+
+    # =========================================================================
+    # 5. ONGLET VISUALISATION (Chart Builder)
     # =========================================================================
     bslib::nav_panel(
       title = shiny::HTML(paste(fontawesome::fa("chart-column", fill = "#4B5563", height = "0.9em"), "Visualisation")),
@@ -696,7 +817,7 @@ app_ui <- function() {
     ),
 
     # =========================================================================
-    # 5. ONGLET JOURNAL R MARKDOWN
+    # 6. ONGLET JOURNAL R MARKDOWN
     # =========================================================================
     bslib::nav_panel(
       title = shiny::HTML(paste(fontawesome::fa("code", fill = "#4B5563", height = "0.9em"), "Journal Rmd")),
@@ -765,6 +886,15 @@ app_ui <- function() {
       page_about_ramses_ui()
     ),
 
+    # =========================================================================
+    # 7. PAGE "COURS DE METHODES STATISTIQUES" (Vue complete integree)
+    # =========================================================================
+    bslib::nav_panel(
+      title = NULL,
+      value = "cours_stats_page",
+      page_cours_statistiques_ui()
+    ),
+
     bslib::nav_spacer(),
 
     # =========================================================================
@@ -799,14 +929,25 @@ app_ui <- function() {
     ),
 
     # =========================================================================
-    # BOUTON D'ACCES A PROPOS (?)
+    # MENU D'AIDE ET FORMATION (?)
     # =========================================================================
-    bslib::nav_item(
-      shiny::actionButton(
-        inputId = "btn_about_ramses",
-        label = "?",
-        class = "btn-outline-secondary btn-sm my-auto ms-2 px-3 py-1 shadow-sm rounded-circle fw-bold",
-        title = "\u00c0 propos de Ramses"
+    bslib::nav_menu(
+      title = "?",
+      align = "right",
+      bslib::nav_item(
+        shiny::actionLink(
+          inputId = "menu_open_formation",
+          label = shiny::HTML(paste(fontawesome::fa("graduation-cap", fill = "#1F2937", height = "0.9em"), " <strong>Formation</strong>")),
+          class = "dropdown-item"
+        )
+      ),
+      bslib::nav_item(shiny::tags$hr(class = "dropdown-divider")),
+      bslib::nav_item(
+        shiny::actionLink(
+          inputId = "menu_open_about",
+          label = shiny::HTML(paste(fontawesome::fa("circle-info", fill = "#6B7280", height = "0.85em"), " \u00c0 propos de Ramses")),
+          class = "dropdown-item"
+        )
       )
     )
   )
@@ -1095,6 +1236,53 @@ page_about_ramses_ui <- function() {
           )
         )
       )
+    )
+  )
+}
+
+#' Interface de la page enti\u00e8re "Cours de m\u00e9thodes statistiques"
+#'
+#' @return Une structure UI Shiny avec iframe plein \u00e9cran et barre d'actions
+#' @noRd
+page_cours_statistiques_ui <- function() {
+  shiny::div(
+    class = "container-fluid p-0 d-flex flex-column",
+    style = "height: calc(100vh - 46px); min-height: 560px; background-color: #FFFFFF;",
+
+    # Barre d'actions sup\u00e9rieure
+    shiny::div(
+      class = "d-flex justify-content-between align-items-center px-3 py-2 border-bottom bg-light",
+      style = "min-height: 42px;",
+      shiny::div(
+        class = "d-flex align-items-center gap-2",
+        shiny::actionButton(
+          inputId = "btn_cours_back",
+          label = shiny::HTML(paste(fontawesome::fa("arrow-left", height = "0.9em"), " \u2190 Retour \u00e0 Ramses")),
+          class = "btn btn-outline-secondary btn-sm px-3 py-1 fw-semibold shadow-sm"
+        ),
+        shiny::tags$span(
+          class = "fw-bold text-dark ms-2 small d-none d-sm-inline",
+          shiny::HTML("<strong>\U0001F4DA M\u00e9thodes statistiques</strong> \u2014 Cours & Manuel interactif de r\u00e9f\u00e9rence")
+        )
+      ),
+      shiny::div(
+        class = "d-flex align-items-center gap-2",
+        shiny::tags$a(
+          href = "cours_stats/index.html",
+          target = "_blank",
+          rel = "noopener noreferrer",
+          class = "btn btn-outline-dark btn-sm px-2 py-1",
+          shiny::HTML(paste(fontawesome::fa("arrow-up-right-from-square", height = "0.8em"), " Ouvrir dans un nouvel onglet"))
+        )
+      )
+    ),
+
+    # Iframe autonome contenant l'int\u00e9gralit\u00e9 du module HTML
+    shiny::tags$iframe(
+      src = "cours_stats/index.html",
+      id = "iframe_cours_statistiques",
+      style = "flex-grow: 1; width: 100%; height: 100%; border: none; background: #F9FAFB;",
+      title = "Cours de m\u00e9thodes statistiques"
     )
   )
 }

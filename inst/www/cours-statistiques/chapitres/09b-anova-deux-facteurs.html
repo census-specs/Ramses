@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Module 09b — Analyse de variance à deux facteurs et interactions.">
+  <title>09b. ANOVA à deux facteurs — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link active">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 09b</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">ANOVA à deux facteurs</h1>
+    <div class="course-subtitle">Quand deux variables explicatives agissent ensemble sur la réponse</div>
+
+    <!-- 1. INTRODUCTION -->
+    <h2><i class="fa-solid fa-seedling" style="color:#059669;"></i> 1. Pourquoi deux facteurs au lieu d'un seul ?</h2>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question de l'expérimentateur</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Je veux tester à la fois l'effet de la variété ET celui de la fertilisation sur le rendement du maïs. Est-ce que ces deux facteurs agissent indépendamment, ou se combinent-ils ? »
+      </p>
+    </div>
+
+    <p>
+      Dans le module 09, nous avons appris à comparer plusieurs groupes avec l'<strong>ANOVA à un facteur</strong>. Mais en agronomie, une expérimentation teste rarement un seul facteur à la fois. On veut souvent savoir :
+    </p>
+
+    <ul style="margin:12px 0 20px 0; padding-left:22px; font-size:14.5px; line-height:1.7;">
+      <li>Si la <strong>variété A</strong> est meilleure que la variété B (effet principal de la variété) ;</li>
+      <li>Si la <strong>fertilisation</strong> augmente le rendement (effet principal de la fertilisation) ;</li>
+      <li>Et surtout : si l'effet d'une variété <strong>dépend</strong> de la fertilisation (interaction).</li>
+    </ul>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Principe fondamental</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#065F46;">
+        « L'ANOVA à deux facteurs teste simultanément deux sources de variation et leur éventuelle interaction. »
+      </p>
+    </div>
+
+    <!-- 2. LE NOUVEAU JEU DE DONNÉES -->
+    <h2><i class="fa-solid fa-database" style="color:#2563EB;"></i> 2. Notre nouveau jeu de données : un essai factoriel</h2>
+
+    <p>
+      Nous allons travailler sur un <strong>essai factoriel complet</strong> : 2 variétés de maïs × 2 niveaux de fertilisation = <strong>4 combinaisons</strong>, avec 10 parcelles par combinaison, soit <strong>40 parcelles au total</strong>.
+    </p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Combinaison</th>
+            <th>Variété</th>
+            <th>Fertilisation</th>
+            <th style="text-align:center;">Effectif (n)</th>
+            <th style="text-align:right;">Rendement moyen (t/ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A / Sans</strong></td>
+            <td>Variété A</td>
+            <td>Sans engrais</td>
+            <td style="text-align:center;">10</td>
+            <td style="text-align:right;">2,55</td>
+          </tr>
+          <tr>
+            <td><strong>A / Avec</strong></td>
+            <td>Variété A</td>
+            <td>Avec engrais</td>
+            <td style="text-align:center;">10</td>
+            <td style="text-align:right;">3,10</td>
+          </tr>
+          <tr>
+            <td><strong>B / Sans</strong></td>
+            <td>Variété B</td>
+            <td>Sans engrais</td>
+            <td style="text-align:center;">10</td>
+            <td style="text-align:right;">2,70</td>
+          </tr>
+          <tr>
+            <td><strong>B / Avec</strong></td>
+            <td>Variété B</td>
+            <td>Avec engrais</td>
+            <td style="text-align:center;">10</td>
+            <td style="text-align:right;">3,55</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Ces moyennes suggèrent déjà une histoire intéressante :
+    </p>
+    <ul>
+      <li>La <strong>fertilisation</strong> semble augmenter le rendement (+0,55 pour A, +0,85 pour B).</li>
+      <li>La <strong>variété B</strong> semble meilleure que A, surtout <strong>avec engrais</strong>.</li>
+      <li>La différence entre A et B passe de +0,15 (sans engrais) à +0,45 (avec engrais) → <strong>il y a peut-être une interaction !</strong></li>
+    </ul>
+
+    <!-- 3. LE CONCEPT D'INTERACTION -->
+    <h2><i class="fa-solid fa-diagram-project" style="color:#7C3AED;"></i> 3. Le concept clé : l'interaction</h2>
+
+    <div class="callout callout-info" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Définition simple</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        Une <strong>interaction</strong> existe quand l'effet d'un facteur <em>dépend</em> du niveau de l'autre facteur.
+      </p>
+    </div>
+
+    <p>
+      Le meilleur moyen de détecter une interaction est de tracer un <strong>graphique d'interaction</strong> : on place le rendement en Y, la fertilisation en X, et on trace une courbe par variété.
+    </p>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Graphique d'interaction : variété × fertilisation</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Les deux courbes ne sont pas parallèles → interaction probable</div>
+        </div>
+        <span class="chart-badge" style="background:#EDE9FE; color:#6D28D9; border-color:#DDD6FE;">Interprétation graphique</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Graphique d'interaction montrant que l'écart entre variétés A et B augmente avec la fertilisation">
+        <rect width="620" height="320" fill="#FAFAFA" rx="8" />
+
+        <!-- Axe Y : de 2.0 (y=270) à 4.0 (y=40) -->
+        <!-- 230 px / 2 unités = 115 px par unité -->
+        <line x1="80" y1="40"  x2="560" y2="40"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="97"  x2="560" y2="97"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="155" x2="560" y2="155" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="212" x2="560" y2="212" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="270" x2="560" y2="270" stroke="#E5E7EB" stroke-width="1.5" />
+
+        <text x="70" y="274" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.0</text>
+        <text x="70" y="216" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.5</text>
+        <text x="70" y="159" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.0</text>
+        <text x="70" y="101" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.5</text>
+        <text x="70" y="44"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">4.0</text>
+        <text x="30" y="155" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="600" fill="#4B5563" text-anchor="middle" transform="rotate(-90 30 155)">Rendement (t/ha)</text>
+
+        <!-- Positions X : Sans = 240, Avec = 420 -->
+        <line x1="240" y1="30" x2="240" y2="280" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="420" y1="30" x2="420" y2="280" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="3,3" />
+
+        <!-- Variété A : sans=2.55 (y=207), avec=3.10 (y=143) -->
+        <line x1="240" y1="207" x2="420" y2="143" stroke="#2563EB" stroke-width="3" />
+        <circle cx="240" cy="207" r="8" fill="#2563EB" stroke="#FFFFFF" stroke-width="2" />
+        <circle cx="420" cy="143" r="8" fill="#2563EB" stroke="#FFFFFF" stroke-width="2" />
+        <text x="240" y="195" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">2,55</text>
+        <text x="420" y="131" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">3,10</text>
+
+        <!-- Variété B : sans=2.70 (y=189), avec=3.55 (y=87) -->
+        <line x1="240" y1="189" x2="420" y2="87" stroke="#059669" stroke-width="3" />
+        <circle cx="240" cy="189" r="8" fill="#059669" stroke="#FFFFFF" stroke-width="2" />
+        <circle cx="420" cy="87" r="8" fill="#059669" stroke="#FFFFFF" stroke-width="2" />
+        <text x="240" y="177" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">2,70</text>
+        <text x="420" y="75" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">3,55</text>
+
+        <!-- Labels des modalités X -->
+        <text x="240" y="300" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#1F2937" text-anchor="middle">Sans engrais</text>
+        <text x="420" y="300" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#1F2937" text-anchor="middle">Avec engrais</text>
+
+        <!-- Légende -->
+        <line x1="450" y1="35" x2="480" y2="35" stroke="#2563EB" stroke-width="3" />
+        <circle cx="465" cy="35" r="5" fill="#2563EB" />
+        <text x="490" y="39" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#1F2937">Variété A</text>
+
+        <line x1="450" y1="55" x2="480" y2="55" stroke="#059669" stroke-width="3" />
+        <circle cx="465" cy="55" r="5" fill="#059669" />
+        <text x="490" y="59" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#1F2937">Variété B</text>
+      </svg>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Comment lire ce graphique ?</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li><strong>Courbes parallèles</strong> → pas d'interaction (les facteurs agissent indépendamment).</li>
+        <li><strong>Courbes qui divergent ou convergent</strong> → interaction (l'effet d'un facteur change selon l'autre).</li>
+        <li><strong>Courbes qui se croisent</strong> → interaction forte (parfois inversion de l'effet).</li>
+      </ul>
+      <p style="margin-top:8px; margin-bottom:0; font-size:13.5px; color:#065F46;">
+        Ici, l'écart entre A et B <strong>augmente</strong> avec l'engrais → interaction probable.
+      </p>
+    </div>
+
+    <!-- 4. LE MODÈLE ANOVA 2 FACTEURS -->
+    <h2><i class="fa-solid fa-square-root-variable" style="color:#2563EB;"></i> 4. Le modèle ANOVA à deux facteurs</h2>
+
+    <p>
+      L'ANOVA à deux facteurs décompose la variance totale en <strong>4 sources</strong> :
+    </p>
+
+    <div class="formula-box">
+      $$y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}$$
+    </div>
+
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:var(--shadow-sm);">
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$\mu$</span>
+          <div>La <strong>moyenne globale</strong> toutes combinaisons confondues.</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$\alpha_i$</span>
+          <div>L'<strong>effet principal</strong> du facteur Variété (A vs B).</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$\beta_j$</span>
+          <div>L'<strong>effet principal</strong> du facteur Fertilisation (Sans vs Avec).</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#FEF3C7; color:#92400E; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$(\alpha\beta)_{ij}$</span>
+          <div>L'<strong>effet d'interaction</strong> : est-ce que l'effet de la variété dépend de la fertilisation (et inversement) ?</div>
+        </li>
+        <li style="display:flex; gap:12px; font-size:14.5px; align-items:flex-start;">
+          <span style="background:#DBEAFE; color:#1E40AF; padding:2px 8px; border-radius:4px; font-weight:700; font-family:var(--font-mono); flex-shrink:0;">$\varepsilon$</span>
+          <div>Le <strong>résidu</strong> (variation non expliquée).</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> 3 tests à interpréter ensemble</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        L'ANOVA à 2 facteurs produit <strong>3 p-values</strong> : une pour chaque effet principal et une pour l'interaction. Il faut les lire <strong>dans l'ordre</strong> : interaction d'abord, puis effets principaux.
+      </p>
+    </div>
+
+    <!-- 5. RÉALISER L'ANOVA DANS R -->
+    <h2><i class="fa-solid fa-code" style="color:#1F2937;"></i> 5. Réaliser l'ANOVA dans R</h2>
+
+    <p>
+      Dans R, l'ANOVA à 2 facteurs s'ajuste avec <code>aov()</code> et l'opérateur <code>*</code> (qui inclut les deux effets principaux ET l'interaction) :
+    </p>
+
+    <pre><code># Création du jeu de données factoriel
+set.seed(42)  # Pour reproductibilité
+
+donnees_2f <- expand.grid(
+  variete       = c("A", "B"),
+  fertilisation = c("Sans", "Avec"),
+  rep           = 1:10
+)
+
+# Simulation des rendements (avec interaction)
+donnees_2f$rendement <- c(
+  rnorm(10, mean = 2.55, sd = 0.25),  # A / Sans
+  rnorm(10, mean = 3.10, sd = 0.25),  # A / Avec
+  rnorm(10, mean = 2.70, sd = 0.25),  # B / Sans
+  rnorm(10, mean = 3.55, sd = 0.25)   # B / Avec
+)
+
+# Ajustement de l'ANOVA à 2 facteurs AVEC interaction
+modele <- aov(rendement ~ variete * fertilisation, data = donnees_2f)
+summary(modele)</code></pre>
+
+    <p>La sortie de R ressemble à ceci :</p>
+
+    <pre><code>                     Df Sum Sq Mean Sq F value   Pr(>F)    
+variete               1  2.450   2.450  42.317  1.2e-07 ***
+fertilisation         1  5.880   5.880 101.562  &lt; 2e-16 ***
+variete:fertilisation 1  0.405   0.405   6.995   0.0124 *  
+Residuals            36  2.085   0.058                     </code></pre>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Comment lire cette sortie ?</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li><strong>Ligne "variete"</strong> : test de l'effet principal de la variété → p &lt; 0,001 → effet significatif.</li>
+        <li><strong>Ligne "fertilisation"</strong> : test de l'effet principal de la fertilisation → p &lt; 0,001 → effet significatif.</li>
+        <li><strong>Ligne "variete:fertilisation"</strong> : test de l'<strong>interaction</strong> → p = 0,012 → <strong>interaction significative !</strong></li>
+        <li><strong>Residuals</strong> : variance non expliquée par le modèle.</li>
+      </ul>
+    </div>
+
+    <!-- 6. INTERPRÉTATION -->
+    <h2><i class="fa-solid fa-pen-fancy" style="color:#D97706;"></i> 6. Interpréter les résultats</h2>
+
+    <p>
+      L'<strong>interaction est significative</strong> (p = 0,012). Cela change complètement la façon de présenter les conclusions.
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin:20px 0;">
+      <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:16px;">
+        <div style="font-weight:700; font-size:14px; color:#991B1B; margin-bottom:6px;">
+          <i class="fa-solid fa-circle-xmark"></i> Si l'interaction N'était PAS significative
+        </div>
+        <p style="font-size:13.5px; color:#7F1D1D; margin:0;">
+          On pourrait dire : « La variété B est meilleure que A <em>en moyenne</em> » et « La fertilisation augmente le rendement <em>en moyenne</em> ». Chaque effet se résume séparément.
+        </p>
+      </div>
+
+      <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:16px;">
+        <div style="font-weight:700; font-size:14px; color:#065F46; margin-bottom:6px;">
+          <i class="fa-solid fa-circle-check"></i> Puisque l'interaction EST significative
+        </div>
+        <p style="font-size:13.5px; color:#064E3B; margin:0;">
+          On doit dire : « L'effet de la variété <strong>dépend</strong> de la fertilisation ». L'effet de la variété B est <strong>plus marqué</strong> avec engrais.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-quote-left"></i> Phrase d'interprétation pour votre rapport</div>
+      <p style="font-size:15px; margin-bottom:0; line-height:1.6; color:#065F46;">
+        « L'analyse de variance à deux facteurs révèle un effet significatif de la variété (F(1,36) = 42,32 ; p &lt; 0,001), un effet significatif de la fertilisation (F(1,36) = 101,56 ; p &lt; 0,001) et une <strong>interaction significative</strong> entre les deux facteurs (F(1,36) = 7,00 ; p = 0,012). L'avantage de la variété B sur la variété A est donc <em>plus prononcé</em> en conditions fertilisées. »
+      </p>
+    </div>
+
+    <!-- 7. SI L'INTERACTION N'EST PAS SIGNIFICATIVE -->
+    <h2><i class="fa-solid fa-arrow-right" style="color:#059669;"></i> 7. Et si l'interaction n'est pas significative ?</h2>
+
+    <p>
+      Il arrive souvent que l'interaction ne soit <strong>pas significative</strong> (p &gt; 0,05). Dans ce cas :
+    </p>
+
+    <ul style="margin:12px 0 20px 0; padding-left:22px; font-size:14.5px; line-height:1.7;">
+      <li>Vous pouvez interpréter les effets principaux <strong>séparément</strong>.</li>
+      <li>Une analyse plus parcimonieuse consiste à retirer le terme d'interaction du modèle (<code>y ~ A + B</code>).</li>
+      <li>Cela <strong>simplifie</strong> la présentation : on dit « la variété B est meilleure » tout court.</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Un modèle plus simple</div>
+      <pre style="margin:8px 0 0 0; background:#F3F4F6; color:#1F2937; padding:10px 14px; border-radius:6px; font-size:13px;"><code># Modèle sans interaction (effets additifs)
+modele_simple <- aov(rendement ~ variete + fertilisation, data = donnees_2f)
+summary(modele_simple)</code></pre>
+    </div>
+
+    <!-- 8. TESTS POST-HOC -->
+    <h2><i class="fa-solid fa-arrows-split-up-and-left" style="color:#7C3AED;"></i> 8. Tests post-hoc dans un design à 2 facteurs</h2>
+
+    <p>
+      Si l'interaction est significative, le test post-hoc doit être fait <strong>sur les 4 combinaisons</strong> (et non sur chaque facteur séparément) :
+    </p>
+
+    <pre><code># Créer une variable combinant variété et fertilisation
+donnees_2f$combinaison <- interaction(donnees_2f$variete, donnees_2f$fertilisation)
+
+# ANOVA sur cette variable combinée
+modele_comb <- aov(rendement ~ combinaison, data = donnees_2f)
+
+# Test de Tukey sur les 4 combinaisons
+TukeyHSD(modele_comb)</code></pre>
+
+    <p>
+      Cela vous permet de répondre à des questions précises comme : « Est-ce que A/Avec diffère significativement de B/Avec ? ».
+    </p>
+
+    <!-- 9. DANS RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 9. Et dans Ramses ?</h2>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-table-cells-large" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir le module ANOVA 2 facteurs</div>
+          <div class="step-desc">
+            Dans la barre de navigation principale, cliquez sur <strong>« Tests Statistiques »</strong> &rarr; <strong>« ANOVA & Comparaisons multiples »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-sliders" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Choisir « ANOVA à 2 facteurs »</div>
+          <div class="step-desc">
+            Dans le menu déroulant <em>« Type d'ANOVA : »</em>, sélectionnez <strong>« Deux facteurs avec interaction »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-list-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Assigner les variables</div>
+          <div class="step-desc">
+            • <strong>Variable réponse (Y) :</strong> <code>rendement</code><br>
+            • <strong>Facteur 1 :</strong> <code>variete</code><br>
+            • <strong>Facteur 2 :</strong> <code>fertilisation</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Lancer l'analyse</div>
+          <div class="step-desc">
+            Cliquez sur <strong>« Exécuter & Journaliser »</strong>. Ramses affiche automatiquement :<br>
+            • Le tableau d'ANOVA avec les 3 p-values (variété, fertilisation, interaction) ;<br>
+            • Le <strong>graphique d'interaction</strong> ;<br>
+            • Les tests post-hoc (Tukey) sur les 4 combinaisons ;<br>
+            • Une synthèse pédagogique claire.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 10. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; color:#1F2937;">
+        Dans une ANOVA à 2 facteurs, l'interaction <strong>variété × fertilisation</strong> a une p-value de <strong>0,32</strong>. Que concluez-vous ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:600px;">
+        <button class="quiz-btn quiz-module09b-btn" data-answer="wrong1">Il faut abandonner l'analyse, le modèle est mauvais.</button>
+        <button class="quiz-btn quiz-module09b-btn" data-answer="correct">L'interaction n'est pas significative : on peut interpréter les effets principaux de la variété et de la fertilisation séparément.</button>
+        <button class="quiz-btn quiz-module09b-btn" data-answer="wrong2">Les deux facteurs n'ont aucun effet sur le rendement.</button>
+        <button class="quiz-btn quiz-module09b-btn" data-answer="wrong3">Il faut refaire l'expérience avec plus de répétitions.</button>
+      </div>
+
+      <div id="quiz-module09b-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 11. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">
+        • L'ANOVA à 2 facteurs teste <strong>3 hypothèses simultanément</strong> : effet A, effet B, interaction A×B.<br>
+        • L'<strong>interaction</strong> existe quand l'effet d'un facteur dépend de l'autre.<br>
+        • Le <strong>graphique d'interaction</strong> est le meilleur outil visuel pour la repérer (courbes parallèles = pas d'interaction).<br>
+        • <strong>Toujours interpréter l'interaction EN PREMIER</strong>, avant les effets principaux.<br>
+        • Si l'interaction est significative : les post-hoc portent sur les <strong>4 combinaisons</strong>.<br>
+        • Si l'interaction n'est pas significative : les effets principaux s'interprètent séparément.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « L'interaction, c'est quand 1 + 1 ne fait pas 2 : la combinaison des facteurs crée un effet inattendu. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="chapter-nav-footer">
+      <a href="09-comparer-3-groupes-ou-plus.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">09. Comparer 3 groupes ou plus</span>
+      </a>
+      <a href="10-etudier-relation-deux-variables.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">10. Étudier la relation entre deux variables</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

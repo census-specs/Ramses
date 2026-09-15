@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Module 08b — Vérifier les conditions d'application des tests statistiques (normalité, homoscédasticité) avant de conclure.">
+  <title>08b. Vérifier les conditions d'un test — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link active">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 08b</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Vérifier les conditions d'un test</h1>
+    <div class="course-subtitle">Avant de conclure, s'assurer que la méthode est bien appliquée</div>
+
+    <!-- 1. LE CONSTAT -->
+    <h2><i class="fa-solid fa-triangle-exclamation" style="color:#DC2626;"></i> 1. Le test t ne fonctionne pas toujours !</h2>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La situation typique</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « J'ai lancé un test t sur mes données. Il me dit p = 0,04, donc significatif. Mais mon collègue dit que ce n'est pas valable. Pourquoi ? »
+      </p>
+    </div>
+
+    <p>
+      Dans le module 08, nous avons vu qu'un test t de Student compare deux moyennes. Mais ce test repose sur des <strong>hypothèses mathématiques précises</strong>. Si ces hypothèses ne sont pas raisonnablement respectées, le résultat du test <strong>n'est pas fiable</strong> — même si R affiche une belle p-value.
+    </p>
+
+    <div class="callout callout-warning">
+      <div class="callout-title" style="color:#991B1B;"><i class="fa-solid fa-circle-exclamation"></i> Une règle à retenir</div>
+      <p style="margin-bottom:0; font-size:15px; font-weight:700; color:#991B1B;">
+        « Aucun test n'est valable sans vérifier ses conditions d'application. »
+      </p>
+    </div>
+
+    <!-- 2. LES 3 CONDITIONS DU TEST T -->
+    <h2><i class="fa-solid fa-list-check" style="color:#2563EB;"></i> 2. Les 3 conditions à vérifier</h2>
+
+    <p>
+      Pour le <strong>test t de Student</strong> (indépendant ou apparié), trois conditions doivent être vérifiées :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num" style="background:#DBEAFE; color:#1E40AF;">1</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#1E40AF;">Indépendance des observations</div>
+          <div class="step-desc">
+            Chaque observation doit être indépendante des autres. Deux mesures sur la même parcelle ne sont pas indépendantes. Ce point relève du <strong>plan expérimental</strong>, pas d'un test.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEF3C7; color:#92400E;">2</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#92400E;">Normalité des données (ou du moins leur proximité)</div>
+          <div class="step-desc">
+            Les résidus (ou les données elles-mêmes) doivent suivre approximativement une <strong>loi normale</strong> en forme de cloche. C'est surtout important pour de <strong>petits échantillons</strong> (n &lt; 30).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#D1FAE5; color:#065F46;">3</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#065F46;">Égalité des variances (uniquement pour 2 groupes indépendants)</div>
+          <div class="step-desc">
+            Les deux groupes comparés doivent avoir des variances <strong>à peu près égales</strong>. On parle d'<strong>homoscédasticité</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Bonne nouvelle</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Le test t est <strong>robuste</strong> : il tolère de petits écarts sur la normalité et les variances, à condition que <strong>les groupes soient suffisamment grands</strong> (n ≥ 30 par groupe). Pour de petits échantillons, il faut être plus prudent.
+      </p>
+    </div>
+
+    <!-- 3. TEST DE NORMALITÉ -->
+    <h2><i class="fa-solid fa-chart-area" style="color:#7C3AED;"></i> 3. Vérifier la normalité</h2>
+
+    <p>
+      Deux outils complémentaires : <strong>visuel</strong> (graphique) et <strong>formel</strong> (test statistique).
+    </p>
+
+    <h3>Outil 1 — Le QQ-plot (visuel)</h3>
+    <p>
+      Un <strong>QQ-plot</strong> compare la distribution de vos données à une distribution normale théorique. Si les points s'alignent sur la diagonale, la normalité est plausible.
+    </p>
+
+    <pre><code># QQ-plot pour vérifier la normalité
+qqnorm(donnees$rendement)
+qqline(donnees$rendement, col = "red")</code></pre>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Deux QQ-plots comparés</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Alignement sur la droite = normalité plausible</div>
+        </div>
+        <span class="chart-badge" style="background:#EDE9FE; color:#6D28D9; border-color:#DDD6FE;">Diagnostic visuel</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Deux QQ-plots : à gauche les points s'alignent sur la droite (normal), à droite les points sont en S (non normal)">
+        <rect width="620" height="260" fill="#FAFAFA" rx="8" />
+
+        <!-- QQ-plot GAUCHE : normal -->
+        <text x="150" y="24" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#065F46" text-anchor="middle">✔ Distribution normale</text>
+        <line x1="60" y1="220" x2="60" y2="40" stroke="#9CA3AF" stroke-width="1.5" />
+        <line x1="60" y1="220" x2="250" y2="220" stroke="#9CA3AF" stroke-width="1.5" />
+        <line x1="60" y1="220" x2="250" y2="40" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,4" />
+
+        <circle cx="80" cy="205" r="4" fill="#2563EB" />
+        <circle cx="105" cy="180" r="4" fill="#2563EB" />
+        <circle cx="130" cy="150" r="4" fill="#2563EB" />
+        <circle cx="155" cy="125" r="4" fill="#2563EB" />
+        <circle cx="180" cy="95" r="4" fill="#2563EB" />
+        <circle cx="205" cy="70" r="4" fill="#2563EB" />
+        <circle cx="230" cy="50" r="4" fill="#2563EB" />
+
+        <text x="155" y="245" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="middle">Quantiles théoriques</text>
+        <text x="30" y="130" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="middle" transform="rotate(-90 30 130)">Quantiles observés</text>
+
+        <!-- QQ-plot DROITE : non normal -->
+        <text x="460" y="24" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#991B1B" text-anchor="middle">✘ Distribution non normale</text>
+        <line x1="340" y1="220" x2="340" y2="40" stroke="#9CA3AF" stroke-width="1.5" />
+        <line x1="340" y1="220" x2="560" y2="220" stroke="#9CA3AF" stroke-width="1.5" />
+        <line x1="340" y1="220" x2="560" y2="40" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4,4" />
+
+        <!-- Points en S : déviation claire aux extrémités -->
+        <circle cx="355" cy="200" r="4" fill="#DC2626" />
+        <circle cx="380" cy="180" r="4" fill="#DC2626" />
+        <circle cx="405" cy="160" r="4" fill="#DC2626" />
+        <circle cx="430" cy="150" r="4" fill="#DC2626" />
+        <circle cx="455" cy="135" r="4" fill="#DC2626" />
+        <circle cx="480" cy="120" r="4" fill="#DC2626" />
+        <circle cx="505" cy="90" r="4" fill="#DC2626" />
+        <circle cx="530" cy="60" r="4" fill="#DC2626" />
+        <circle cx="548" cy="45" r="4" fill="#DC2626" />
+
+        <text x="450" y="245" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="middle">Quantiles théoriques</text>
+      </svg>
+    </div>
+
+    <h3>Outil 2 — Le test de Shapiro-Wilk (formel)</h3>
+    <p>
+      Le test de <strong>Shapiro-Wilk</strong> vérifie formellement si la distribution s'écarte significativement de la normalité :
+    </p>
+
+    <pre><code># Test de normalité de Shapiro-Wilk
+shapiro.test(donnees$rendement)
+
+# Sortie :
+#   Shapiro-Wilk normality test
+#   data:  donnees$rendement
+#   W = 0.96, p-value = 0.78</code></pre>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Comment lire ce test ?</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        • $p > 0{,}05$ : on ne rejette pas la normalité &rarr; on peut utiliser un test paramétrique comme le test t.<br>
+        • $p < 0{,}05$ : la normalité est rejetée &rarr; envisager une alternative non paramétrique.
+      </p>
+      <p style="margin-top:8px; margin-bottom:0; font-size:13.5px; color:#6B7280; font-style:italic;">
+        Attention : c'est l'inverse de la logique habituelle ! Ici, un p élevé est rassurant.
+      </p>
+    </div>
+
+    <!-- 4. TEST D'ÉGALITÉ DES VARIANCES -->
+    <h2><i class="fa-solid fa-scale-unbalanced-flip" style="color:#D97706;"></i> 4. Vérifier l'égalité des variances</h2>
+
+    <p>
+      Pour <strong>deux groupes indépendants</strong>, il faut que les variances soient à peu près égales (homoscédasticité). Deux tests classiques :
+    </p>
+
+    <ul style="margin-left:20px; margin-bottom:16px; font-size:14.5px; line-height:1.7;">
+      <li><strong>Test de Bartlett :</strong> suppose la normalité, très sensible aux écarts.</li>
+      <li><strong>Test de Levene :</strong> plus robuste, moins sensible aux distributions non normales. <em>Recommandé par défaut.</em></li>
+    </ul>
+
+    <pre><code># Test de Levene (plus robuste)
+library(car)
+leveneTest(rendement ~ variete, data = donnees)
+
+# Test de Bartlett (si normalité confirmée)
+bartlett.test(rendement ~ variete, data = donnees)</code></pre>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Lecture du test</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        • $p > 0{,}05$ : variances homogènes &rarr; test t standard est OK.<br>
+        • $p < 0{,}05$ : variances inégales &rarr; utiliser la variante <code>var.equal = FALSE</code> du test t (test de Welch), plus sûre.
+      </p>
+    </div>
+
+    <pre><code># Test t de Welch (ne suppose pas l'égalité des variances)
+t.test(rendement ~ variete, data = donnees, var.equal = FALSE)</code></pre>
+
+    <!-- 5. ARBRE DE DÉCISION -->
+    <h2><i class="fa-solid fa-diagram-project" style="color:#059669;"></i> 5. Arbre de décision complet</h2>
+
+    <p>
+      Voici le raisonnement à suivre avant de choisir entre test paramétrique et non paramétrique :
+    </p>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Choisir entre test t et alternative non paramétrique</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Diagnostic étape par étape</div>
+        </div>
+        <span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Arbre de décision</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre décisionnel : vérifier normalité puis égalité des variances pour choisir entre test t classique, test de Welch et test de Mann-Whitney">
+        <rect width="620" height="340" fill="#FAFAFA" rx="8" />
+
+        <!-- Étape 1 -->
+        <rect x="180" y="15" width="260" height="38" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5" rx="6" />
+        <text x="310" y="39" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">Test de normalité (Shapiro-Wilk)</text>
+
+        <!-- Branche gauche : p ≤ 0.05 -->
+        <path d="M 220 53 L 130 90" stroke="#9CA3AF" stroke-width="2" />
+        <text x="155" y="70" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#DC2626">p ≤ 0,05</text>
+
+        <rect x="30" y="95" width="200" height="42" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5" rx="6" />
+        <text x="130" y="113" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#991B1B" text-anchor="middle">Non normal</text>
+        <text x="130" y="130" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#991B1B" text-anchor="middle">→ envisager Mann-Whitney</text>
+
+        <!-- Branche droite : p > 0.05 -->
+        <path d="M 400 53 L 490 90" stroke="#9CA3AF" stroke-width="2" />
+        <text x="455" y="70" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#059669">p > 0,05</text>
+
+        <rect x="390" y="95" width="200" height="42" fill="#D1FAE5" stroke="#059669" stroke-width="1.5" rx="6" />
+        <text x="490" y="113" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Normal</text>
+        <text x="490" y="130" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#065F46" text-anchor="middle">→ continuer le diagnostic</text>
+
+        <!-- Étape 2 : test de Levene (uniquement sur la branche droite) -->
+        <path d="M 490 137 L 490 165" stroke="#9CA3AF" stroke-width="2" />
+        <rect x="375" y="170" width="230" height="38" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5" rx="6" />
+        <text x="490" y="194" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#92400E" text-anchor="middle">Égalité des variances (Levene)</text>
+
+        <!-- Branche gauche : variances inégales -->
+        <path d="M 430 208 L 400 240" stroke="#9CA3AF" stroke-width="2" />
+        <text x="400" y="230" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#D97706">p ≤ 0,05</text>
+
+        <rect x="230" y="245" width="220" height="42" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5" rx="6" />
+        <text x="340" y="263" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">Variances inégales</text>
+        <text x="340" y="280" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#92400E" text-anchor="middle">→ Test t de Welch</text>
+
+        <!-- Branche droite : variances égales -->
+        <path d="M 550 208 L 570 240" stroke="#9CA3AF" stroke-width="2" />
+        <text x="570" y="230" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#059669">p > 0,05</text>
+
+        <rect x="470" y="245" width="130" height="42" fill="#D1FAE5" stroke="#059669" stroke-width="1.5" rx="6" />
+        <text x="535" y="263" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Variances égales</text>
+        <text x="535" y="280" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#065F46" text-anchor="middle">→ Test t classique</text>
+
+        <text x="310" y="325" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-style="italic" fill="#4B5563" text-anchor="middle">« Je vérifie les conditions AVANT de choisir mon test. »</text>
+      </svg>
+    </div>
+
+    <!-- 6. ALTERNATIVES NON PARAMÉTRIQUES -->
+    <h2><i class="fa-solid fa-arrow-right-arrow-left" style="color:#D97706;"></i> 6. Que faire si les conditions ne sont pas respectées ?</h2>
+
+    <p>
+      Pas de panique : il existe des alternatives robustes aux tests t, appelées <strong>tests non paramétriques</strong>. Elles ne supposent aucune forme particulière de distribution.
+    </p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Situation</th>
+            <th>Test paramétrique</th>
+            <th>Alternative non paramétrique</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 groupe vs référence</td>
+            <td><code>t.test(x, mu = ...)</code></td>
+            <td><code>wilcox.test(x, mu = ...)</code></td>
+          </tr>
+          <tr>
+            <td>2 groupes indépendants</td>
+            <td><code>t.test(y ~ g)</code></td>
+            <td><code>wilcox.test(y ~ g)</code> (Mann-Whitney)</td>
+          </tr>
+          <tr>
+            <td>2 groupes appariés</td>
+            <td><code>t.test(x, y, paired = TRUE)</code></td>
+            <td><code>wilcox.test(x, y, paired = TRUE)</code></td>
+          </tr>
+          <tr>
+            <td>3 groupes ou plus</td>
+            <td>ANOVA <code>aov(y ~ g)</code></td>
+            <td><code>kruskal.test(y ~ g)</code> (Kruskal-Wallis)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Quand préférer un test non paramétrique ?</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        • Distribution clairement non normale ET <strong>petit échantillon</strong> (n &lt; 20 par groupe).<br>
+        • Présence de <strong>valeurs aberrantes</strong> qui ne sont pas des erreurs.<br>
+        • Données <strong>ordinales</strong> (notes, échelles de satisfaction).<br>
+        • Variances très inégales entre groupes.
+      </p>
+    </div>
+
+    <!-- 7. VÉRIFICATION DANS RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 7. Et dans Ramses ?</h2>
+
+    <p>
+      Ramses guide automatiquement la vérification des conditions et propose le test approprié :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-vial" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir le diagnostic automatique</div>
+          <div class="step-desc">
+            Dans l'onglet <strong>« Tests Statistiques »</strong>, activez l'option <strong>« Vérification automatique des conditions »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-area" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Consulter le tableau de bord</div>
+          <div class="step-desc">
+            Ramses affiche automatiquement :<br>
+            • QQ-plot de chaque groupe ;<br>
+            • Résultat du test de Shapiro-Wilk ;<br>
+            • Résultat du test de Levene ;<br>
+            • Une recommandation : <em>« Conditions respectées → test t »</em> ou <em>« Normalité rejetée → Mann-Whitney »</em>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Suivre la recommandation ou forcer</div>
+          <div class="step-desc">
+            Vous pouvez accepter la suggestion de Ramses ou forcer manuellement un test (avec un avertissement de sa part). Toutes les décisions sont journalisées.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 8. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; color:#1F2937;">
+        Vous avez lancé un test de <strong>Shapiro-Wilk</strong> sur vos données et vous obtenez <strong>p = 0,003</strong>. Quelle est la bonne interprétation ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:560px;">
+        <button class="quiz-btn quiz-module08b-btn" data-answer="wrong1">La normalité est confirmée, je peux utiliser le test t.</button>
+        <button class="quiz-btn quiz-module08b-btn" data-answer="correct">La normalité est rejetée, il faut envisager une alternative non paramétrique comme Mann-Whitney.</button>
+        <button class="quiz-btn quiz-module08b-btn" data-answer="wrong2">Comme p &lt; 0,05, la différence entre mes groupes est significative.</button>
+        <button class="quiz-btn quiz-module08b-btn" data-answer="wrong3">Il faut recommencer l'expérience.</button>
+      </div>
+
+      <div id="quiz-module08b-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 9. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">
+        • Tout test paramétrique repose sur des <strong>conditions d'application</strong>.<br>
+        • Les 3 conditions du test t : <strong>indépendance, normalité, égalité des variances</strong>.<br>
+        • Le test de <strong>Shapiro-Wilk</strong> vérifie la normalité. Un p élevé est rassurant.<br>
+        • Le test de <strong>Levene</strong> vérifie l'égalité des variances. Un p élevé est rassurant.<br>
+        • Si les conditions ne sont pas respectées : <strong>alternative non paramétrique</strong> (Mann-Whitney, Wilcoxon, Kruskal-Wallis).<br>
+        • Ramses automatise ce diagnostic et recommande le test adapté.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Un résultat n'est valable que si les conditions du test sont vérifiées. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="chapter-nav-footer">
+      <a href="08-comparer-groupes-quel-test.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">08. Comparer des groupes : quel test choisir ?</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">09. Comparer 3 groupes ou plus</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

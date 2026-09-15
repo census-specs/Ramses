@@ -1,7 +1,25 @@
-^.*\.Rproj$
-^\.Rproj\.user$
-^dev$
-^\.github$
-^LICENSE\.md$
-^README\.md$
-^\.gitignore$
+# Sauvegardes
+*.bak
+*.bak.*
+
+# Système
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Temporaire
+*.tmp
+*.log
+*.swp
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Fichiers générés pour la formation
+inst/www/cours-statistiques/formation-complete.html
+inst/www/cours-statistiques/formation-complete.pdf

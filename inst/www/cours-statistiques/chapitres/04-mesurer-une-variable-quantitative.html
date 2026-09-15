@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04. Mesurer une variable quantitative — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-seedling"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée avec Ramses</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Accueil & Méthode</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> 00. Accueil de la formation
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link active">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 04</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Mesurer une variable quantitative</h1>
+    <div class="course-subtitle">Comment résumer une série de nombres simplement ?</div>
+
+    <!-- INTRODUCTION : LA VRAIE QUESTION AGRICOLE -->
+    <div class="callout callout-try" style="margin-top:20px; border-left:4px solid #2563EB;">
+      <div class="callout-title" style="color:#1E40AF;"><i class="fa-solid fa-comment-dots"></i> La question du responsable de suivi agricole</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « J'ai 10 parcelles de maïs. Quel est le rendement moyen ? Et les rendements sont-ils tous proches de cette valeur ? »
+      </p>
+    </div>
+
+    <p>
+      Dans les chapitres précédents, nous avons appris à observer la structure des données et à compter des catégories qualitatives.
+      Aujourd'hui, nous nous intéressons à une <strong>variable quantitative</strong> (numérique et mesurable) : le <strong>rendement</strong> en grains de maïs (exprimé en tonnes par hectare, t/ha).
+    </p>
+
+    <!-- LES 10 VALEURS DE RENDEMENT -->
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:20%;">Parcelle</th>
+            <th style="width:25%;">Village</th>
+            <th style="width:25%; text-align:right;">Superficie (ha)</th>
+            <th style="width:30%; text-align:right;">Rendement (t/ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>P01</strong></td><td>Bonabéri</td><td style="text-align:right;">1.2</td><td style="text-align:right; font-weight:700; color:#065F46;">2.8</td></tr>
+          <tr><td><strong>P02</strong></td><td>Bonabéri</td><td style="text-align:right;">0.8</td><td style="text-align:right; font-weight:700; color:#065F46;">2.4</td></tr>
+          <tr><td><strong>P03</strong></td><td>Bonabéri</td><td style="text-align:right;">1.5</td><td style="text-align:right; font-weight:700; color:#065F46;">3.1</td></tr>
+          <tr><td><strong>P04</strong></td><td>Bonabéri</td><td style="text-align:right;">1.0</td><td style="text-align:right; font-weight:700; color:#065F46;">2.7</td></tr>
+          <tr><td><strong>P05</strong></td><td>Bonabéri</td><td style="text-align:right;">2.0</td><td style="text-align:right; font-weight:700; color:#065F46;">3.4</td></tr>
+          <tr><td><strong>P06</strong></td><td>Bépanda</td><td style="text-align:right;">0.7</td><td style="text-align:right; font-weight:700; color:#1E40AF;">2.1</td></tr>
+          <tr><td><strong>P07</strong></td><td>Bépanda</td><td style="text-align:right;">1.1</td><td style="text-align:right; font-weight:700; color:#1E40AF;">2.5</td></tr>
+          <tr><td><strong>P08</strong></td><td>Bépanda</td><td style="text-align:right;">1.4</td><td style="text-align:right; font-weight:700; color:#1E40AF;">2.9</td></tr>
+          <tr><td><strong>P09</strong></td><td>Bépanda</td><td style="text-align:right;">0.9</td><td style="text-align:right; font-weight:700; color:#1E40AF;">2.3</td></tr>
+          <tr><td><strong>P10</strong></td><td>Bépanda</td><td style="text-align:right;">1.8</td><td style="text-align:right; font-weight:700; color:#1E40AF;">3.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>La série brute des 10 rendements mesurés sur le terrain est donc :</p>
+    <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:8px; padding:12px 18px; margin:14px 0 20px; font-family:var(--font-mono); font-size:14.5px; color:#1F2937; text-align:center;">
+      <strong>2.8 &nbsp;|&nbsp; 2.4 &nbsp;|&nbsp; 3.1 &nbsp;|&nbsp; 2.7 &nbsp;|&nbsp; 3.4 &nbsp;|&nbsp; 2.1 &nbsp;|&nbsp; 2.5 &nbsp;|&nbsp; 2.9 &nbsp;|&nbsp; 2.3 &nbsp;|&nbsp; 3.0</strong>
+    </div>
+
+    <!-- 1. COMPRENDRE LA MOYENNE -->
+    <h2><i class="fa-solid fa-calculator" style="color:#2563EB;"></i> 1. Comprendre la moyenne</h2>
+
+    <p>
+      La <strong>moyenne</strong> est une valeur qui résume approximativement l'ensemble des observations. Elle répond à la question : 
+      <em>« Si toutes les parcelles avaient produit exactement la même récolte, combien produirait chaque parcelle ? »</em>
+    </p>
+
+    <div class="formula-box" style="text-align:center;">
+      $$\text{Moyenne} = \bar{x} = \frac{\sum_{i=1}^n x_i}{n} = \frac{\text{Somme des valeurs}}{\text{Nombre total d'observations}}$$
+    </div>
+
+    <p>Calculons-la pas à pas pour nos 10 parcelles :</p>
+    <ol style="margin-left:20px; margin-bottom:16px;">
+      <li><strong>Additionnons toutes les récoltes :</strong>
+        <div style="margin:6px 0; font-family:var(--font-mono); font-size:13.5px; color:#374151;">
+          2.8 + 2.4 + 3.1 + 2.7 + 3.4 + 2.1 + 2.5 + 2.9 + 2.3 + 3.0 = <strong>27.2</strong>
+        </div>
+      </li>
+      <li><strong>Divisons par le nombre total de parcelles ($n = 10$) :</strong>
+        <div style="margin:6px 0; font-family:var(--font-mono); font-size:13.5px; color:#374151;">
+          $$\bar{x} = \frac{27{,}2}{10} = \mathbf{2{,}72\text{ t/ha}}$$
+        </div>
+      </li>
+    </ol>
+
+    <p>Dans <strong>R</strong>, on effectue ce calcul avec la commande <code>mean()</code> :</p>
+
+    <pre><code># Calcul de la moyenne du rendement
+mean(donnees$rendement)</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+[1] 2.72
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Ce que cela signifie simplement</div>
+      <p style="font-size:15px; margin-bottom:0; color:#1E40AF; font-weight:600;">
+        « Le rendement moyen de ces 10 parcelles est de 2,72. »
+      </p>
+    </div>
+
+    <!-- 2. LA MÉDIANE -->
+    <h2><i class="fa-solid fa-arrows-split-up-and-left" style="color:#059669;"></i> 2. La médiane : la valeur du milieu</h2>
+
+    <p>
+      La <strong>médiane</strong> est la valeur qui se trouve exactement au milieu lorsque les données sont classées par ordre croissant.
+      Elle sépare l'échantillon en deux groupes d'égal effectif : 50 % des observations sont inférieures ou égales à la médiane, et 50 % sont supérieures ou égales.
+    </p>
+
+    <p>Pour la trouver, trions nos 10 rendements du plus petit au plus grand :</p>
+
+    <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:8px; padding:14px; margin:16px 0; text-align:center; font-family:var(--font-mono); font-size:14px;">
+      <span style="color:#6B7280;">1<sup>er</sup></span> 2.1 &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">2<sup>e</sup></span> 2.3 &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">3<sup>e</sup></span> 2.4 &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">4<sup>e</sup></span> 2.5 &nbsp;&le;&nbsp;
+      <span style="background:#FEF3C7; padding:2px 6px; border-radius:4px; font-weight:700; color:#92400E;">2.7</span> &nbsp;|&nbsp; 
+      <span style="background:#FEF3C7; padding:2px 6px; border-radius:4px; font-weight:700; color:#92400E;">2.8</span> &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">7<sup>e</sup></span> 2.9 &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">8<sup>e</sup></span> 3.0 &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">9<sup>e</sup></span> 3.1 &nbsp;&le;&nbsp;
+      <span style="color:#6B7280;">10<sup>e</sup></span> 3.4
+    </div>
+
+    <p>
+      Comme nous avons 10 parcelles (un nombre pair), la médiane est la moyenne des deux valeurs centrales (la 5<sup>e</sup> et la 6<sup>e</sup>) :
+      $$\text{Médiane} = \frac{2{,}7 + 2{,}8}{2} = \mathbf{2{,}75\text{ t/ha}}$$
+    </p>
+
+    <p>Dans <strong>R</strong> :</p>
+
+    <pre><code># Calcul de la médiane
+median(donnees$rendement)</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+[1] 2.75
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Pourquoi la médiane est-elle si utile ?</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        La médiane est <strong>robuste</strong> : elle n'est pas faussée lorsqu'une valeur est particulièrement élevée ou anormalement faible (valeur extrême). Si une parcelle avait produit 15 t/ha par erreur, la moyenne exploserait, mais la médiane resterait quasiment inchangée.
+      </p>
+    </div>
+
+    <!-- 3. MINIMUM ET MAXIMUM -->
+    <h2><i class="fa-solid fa-arrows-left-right" style="color:#D97706;"></i> 3. Le minimum et le maximum</h2>
+
+    <p>
+      Le <strong>minimum</strong> indique la plus petite valeur observée et le <strong>maximum</strong> la plus grande valeur observée dans le jeu de données :
+    </p>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="border-left:4px solid #EF4444;">
+        <h4><i class="fa-solid fa-arrow-down" style="color:#EF4444;"></i> Le Minimum</h4>
+        <p style="margin-bottom:8px; font-size:14px;">La plus faible récolte observée sur le terrain.</p>
+        <div style="font-family:var(--font-mono); font-size:18px; font-weight:700; color:#B91C1C;">2.1 t/ha</div>
+        <div style="font-size:12.5px; color:#6B7280; margin-top:4px;">Parcelle P06 (Bépanda)</div>
+      </div>
+
+      <div class="comparison-box" style="border-left:4px solid #10B981;">
+        <h4><i class="fa-solid fa-arrow-up" style="color:#10B981;"></i> Le Maximum</h4>
+        <p style="margin-bottom:8px; font-size:14px;">La plus forte récolte observée sur le terrain.</p>
+        <div style="font-family:var(--font-mono); font-size:18px; font-weight:700; color:#047857;">3.4 t/ha</div>
+        <div style="font-size:12.5px; color:#6B7280; margin-top:4px;">Parcelle P05 (Bonabéri)</div>
+      </div>
+    </div>
+
+    <p>Dans <strong>R</strong> :</p>
+
+    <pre><code># Plus petite valeur
+min(donnees$rendement)
+
+# Plus grande valeur
+max(donnees$rendement)</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+[1] 2.1
+[1] 3.4
+    </div>
+
+    <!-- 4. L'ÉCART-TYPE -->
+    <h2><i class="fa-solid fa-arrows-spin" style="color:#8B5CF6;"></i> 4. L'écart-type : mesurer la dispersion</h2>
+
+    <p>
+      L'<strong>écart-type</strong> indique à quel point les observations sont dispersées autour de la moyenne :
+    </p>
+    <ul style="margin-left:20px; font-size:14.5px; margin-bottom:14px;">
+      <li>Un <strong>petit écart-type</strong> signifie que les valeurs sont plutôt proches de la moyenne (parcelles régulières et homogènes) ;</li>
+      <li>Un <strong>grand écart-type</strong> signifie que les valeurs sont plus dispersées et hétérogènes.</li>
+    </ul>
+
+    <!-- Exemple visuel de dispersion -->
+    <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin:16px 0 20px; box-shadow:var(--shadow-sm);">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:18px;">
+        <div style="background:#F9FAFB; border-radius:6px; padding:14px; border:1px solid #E5E7EB;">
+          <div style="font-weight:700; color:#065F46; font-size:14px; margin-bottom:6px;"><i class="fa-solid fa-bullseye"></i> Situation A : Écart-type faible (homogène)</div>
+          <div style="font-size:13px; color:#4B5563;">Rendements : <strong>2.7 &nbsp;|&nbsp; 2.7 &nbsp;|&nbsp; 2.8</strong></div>
+          <div style="font-size:13px; margin-top:4px;">Moyenne = <strong>2.73</strong> &bull; Écart-type = <strong>0.06</strong></div>
+          <div style="font-size:12.5px; color:#059669; margin-top:6px;">Toutes les parcelles ont produit quasiment la même récolte.</div>
+        </div>
+
+        <div style="background:#F9FAFB; border-radius:6px; padding:14px; border:1px solid #E5E7EB;">
+          <div style="font-weight:700; color:#B45309; font-size:14px; margin-bottom:6px;"><i class="fa-solid fa-arrows-left-right-to-line"></i> Situation B : Écart-type fort (hétérogène)</div>
+          <div style="font-size:13px; color:#4B5563;">Rendements : <strong>1.2 &nbsp;|&nbsp; 2.8 &nbsp;|&nbsp; 4.2</strong></div>
+          <div style="font-size:13px; margin-top:4px;">Moyenne = <strong>2.73</strong> &bull; Écart-type = <strong>1.50</strong></div>
+          <div style="font-size:12.5px; color:#D97706; margin-top:6px;">Même moyenne que A, mais très grande variabilité entre champs !</div>
+        </div>
+      </div>
+    </div>
+
+    <p>Dans <strong>R</strong>, on utilise la commande <code>sd()</code> (pour <em>Standard Deviation</em>) :</p>
+
+    <pre><code># Calcul de l'écart-type
+sd(donnees$rendement)</code></pre>
+
+    <div style="background:#1F2937; color:#F9FAFB; padding:12px 16px; border-radius:6px; font-family:var(--font-mono); font-size:13px; margin:-8px 0 16px;">
+[1] 0.3994441
+    </div>
+
+    <p style="font-size:13.5px; color:var(--text-muted);">
+      L'écart-type est d'environ <strong>0,40 t/ha</strong>. Cela reflète une dispersion modérée et réaliste sur le terrain.
+    </p>
+
+    <!-- 5. VOIR LES DONNÉES : HISTOGRAMME -->
+    <h2><i class="fa-solid fa-chart-column" style="color:#2563EB;"></i> 5. Voir les données : l'histogramme</h2>
+
+    <p>
+      L'<strong>histogramme</strong> regroupe les valeurs par tranches (classes) et affiche sous forme de barres le nombre d'observations dans chaque tranche. Il permet de voir d'un coup d'œil la forme globale de la distribution.
+    </p>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Histogramme des rendements (10 parcelles)</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Tranches de 0,5 t/ha de 2,0 à 3,5 t/ha</div>
+        </div>
+        <span class="chart-badge" style="background:#EFF6FF; color:#1D4ED8; border-color:#BFDBFE;">Graphique réel R</span>
+      </div>
+
+      <!-- Histogramme SVG vectoriel -->
+      <svg class="chart-container-svg" viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="250" fill="#FAFAFA" rx="8" />
+
+        <!-- Axes Y (0 à 5) -->
+        <line x1="70" y1="190" x2="570" y2="190" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="70" y1="155" x2="570" y2="155" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="120" x2="570" y2="120" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="85"  x2="570" y2="85"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="50"  x2="570" y2="50"  stroke="#F3F4F6" stroke-width="1" />
+
+        <text x="58" y="194" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+        <text x="58" y="159" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">1</text>
+        <text x="58" y="124" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2</text>
+        <text x="58" y="89"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3</text>
+        <text x="58" y="54"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">4</text>
+        <text x="24" y="115" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 24 115)">Nombre de parcelles</text>
+
+        <!-- Tranche 1 [2.0 - 2.5] -> 4 parcelles (2.1, 2.3, 2.4, 2.5) : height = 140px, y = 50 -->
+        <rect x="110" y="50" width="130" height="140" fill="#3B82F6" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <text x="175" y="42" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1D4ED8" text-anchor="middle">4 parcelles</text>
+        <text x="175" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">2.1, 2.3, 2.4, 2.5</text>
+
+        <!-- Tranche 2 ]2.5 - 3.0] -> 4 parcelles (2.7, 2.8, 2.9, 3.0) : height = 140px, y = 50 -->
+        <rect x="245" y="50" width="130" height="140" fill="#3B82F6" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <text x="310" y="42" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1D4ED8" text-anchor="middle">4 parcelles</text>
+        <text x="310" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">2.7, 2.8, 2.9, 3.0</text>
+
+        <!-- Tranche 3 ]3.0 - 3.5] -> 2 parcelles (3.1, 3.4) : height = 70px, y = 120 -->
+        <rect x="380" y="120" width="130" height="70" fill="#60A5FA" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <text x="445" y="112" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1D4ED8" text-anchor="middle">2 parcelles</text>
+        <text x="445" y="160" font-family="'IBM Plex Sans', sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">3.1, 3.4</text>
+
+        <!-- Axe X -->
+        <line x1="110" y1="190" x2="110" y2="196" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="245" y1="190" x2="245" y2="196" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="380" y1="190" x2="380" y2="196" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="510" y1="190" x2="510" y2="196" stroke="#4B5563" stroke-width="1.5" />
+
+        <text x="110" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">2.0</text>
+        <text x="245" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">2.5</text>
+        <text x="380" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">3.0</text>
+        <text x="510" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">3.5</text>
+        <text x="310" y="238" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Rendement en maïs (t/ha)</text>
+      </svg>
+    </div>
+
+    <p>Le code R pour tracer cet histogramme :</p>
+
+    <pre><code>hist(
+  donnees$rendement,
+  main = "Distribution des rendements",
+  xlab = "Rendement",
+  ylab = "Nombre de parcelles"
+)</code></pre>
+
+    <!-- 6. VOIR LES DONNÉES : BOXPLOT -->
+    <h2><i class="fa-solid fa-box-archive" style="color:#059669;"></i> 6. Voir les données : la boîte à moustaches (Boxplot)</h2>
+
+    <p>
+      La <strong>boîte à moustaches</strong> résume visuellement la distribution en 5 valeurs repères : le minimum, le 1<sup>er</sup> quartile (Q1 = 25 %), la médiane (50 %), le 3<sup>e</sup> quartile (Q3 = 75 %) et le maximum.
+      Elle met en évidence la valeur centrale, la dispersion et les éventuelles valeurs atypiques.
+    </p>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Boîte à moustaches (Boxplot) des 10 parcelles</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Visualisation claire des quartiles et des extrêmes réels</div>
+        </div>
+        <span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Graphique réel R</span>
+      </div>
+
+      <!-- Boxplot SVG vectoriel précis -->
+      <svg class="chart-container-svg" viewBox="0 0 620 270" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="270" fill="#FAFAFA" rx="8" />
+
+        <!-- Lignes horizontales de l'axe Y : de 2.0 à 3.5 t/ha -->
+        <line x1="80" y1="220" x2="560" y2="220" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="80" y1="150" x2="560" y2="150" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="80"  x2="560" y2="80"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="20"  x2="560" y2="20"  stroke="#F3F4F6" stroke-width="1" />
+
+        <!-- Graduations Y -->
+        <text x="68" y="224" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.0</text>
+        <text x="68" y="154" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.5</text>
+        <text x="68" y="84"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.0</text>
+        <text x="68" y="24"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.5</text>
+        <text x="25" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 25 120)">Rendement (t/ha)</text>
+
+        <!-- Minimum = 2.1 (y=206), Q1 = 2.4 (y=164), Médiane = 2.75 (y=115), Q3 = 3.0 (y=80), Max = 3.4 (y=24) -->
+        <!-- Moustache inférieure -->
+        <line x1="310" y1="206" x2="310" y2="164" stroke="#1F2937" stroke-width="2" stroke-dasharray="4 2" />
+        <line x1="265" y1="206" x2="355" y2="206" stroke="#1F2937" stroke-width="2" />
+        <text x="370" y="210" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="600" fill="#DC2626">Min : 2.1 t/ha</text>
+
+        <!-- Rectangle de la boîte (Q1 à Q3) -->
+        <rect x="250" y="80" width="120" height="84" fill="#E0F2FE" stroke="#0284C7" stroke-width="2" rx="2" />
+
+        <!-- Ligne de la médiane -->
+        <line x1="250" y1="115" x2="370" y2="115" stroke="#0369A1" stroke-width="3" />
+        <text x="385" y="119" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#0284C7">Médiane : 2.75 t/ha</text>
+
+        <!-- Moustache supérieure -->
+        <line x1="310" y1="80" x2="310" y2="24" stroke="#1F2937" stroke-width="2" stroke-dasharray="4 2" />
+        <line x1="265" y1="24" x2="355" y2="24" stroke="#1F2937" stroke-width="2" />
+        <text x="370" y="28" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="600" fill="#059669">Max : 3.4 t/ha</text>
+
+        <!-- Annotations Q1 et Q3 -->
+        <text x="235" y="168" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">Q1 (25 %) : 2.4</text>
+        <text x="235" y="84"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">Q3 (75 %) : 3.0</text>
+
+        <text x="310" y="252" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="middle">Échantillon des 10 parcelles de maïs</text>
+      </svg>
+    </div>
+
+    <p>Le code R pour tracer cette boîte à moustaches :</p>
+
+    <pre><code>boxplot(
+  donnees$rendement,
+  main = "Rendements des parcelles",
+  ylab = "Rendement"
+)</code></pre>
+
+    <!-- 7. INTERPRÉTATION -->
+    <h2><i class="fa-solid fa-pen-fancy" style="color:#D97706;"></i> 7. Interprétation : résumer une série de données</h2>
+
+    <p>
+      Voici la grille de lecture systématique pour résumer n'importe quelle variable quantitative :
+    </p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:35%;">Question posée</th>
+            <th style="width:25%;">Indicateur ou Graphique</th>
+            <th style="width:40%;">Ce qu'il nous apprend sur l'essai</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Quel est le rendement moyen ?</strong></td>
+            <td><code>Moyenne</code></td>
+            <td>La production moyenne attendue par parcelle (<strong>2,72 t/ha</strong>).</td>
+          </tr>
+          <tr>
+            <td><strong>Quelle est la valeur centrale ?</strong></td>
+            <td><code>Médiane</code></td>
+            <td>50 % des parcelles produisent &le; <strong>2,75 t/ha</strong> et 50 % produisent &ge; 2,75.</td>
+          </tr>
+          <tr>
+            <td><strong>Quel est le plus petit rendement ?</strong></td>
+            <td><code>Minimum</code></td>
+            <td>La récolte plancher observée (<strong>2,1 t/ha</strong>).</td>
+          </tr>
+          <tr>
+            <td><strong>Quel est le plus grand rendement ?</strong></td>
+            <td><code>Maximum</code></td>
+            <td>Le potentiel maximal observé (<strong>3,4 t/ha</strong>).</td>
+          </tr>
+          <tr>
+            <td><strong>Les rendements sont-ils dispersés ?</strong></td>
+            <td><code>Écart-type</code></td>
+            <td>L'étalement autour de la moyenne ($s = \mathbf{0{,}40\text{ t/ha}}$).</td>
+          </tr>
+          <tr>
+            <td><strong>Quelle est la forme de la distribution ?</strong></td>
+            <td><code>Histogramme</code></td>
+            <td>La répartition des parcelles par classes de rendement.</td>
+          </tr>
+          <tr>
+            <td><strong>Y a-t-il des valeurs particulières ?</strong></td>
+            <td><code>Boxplot</code></td>
+            <td>La présence ou l'absence de parcelles atypiques (valeurs aberrantes).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-agri">
+      <div class="callout-title"><i class="fa-solid fa-file-signature"></i> Exemple de synthèse pour votre rapport technique</div>
+      <p style="font-size:15px; margin-bottom:0; line-height:1.6; color:#065F46; font-weight:600;">
+        « Les rendements vont de 2,1 à 3,4 t/ha, avec un rendement moyen de 2,72 t/ha (médiane = 2,75 t/ha, écart-type = 0,40 t/ha). »
+      </p>
+    </div>
+
+    <!-- 8. FAIRE DANS RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 8. Et maintenant, faisons la même chose dans Ramses</h2>
+
+    <p>
+      Dans Ramses, l'ensemble de ces calculs et graphiques s'effectue en quelques clics sans écrire de code :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-table" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Vérifier le type de la variable</div>
+          <div class="step-desc">
+            Dans <strong>« Fichier & Données »</strong> &rarr; <strong>« Aperçu des données »</strong>, constatez que la colonne <code>rendement</code> porte le symbole numérique <strong>[#]</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-line" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Ouvrir le module de statistiques descriptives quantitatives</div>
+          <div class="step-desc">
+            Dans la barre de navigation supérieure, cliquez sur <strong>« Statistiques Descriptives »</strong> puis sélectionnez <strong>« Variables Quantitatives »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-list-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Sélectionner la variable et les options</div>
+          <div class="step-desc">
+            Dans le panneau de gauche :<br>
+            • Dans <em>« Variable(s) quantitative(s) : »</em>, choisissez <code>rendement</code> ;<br>
+            • Laissez <em>« Groupe (optionnel) : »</em> sur <code>Aucun (analyse globale)</code> ;<br>
+            • Cochez les indicateurs : <strong>Effectif (N)</strong>, <strong>Moyenne</strong>, <strong>Médiane</strong>, <strong>Écart-type (SD)</strong>, <strong>Minimum</strong>, <strong>Maximum</strong> ;<br>
+            • Pour <em>« Graphique associé : »</em>, sélectionnez <strong>Boîte à moustaches (Boxplot)</strong> ou <strong>Histogramme</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Lancer le calcul</div>
+          <div class="step-desc">
+            Cliquez sur le bouton sombre <strong>« Calculer & Journaliser »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-square-poll-vertical" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">5. Consulter les onglets de résultats</div>
+          <div class="step-desc">
+            • L'onglet <strong>« Tableau des statistiques »</strong> affiche la ligne récapitulative complète ;<br>
+            • L'onglet <strong>« Graphique de distribution »</strong> génère le tracé interactif de votre boîte à moustaches ou de votre histogramme.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. MINI-QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 9. Mini-quiz de compréhension</h2>
+
+    <!-- Question 1 -->
+    <div class="quiz-card" style="margin-bottom:18px;">
+      <h3 style="margin-top:0; font-size:15.5px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> Question 1</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        La moyenne des rendements est de 2,72 t/ha. Une parcelle ayant un rendement de 3,2 t/ha a-t-elle un rendement supérieur ou inférieur à la moyenne ?
+      </p>
+
+      <div class="quiz-options" style="max-width:400px;">
+        <button class="quiz-btn quiz-module4-btn" data-answer="above">Supérieur à la moyenne</button>
+        <button class="quiz-btn quiz-module4-btn" data-answer="below">Inférieur à la moyenne</button>
+      </div>
+
+      <div id="quiz-module4-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:15.5px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> Question 2</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Que signifie un écart-type faible dans un essai de rendement ?
+      </p>
+
+      <div class="quiz-options" style="max-width:600px;">
+        <button class="quiz-btn quiz-module4-q2-btn" data-answer="wrong">Les rendements des parcelles sont très hétérogènes et dispersés</button>
+        <button class="quiz-btn quiz-module4-q2-btn" data-answer="correct">Les parcelles ont des rendements réguliers et proches de la moyenne</button>
+      </div>
+
+      <div id="quiz-module4-q2-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 10. CONCLUSION -->
+    <h2><i class="fa-solid fa-flag-checkered" style="color:#059669;"></i> 10. Ce qu'il faut retenir de ce chapitre</h2>
+
+    <div class="callout callout-remember" style="margin-top:16px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-bookmark"></i> Message clé</div>
+      <p style="font-size:15.5px; line-height:1.7; margin-bottom:12px; font-weight:600; color:#065F46;">
+        « Une variable quantitative peut être résumée par quelques indicateurs simples, mais les indicateurs seuls ne suffisent pas toujours. Les graphiques nous permettent aussi de voir comment les données sont réparties. »
+      </p>
+      <p style="font-size:14.5px; margin-bottom:0; color:#1F2937;">
+        • <strong>Position centrale</strong> : Moyenne (point d'équilibre) et Médiane (valeur du milieu robuste).<br>
+        • <strong>Dispersion</strong> : Minimum, Maximum et Écart-type (homogénéité vs hétérogénéité).<br>
+        • <strong>Visualisation</strong> : Histogramme (fréquence par classes) et Boxplot (les 5 repères clés).
+      </p>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="03-compter-et-resumer-mes-donnees.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Module précédent</span>
+        <span class="nav-target-title">03. Compter et résumer mes données</span>
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Module suivant &rarr;</span>
+        <span class="nav-target-title">05. Visualiser mes données</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

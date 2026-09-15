@@ -8,12 +8,25 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
-  # 0. Initialisation des ressources statiques (favicon, etc.)
+  # 0. Initialisation des ressources statiques (favicon, cours-statistiques, etc.)
   res_dir <- system.file("app/www", package = "Ramses")
   if (dir.exists(res_dir)) {
     tryCatch({
       shiny::addResourcePath("ramses_res", res_dir)
       shiny::addResourcePath("www", res_dir)
+    }, error = function(e) NULL)
+  }
+
+  cours_dir <- system.file("www/cours-statistiques", package = "Ramses")
+  if (!nzchar(cours_dir) || !dir.exists(cours_dir)) {
+    cours_dir <- file.path(getwd(), "inst", "www", "cours-statistiques")
+  }
+  if (!dir.exists(cours_dir)) {
+    cours_dir <- file.path(getwd(), "Ramses", "inst", "www", "cours-statistiques")
+  }
+  if (dir.exists(cours_dir)) {
+    tryCatch({
+      shiny::addResourcePath("cours_stats", cours_dir)
     }, error = function(e) NULL)
   }
 
@@ -134,10 +147,18 @@ app_server <- function(input, output, session) {
   # Sommaire lat\u00e9ral dans le volet de l'onglet Donn\u00e9es
   output$data_summary_sidebar <- shiny::renderUI({
     df <- data_holder$df
+    src_info <- if (!is.null(data_holder$source_file_name)) {
+      data_holder$source_file_name
+    } else if (identical(data_holder$name, "iris")) {
+      "Exemple (datasets::iris)"
+    } else {
+      "Session R / m\u00e9moire (.GlobalEnv)"
+    }
     shiny::tagList(
       shiny::tags$ul(
         class = "list-unstyled small mb-0",
         shiny::tags$li(shiny::tags$strong("Nom : "), data_holder$name),
+        shiny::tags$li(shiny::tags$strong("Source : "), src_info),
         shiny::tags$li(shiny::tags$strong("Lignes : "), nrow(df)),
         shiny::tags$li(shiny::tags$strong("Colonnes : "), ncol(df)),
         shiny::tags$li(
@@ -324,14 +345,180 @@ app_server <- function(input, output, session) {
     shiny::showNotification("Jeu de donn\u00e9es 'iris' recharg\u00e9.", type = "default")
   })
 
+  # \u00c9tat r\u00e9actif de la liste des jeux de donn\u00e9es du workspace
+  workspace_datasets_list <- shiny::reactiveVal(NULL)
+
+  refresh_workspace_list <- function() {
+    ds <- ramses_list_workspace_datasets(.GlobalEnv)
+    workspace_datasets_list(ds)
+  }
+
   # Ouvrir la fen\u00eatre modale d'importation
   open_import_modal <- function() {
+    refresh_workspace_list()
     shiny::showModal(modal_import_data())
   }
 
   shiny::observeEvent(input$btn_import, { open_import_modal() })
   shiny::observeEvent(input$sidebar_btn_import, { open_import_modal() })
   shiny::observeEvent(input$menu_btn_import, { open_import_modal() })
+
+  # Actualisation manuelle de la liste des objets R
+  shiny::observeEvent(input$btn_refresh_workspace_datasets, {
+    refresh_workspace_list()
+    shiny::showNotification("Liste des jeux de donn\u00e9es R actualis\u00e9e.", type = "default", duration = 2)
+  })
+
+  # Bascule vers l'onglet fichier externe
+  shiny::observeEvent(input$btn_switch_to_file_tab, {
+    bslib::nav_select(id = "import_source_tabs", selected = "tab_import_file")
+  })
+
+  # Affichage dynamique des jeux de donn\u00e9es du workspace
+  output$workspace_datasets_ui <- shiny::renderUI({
+    ds <- workspace_datasets_list()
+    if (is.null(ds)) {
+      ds <- ramses_list_workspace_datasets(.GlobalEnv)
+      workspace_datasets_list(ds)
+    }
+
+    if (nrow(ds) == 0) {
+      return(
+        shiny::div(
+          class = "alert alert-secondary py-3 px-3 small mb-0",
+          shiny::tags$div(
+            class = "d-flex align-items-center gap-2 mb-2",
+            shiny::tags$strong("Aucun jeu de donn\u00e9es compatible n'a \u00e9t\u00e9 d\u00e9tect\u00e9 dans votre session R.")
+          ),
+          shiny::tags$p(
+            class = "mb-2 text-muted",
+            "Pour utiliser directement un objet R, cr\u00e9ez ou chargez un ",
+            shiny::tags$code("data.frame"), ", ", shiny::tags$code("tibble"), " ou ", shiny::tags$code("data.table"),
+            " dans votre console R ou RStudio (ex : ", shiny::tags$code("donnees <- read.csv('fichier.csv')"), "), puis cliquez sur ",
+            shiny::tags$strong("Actualiser"), "."
+          ),
+          shiny::tags$div(
+            class = "mt-3",
+            shiny::actionButton(
+              inputId = "btn_switch_to_file_tab",
+              label = "Importer plut\u00f4t un fichier externe",
+              class = "btn-outline-dark btn-sm"
+            )
+          )
+        )
+      )
+    }
+
+    valid_names <- ds$name[ds$valid]
+    first_valid <- if (length(valid_names) > 0) valid_names[1] else ds$name[1]
+
+    shiny::div(
+      class = "d-flex flex-column gap-2",
+      shiny::tags$div(
+        class = "text-muted small mb-1",
+        paste0(nrow(ds), " jeu(x) de donn\u00e9es d\u00e9tect\u00e9(s) dans votre environnement :")
+      ),
+      shiny::radioButtons(
+        inputId = "selected_workspace_dataset",
+        label = NULL,
+        choiceNames = lapply(seq_len(nrow(ds)), function(i) {
+          row <- ds[i, ]
+          is_v <- row$valid
+          shiny::div(
+            class = paste0("p-2 rounded border mb-2 ", if (is_v) "bg-white" else "bg-light opacity-75"),
+            style = "cursor: pointer;",
+            shiny::div(
+              class = "d-flex justify-content-between align-items-center",
+              shiny::tags$span(
+                class = "fw-bold text-dark",
+                style = "font-size: 0.95rem;",
+                row$name
+              ),
+              if (is_v) {
+                shiny::tags$span(
+                  class = "badge bg-secondary text-white",
+                  style = "font-size: 0.72rem;",
+                  row$class
+                )
+              } else {
+                shiny::tags$span(
+                  class = "badge bg-danger text-white",
+                  style = "font-size: 0.72rem;",
+                  "Vide (non utilisable)"
+                )
+              }
+            ),
+            shiny::div(
+              class = "text-muted small mt-1",
+              if (is_v) {
+                paste0(
+                  row$nrow, " observation(s) \u00d7 ", row$ncol, " variable(s)",
+                  if (nzchar(row$size)) paste0(" \u2022 ", row$size) else ""
+                )
+              } else {
+                "Ce tableau est vide (0 observation ou 0 variable) et ne peut pas \u00eatre utilis\u00e9."
+              }
+            )
+          )
+        }),
+        choiceValues = ds$name,
+        selected = first_valid,
+        width = "100%"
+      )
+    )
+  })
+
+  # Chargement du jeu de donn\u00e9es s\u00e9lectionn\u00e9 depuis le workspace R
+  shiny::observeEvent(input$btn_load_workspace_dataset, {
+    sel_name <- input$selected_workspace_dataset
+    if (is.null(sel_name) || !nzchar(sel_name)) {
+      shiny::showNotification(
+        "Veuillez s\u00e9lectionner un jeu de donn\u00e9es dans la liste.",
+        type = "warning"
+      )
+      return()
+    }
+
+    tryCatch({
+      loaded_df <- ramses_get_workspace_dataset(sel_name, envir = .GlobalEnv)
+
+      # Mise \u00e0 jour centrale des donn\u00e9es
+      data_holder$name <- sel_name
+      data_holder$df <- loaded_df
+      data_holder$source_file_name <- NULL
+      data_holder$source_file_datapath <- NULL
+
+      # Journalisation dans le R Markdown avec le nom exact de l'objet
+      code_entry <- paste0(
+        "# Jeu de donn\u00e9es provenant de l'environnement R\n",
+        sprintf("dataset <- as.data.frame(%s)\n\n", ramses_code_symbol(sel_name)),
+        "# V\u00e9rification de la structure et aper\u00e7u\n",
+        sprintf("dim(%s)\n", ramses_code_symbol(sel_name)),
+        sprintf("head(%s)", ramses_code_symbol(sel_name))
+      )
+
+      append_to_rmd(
+        title = paste0("Chargement depuis l'environnement R (", sel_name, ")"),
+        code = code_entry
+      )
+
+      # Fermeture de la modale
+      shiny::removeModal()
+
+      # Notification de succ\u00e8s
+      shiny::showNotification(
+        paste0("Jeu de donn\u00e9es '", sel_name, "' charg\u00e9 avec succ\u00e8s depuis la session R !"),
+        type = "message",
+        duration = 5
+      )
+    }, error = function(e) {
+      shiny::showNotification(
+        paste0("Erreur lors du chargement : ", e$message),
+        type = "error",
+        duration = 8
+      )
+    })
+  })
 
   # D\u00e9tection du format effectif (si auto-d\u00e9tection choisie)
   detected_format <- shiny::reactive({
@@ -1249,32 +1436,69 @@ app_server <- function(input, output, session) {
     append_to_rmd = append_to_rmd
   )
 
-  # Initialisation du module complet de Tests Statistiques & Mod\u00e9lisation
+  # Initialisation du module complet de Tests Statistiques
   mod_tests_server(
     id = "tests_module",
     data_holder = data_holder,
     append_to_rmd = append_to_rmd
   )
 
-  # Navigation et gestion de la page "A propos de Ramses"
+  # Initialisation du module d\u00e9di\u00e9 Mod\u00e8les de R\u00e9gression (Lin\u00e9aire & Logistique)
+  mod_regression_server(
+    id = "regression_module",
+    data_holder = data_holder,
+    append_to_rmd = append_to_rmd
+  )
+
+  # Navigation et gestion des pages "A propos de Ramses" et "Formation (Cours)"
   previous_tab <- shiny::reactiveVal("data_preview")
 
-  # Suivi de l'onglet actif (sauvegarder l'onglet precedent avant d'ouvrir A propos)
+  # Suivi de l'onglet actif (sauvegarder l'onglet precedent avant d'ouvrir A propos ou Formation)
   shiny::observeEvent(input$main_nav, {
-    if (!is.null(input$main_nav) && nzchar(input$main_nav) && input$main_nav != "about_page") {
+    if (!is.null(input$main_nav) && nzchar(input$main_nav) && 
+        input$main_nav != "about_page" && input$main_nav != "cours_stats_page") {
       previous_tab(input$main_nav)
     }
   }, ignoreInit = FALSE)
 
-  # Clic sur le bouton "?" du header : basculer vers la page "A propos"
+  # Clic sur "A propos de Ramses" (depuis le menu ? ou bouton historique)
+  shiny::observeEvent(input$menu_open_about, {
+    bslib::nav_select("main_nav", "about_page")
+  })
+
   shiny::observeEvent(input$btn_about_ramses, {
     bslib::nav_select("main_nav", "about_page")
+  })
+
+  # Clic sur "Formation" depuis le menu ?
+  # Ouvrir dans un nouvel onglet via JS avec fallback vers l'onglet integre cours_stats_page
+  shiny::observeEvent(input$menu_open_formation, {
+    shiny::showNotification(
+      "Ouverture de la formation...",
+      type = "message",
+      duration = 2
+    )
+    shiny::getDefaultReactiveDomain()$sendCustomMessage(
+      "open_formation_window",
+      list(url = "cours_stats/index.html")
+    )
+    # Basculer egalement vers la page integree de formation
+    bslib::nav_select("main_nav", "cours_stats_page")
   })
 
   # Clic sur "Retour a Ramses" sur la page "A propos" : revenir a l'onglet precedent
   shiny::observeEvent(input$btn_about_back, {
     target <- previous_tab()
-    if (is.null(target) || !nzchar(target) || target == "about_page") {
+    if (is.null(target) || !nzchar(target) || target == "about_page" || target == "cours_stats_page") {
+      target <- "data_preview"
+    }
+    bslib::nav_select("main_nav", target)
+  })
+
+  # Clic sur "Retour a Ramses" sur la page "Formation" : revenir a l'onglet precedent
+  shiny::observeEvent(input$btn_cours_back, {
+    target <- previous_tab()
+    if (is.null(target) || !nzchar(target) || target == "about_page" || target == "cours_stats_page") {
       target <- "data_preview"
     }
     bslib::nav_select("main_nav", target)
