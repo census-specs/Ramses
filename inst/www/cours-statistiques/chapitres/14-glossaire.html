@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Glossaire complet des symboles et termes statistiques utilisés dans la formation.">
+  <title>14. Glossaire des symboles et termes statistiques — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+  <style>
+    /* Styles spécifiques au glossaire */
+    .glossary-search {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #FFFFFF;
+      margin: 16px 0 24px;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    .glossary-search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .glossary-section {
+      margin: 32px 0;
+    }
+    .glossary-letter {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 4px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    .glossary-entry {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+    .glossary-entry:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-md);
+    }
+    .glossary-term {
+      font-weight: 700;
+      font-size: 15.5px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .glossary-symbol {
+      font-family: var(--font-mono);
+      background: #EFF6FF;
+      color: #1E40AF;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      border: 1px solid #BFDBFE;
+    }
+    .glossary-def {
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .glossary-link {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: #F9FAFB;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: all 0.15s ease;
+    }
+    .glossary-link:hover {
+      background: #EFF6FF;
+      color: #1E40AF;
+      border-color: #BFDBFE;
+    }
+    .glossary-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 40px 20px;
+      display: none;
+    }
+    @media (prefers-color-scheme: dark) {
+      .glossary-search { background: #1E293B; }
+      .glossary-entry { background: #1E293B; }
+      .glossary-symbol { background: #1E3A8A; color: #DBEAFE; border-color: #2563EB; }
+      .glossary-def { color: #CBD5E1; }
+      .glossary-link { background: #0F172A; }
+      .glossary-link:hover { background: #1E3A8A; color: #DBEAFE; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+
+      <div class="nav-group-title">Approfondissement</div>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance & taille d'échantillon
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais
+      </a>
+
+      <div class="nav-group-title">Référence</div>
+      <a href="14-glossaire.html" class="nav-link active">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 14 — Glossaire</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Glossaire des symboles et termes statistiques</h1>
+    <div class="course-subtitle">Toutes les notions rencontrées dans la formation, classées alphabétiquement</div>
+
+    <div class="callout callout-info" style="margin-top:20px;">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Comment utiliser ce glossaire ?</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Utilisez le <strong>champ de recherche</strong> ci-dessous pour retrouver rapidement un symbole ou un terme. Chaque entrée indique le module où la notion est expliquée en détail.
+      </p>
+    </div>
+
+    <!-- Barre de recherche -->
+    <input type="text" id="glossary-search" class="glossary-search" placeholder="🔍 Rechercher un symbole, un terme... (ex : p-value, ANOVA, écart-type)">
+
+    <!-- Résumé quand aucun résultat -->
+    <div id="glossary-empty" class="glossary-empty">
+      <i class="fa-solid fa-magnifying-glass" style="font-size:32px; color:var(--text-light); margin-bottom:12px; display:block;"></i>
+      Aucun résultat. Essayez un autre terme.
+    </div>
+
+    <!-- ============ SECTION A ============ -->
+    <div class="glossary-section" data-letter="A">
+      <div class="glossary-letter">A</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">α (alpha)</span>
+          <span>Seuil de signification</span>
+        </div>
+        <div class="glossary-def">
+          Risque accepté de commettre une <strong>erreur de type I</strong> (rejeter H₀ à tort). Conventionnellement fixé à 0,05 (5 %). Le test est déclaré significatif si $p < \alpha$.
+        </div>
+        <a href="07-comprendre-hypothese-pvalue.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 07</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">ANOVA</span>
+          <span>Analyse de variance</span>
+        </div>
+        <div class="glossary-def">
+          Méthode permettant de comparer les moyennes de <strong>3 groupes ou plus</strong> en une seule analyse globale. Évite l'inflation du risque d'erreur liée aux tests multiples.
+        </div>
+        <a href="09-comparer-3-groupes-ou-plus.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Modules 09 et 09b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Apparié</span>
+          <span>Données dépendantes</span>
+        </div>
+        <div class="glossary-def">
+          Se dit de deux échantillons dont chaque observation de l'un est liée à une observation de l'autre (même individu mesuré 2 fois, avant/après...).
+        </div>
+        <a href="08-comparer-groupes-quel-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION B ============ -->
+    <div class="glossary-section" data-letter="B">
+      <div class="glossary-letter">B</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">β (beta)</span>
+          <span>Risque d'erreur de type II</span>
+        </div>
+        <div class="glossary-def">
+          Probabilité de <strong>ne pas rejeter H₀ alors qu'elle est fausse</strong>. Correspond à rater un effet réel. Lié à la puissance : <strong>Puissance = 1 − β</strong>.
+        </div>
+        <a href="12-puissance-et-taille-echantillon.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 12</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Boxplot</span>
+          <span>Boîte à moustaches</span>
+        </div>
+        <div class="glossary-def">
+          Graphique résumant une distribution en 5 valeurs : minimum, Q1 (25 %), médiane (50 %), Q3 (75 %), maximum. Idéal pour comparer plusieurs groupes.
+        </div>
+        <a href="04-mesurer-une-variable-quantitative.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 04</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION C ============ -->
+    <div class="glossary-section" data-letter="C">
+      <div class="glossary-letter">C</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">χ² (Chi-deux)</span>
+          <span>Test d'indépendance</span>
+        </div>
+        <div class="glossary-def">
+          Test permettant de vérifier si deux variables <strong>qualitatives</strong> sont indépendantes ou associées. Utilise un tableau de contingence.
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Corrélation (r)</span>
+          <span>Lien entre 2 variables quantitatives</span>
+        </div>
+        <div class="glossary-def">
+          Mesure l'intensité et le sens d'une <strong>relation linéaire</strong> entre deux variables quantitatives. Varie de −1 (négatif parfait) à +1 (positif parfait). $r = 0$ indique l'absence de relation linéaire.
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION D ============ -->
+    <div class="glossary-section" data-letter="D">
+      <div class="glossary-letter">D</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">d de Cohen</span>
+          <span>Taille d'effet</span>
+        </div>
+        <div class="glossary-def">
+          Mesure normalisée de la différence entre deux moyennes. Interprétation : $d = 0{,}2$ (petit), $0{,}5$ (moyen), $0{,}8$ (grand).
+        </div>
+        <a href="12-puissance-et-taille-echantillon.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 12</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">ddl ou df</span>
+          <span>Degrés de liberté</span>
+        </div>
+        <div class="glossary-def">
+          Nombre de valeurs indépendantes dans le calcul d'une statistique. Pour un test t à 2 groupes de taille $n$, $ddl = 2n - 2$. Utilisé pour lire la p-value dans la table de Student.
+        </div>
+        <a href="08-comparer-groupes-quel-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION E ============ -->
+    <div class="glossary-section" data-letter="E">
+      <div class="glossary-letter">E</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Écart-type (s, σ)</span>
+          <span>Dispersion</span>
+        </div>
+        <div class="glossary-def">
+          Mesure de la <strong>dispersion</strong> des valeurs autour de la moyenne. $s$ = écart-type de l'échantillon ; $\sigma$ = écart-type de la population. Plus il est grand, plus les valeurs sont étalées.
+        </div>
+        <a href="04-mesurer-une-variable-quantitative.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 04</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Erreur standard (SE)</span>
+          <span>Précision de la moyenne</span>
+        </div>
+        <div class="glossary-def">
+          Écart-type de la <strong>distribution d'échantillonnage de la moyenne</strong>. Formule : $SE = \frac{s}{\sqrt{n}}$. Diminue quand $n$ augmente.
+        </div>
+        <a href="05b-intervalles-de-confiance.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 05b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Effectif (n, N)</span>
+          <span>Nombre d'observations</span>
+        </div>
+        <div class="glossary-def">
+          Nombre d'observations dans un échantillon (<strong>$n$ minuscule</strong>) ou dans une population (<strong>$N$ majuscule</strong>).
+        </div>
+        <a href="03-compter-et-resumer-mes-donnees.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 03</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION F ============ -->
+    <div class="glossary-section" data-letter="F">
+      <div class="glossary-letter">F</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">F (statistique)</span>
+          <span>Test global ANOVA</span>
+        </div>
+        <div class="glossary-def">
+          Statistique de test de l'ANOVA. Rapport entre variance <strong>inter-groupes</strong> et variance <strong>intra-groupes</strong>. Si F est grand, les moyennes des groupes diffèrent significativement.
+        </div>
+        <a href="09-comparer-3-groupes-ou-plus.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 09</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Fisher (test exact)</span>
+          <span>Alternative au χ²</span>
+        </div>
+        <div class="glossary-def">
+          Test d'indépendance utilisé quand les effectifs du tableau de contingence sont <strong>trop faibles</strong> pour le χ² (règle : effectifs attendus < 5).
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION H ============ -->
+    <div class="glossary-section" data-letter="H">
+      <div class="glossary-letter">H</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">H₀</span>
+          <span>Hypothèse nulle</span>
+        </div>
+        <div class="glossary-def">
+          Hypothèse par défaut : <strong>pas de différence, pas d'effet</strong>. On cherche à la rejeter en faveur de H₁. Exemple : « les deux variétés ont le même rendement moyen ».
+        </div>
+        <a href="07-comprendre-hypothese-pvalue.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 07</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">H₁ (ou Hₐ)</span>
+          <span>Hypothèse alternative</span>
+        </div>
+        <div class="glossary-def">
+          Hypothèse de recherche : <strong>il existe une différence ou un effet</strong>. On la conclut si le test rejette H₀.
+        </div>
+        <a href="07-comprendre-hypothese-pvalue.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 07</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Histogramme</span>
+          <span>Distribution d'une quantitative</span>
+        </div>
+        <div class="glossary-def">
+          Graphique montrant la distribution d'une variable <strong>quantitative continue</strong> en regroupant les valeurs par classes régulières.
+        </div>
+        <a href="05-visualiser-mes-donnees.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 05</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Homoscédasticité</span>
+          <span>Égalité des variances</span>
+        </div>
+        <div class="glossary-def">
+          Condition d'un test t ou d'une ANOVA : les groupes comparés doivent avoir des <strong>variances sensiblement égales</strong>. Vérifiée par le test de Levene ou Bartlett.
+        </div>
+        <a href="08b-verifier-les-conditions-dun-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08b</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION I ============ -->
+    <div class="glossary-section" data-letter="I">
+      <div class="glossary-letter">I</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">IC 95 %</span>
+          <span>Intervalle de confiance</span>
+        </div>
+        <div class="glossary-def">
+          Fourchette de valeurs plausibles autour d'une estimation. Un IC à 95 % indique que <strong>la méthode</strong> capture la vraie valeur dans 95 % des cas. Ne pas dire « 95 % de chance que la vraie moyenne soit dedans ».
+        </div>
+        <a href="05b-intervalles-de-confiance.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 05b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Interaction</span>
+          <span>Effet combiné de 2 facteurs</span>
+        </div>
+        <div class="glossary-def">
+          Situation où l'effet d'un facteur <strong>dépend</strong> du niveau d'un autre facteur. Détectée dans une ANOVA à 2 facteurs par le terme A×B.
+        </div>
+        <a href="09b-anova-deux-facteurs.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 09b</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION K ============ -->
+    <div class="glossary-section" data-letter="K">
+      <div class="glossary-letter">K</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Kruskal-Wallis</span>
+          <span>ANOVA non paramétrique</span>
+        </div>
+        <div class="glossary-def">
+          Alternative non paramétrique à l'ANOVA à 1 facteur, utilisée quand les conditions (normalité, homoscédasticité) ne sont pas respectées.
+        </div>
+        <a href="09-comparer-3-groupes-ou-plus.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 09</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION L ============ -->
+    <div class="glossary-section" data-letter="L">
+      <div class="glossary-letter">L</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Levene (test de)</span>
+          <span>Égalité des variances</span>
+        </div>
+        <div class="glossary-def">
+          Test vérifiant l'égalité des variances entre groupes. Plus robuste que Bartlett. Si $p > 0{,}05$, on peut considérer les variances comme égales.
+        </div>
+        <a href="08b-verifier-les-conditions-dun-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08b</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION M ============ -->
+    <div class="glossary-section" data-letter="M">
+      <div class="glossary-letter">M</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Mann-Whitney</span>
+          <span>Alternative non paramétrique du test t</span>
+        </div>
+        <div class="glossary-def">
+          Test non paramétrique comparant deux groupes indépendants, sans supposer la normalité. Aussi appelé <em>Wilcoxon rank-sum test</em>.
+        </div>
+        <a href="08-comparer-groupes-quel-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Médiane</span>
+          <span>Valeur du milieu</span>
+        </div>
+        <div class="glossary-def">
+          Valeur séparant l'échantillon en 2 parts égales (50 % en dessous, 50 % au-dessus). <strong>Robuste</strong> aux valeurs aberrantes contrairement à la moyenne.
+        </div>
+        <a href="04-mesurer-une-variable-quantitative.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 04</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">μ (mu)</span>
+          <span>Moyenne de population</span>
+        </div>
+        <div class="glossary-def">
+          Moyenne <strong>théorique</strong> de toute la population. En pratique, elle est <strong>inconnue</strong> ; on l'estime par la moyenne de l'échantillon $\bar{x}$.
+        </div>
+        <a href="05b-intervalles-de-confiance.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 05b</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION N ============ -->
+    <div class="glossary-section" data-letter="N">
+      <div class="glossary-letter">N</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Normalité</span>
+          <span>Condition de test</span>
+        </div>
+        <div class="glossary-def">
+          Condition d'application de certains tests : les données (ou résidus) doivent suivre approximativement une <strong>loi normale</strong> (courbe en cloche). Vérifiée par Shapiro-Wilk ou QQ-plot.
+        </div>
+        <a href="08b-verifier-les-conditions-dun-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Nuage de points</span>
+          <span>Relation entre 2 quantitatives</span>
+        </div>
+        <div class="glossary-def">
+          Graphique représentant chaque observation par un point $(x, y)$. Indispensable avant tout calcul de corrélation.
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION P ============ -->
+    <div class="glossary-section" data-letter="P">
+      <div class="glossary-letter">P</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">p-value</span>
+          <span>Significativité d'un test</span>
+        </div>
+        <div class="glossary-def">
+          Probabilité d'observer un résultat <strong>au moins aussi extrême</strong> que celui obtenu, <strong>si H₀ était vraie</strong>. Si $p < 0{,}05$, on rejette H₀ (différence significative). <strong>Ce n'est PAS la probabilité que H₀ soit vraie.</strong>
+        </div>
+        <a href="07-comprendre-hypothese-pvalue.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 07</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">p-hacking</span>
+          <span>Mauvaise pratique</span>
+        </div>
+        <div class="glossary-def">
+          Pratique consistant à multiplier les analyses jusqu'à obtenir $p < 0{,}05$, puis à ne rapporter que ce résultat. <strong>À éviter absolument</strong>.
+        </div>
+        <a href="13-limites-et-biais-statistiques.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 13</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Pearson (corrélation de)</span>
+          <span>Coefficient r</span>
+        </div>
+        <div class="glossary-def">
+          Coefficient de corrélation linéaire classique. Mesure l'intensité de la relation <strong>linéaire</strong> entre deux variables quantitatives.
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Puissance</span>
+          <span>1 − β</span>
+        </div>
+        <div class="glossary-def">
+          Probabilité de <strong>détecter un effet quand il existe réellement</strong>. Conventionnellement visée à 80 %. Dépend de la taille d'effet, la variabilité, le seuil α et la taille d'échantillon.
+        </div>
+        <a href="12-puissance-et-taille-echantillon.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 12</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION Q ============ -->
+    <div class="glossary-section" data-letter="Q">
+      <div class="glossary-letter">Q</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">QQ-plot</span>
+          <span>Diagnostic de normalité</span>
+        </div>
+        <div class="glossary-def">
+          Graphique comparant les quantiles observés aux quantiles théoriques d'une loi normale. Si les points s'alignent sur la droite, la normalité est plausible.
+        </div>
+        <a href="08b-verifier-les-conditions-dun-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Quartile (Q1, Q3)</span>
+          <span>Repères de position</span>
+        </div>
+        <div class="glossary-def">
+          Q1 = 25 % des observations sont en dessous. Q3 = 75 %. Utilisés dans le boxplot pour représenter la dispersion.
+        </div>
+        <a href="04-mesurer-une-variable-quantitative.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 04</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION R ============ -->
+    <div class="glossary-section" data-letter="R">
+      <div class="glossary-letter">R</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">r (Pearson)</span>
+          <span>Coefficient de corrélation</span>
+        </div>
+        <div class="glossary-def">
+          Mesure entre −1 et +1. $r = 0{,}9$ → forte corrélation positive. $r = -0{,}7$ → corrélation négative modérée. $r = 0{,}1$ → corrélation faible.
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">R²</span>
+          <span>Coefficient de détermination</span>
+        </div>
+        <div class="glossary-def">
+          Proportion de la variance de $y$ expliquée par le modèle. Entre 0 et 1. $R^2 = 0{,}88$ → 88 % de la variabilité est expliquée.
+        </div>
+        <a href="10b-regression-lineaire-simple.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Régression linéaire</span>
+          <span>Modélisation prédictive</span>
+        </div>
+        <div class="glossary-def">
+          Modèle de la forme $y = a + b \cdot x + \varepsilon$. Permet de <strong>prédire</strong> $y$ à partir de $x$. Complémentaire de la corrélation.
+        </div>
+        <a href="10b-regression-lineaire-simple.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Résidu</span>
+          <span>Écart au modèle</span>
+        </div>
+        <div class="glossary-def">
+          Différence entre la valeur observée et la valeur prédite par le modèle : $\varepsilon = y - \hat{y}$. Le diagnostic des résidus permet de valider le modèle.
+        </div>
+        <a href="10b-regression-lineaire-simple.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10b</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION S ============ -->
+    <div class="glossary-section" data-letter="S">
+      <div class="glossary-letter">S</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">s ou σ</span>
+          <span>Écart-type</span>
+        </div>
+        <div class="glossary-def">
+          $s$ = écart-type de l'échantillon (statistique). $\sigma$ = écart-type théorique de la population (paramètre). Les deux mesurent la dispersion.
+        </div>
+        <a href="04-mesurer-une-variable-quantitative.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 04</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Shapiro-Wilk</span>
+          <span>Test de normalité</span>
+        </div>
+        <div class="glossary-def">
+          Test formel de normalité. Si $p > 0{,}05$ → on ne rejette pas la normalité → on peut utiliser un test paramétrique. Attention : la logique est inversée !
+        </div>
+        <a href="08b-verifier-les-conditions-dun-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08b</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Spearman (corrélation de)</span>
+          <span>Corrélation sur les rangs</span>
+        </div>
+        <div class="glossary-def">
+          Alternative non paramétrique à la corrélation de Pearson. Utilisée pour les données ordinales ou en présence de non-linéarité.
+        </div>
+        <a href="10-etudier-relation-deux-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 10</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION T ============ -->
+    <div class="glossary-section" data-letter="T">
+      <div class="glossary-letter">T</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">t (test de Student)</span>
+          <span>Comparaison de 2 moyennes</span>
+        </div>
+        <div class="glossary-def">
+          Test paramétrique comparant les moyennes de 2 groupes (indépendants ou appariés) ou d'un groupe à une valeur de référence. Suppose la normalité et l'homoscédasticité.
+        </div>
+        <a href="08-comparer-groupes-quel-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Tukey (test de)</span>
+          <span>Post-hoc ANOVA</span>
+        </div>
+        <div class="glossary-def">
+          Test de comparaisons multiples utilisé après une ANOVA significative. Compare tous les groupes deux à deux en contrôlant le risque global.
+        </div>
+        <a href="09-comparer-3-groupes-ou-plus.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 09</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION V ============ -->
+    <div class="glossary-section" data-letter="V">
+      <div class="glossary-letter">V</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Variable qualitative</span>
+          <span>Catégorielle</span>
+        </div>
+        <div class="glossary-def">
+          Variable décrivant une <strong>catégorie</strong>, non mesurable numériquement. On compte les effectifs, on ne moyenne pas. Exemples : village, variété, sexe.
+        </div>
+        <a href="02-comprendre-mes-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 02</a>
+      </div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Variable quantitative</span>
+          <span>Numérique</span>
+        </div>
+        <div class="glossary-def">
+          Variable numérique sur laquelle on peut effectuer des opérations mathématiques. Exemples : rendement, superficie, âge.
+        </div>
+        <a href="02-comprendre-mes-variables.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 02</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION W ============ -->
+    <div class="glossary-section" data-letter="W">
+      <div class="glossary-letter">W</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">Wilcoxon (test de)</span>
+          <span>Alternative non paramétrique du test t</span>
+        </div>
+        <div class="glossary-def">
+          Selon le contexte : test de <strong>Wilcoxon signé</strong> (apparié, compare à 0) ou <strong>Mann-Whitney</strong> (indépendant, compare 2 groupes). Ne suppose pas la normalité.
+        </div>
+        <a href="08-comparer-groupes-quel-test.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 08</a>
+      </div>
+    </div>
+
+    <!-- ============ SECTION X ============ -->
+    <div class="glossary-section" data-letter="X">
+      <div class="glossary-letter">X</div>
+
+      <div class="glossary-entry">
+        <div class="glossary-term">
+          <span class="glossary-symbol">x̄ (x-barre)</span>
+          <span>Moyenne d'échantillon</span>
+        </div>
+        <div class="glossary-def">
+          Moyenne arithmétique calculée sur un échantillon. Estimation de la vraie moyenne de population $\mu$.
+        </div>
+        <a href="04-mesurer-une-variable-quantitative.html" class="glossary-link"><i class="fa-solid fa-arrow-right"></i> Voir Module 04</a>
+      </div>
+    </div>
+
+    <!-- Pied de page du glossaire -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title"><i class="fa-solid fa-book-open"></i> Un symbole manque ?</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Si vous rencontrez un symbole ou un terme qui n'est pas dans ce glossaire, n'hésitez pas à nous le signaler via GitHub pour qu'il soit ajouté dans une prochaine version.
+      </p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="chapter-nav-footer">
+      <a href="13-limites-et-biais-statistiques.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">13. Limites et biais</span>
+      </a>
+      <a href="../index.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Retour au sommaire &rarr;</span>
+        <span class="nav-target-title">Accueil de la formation</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+<script>
+  // Recherche dynamique dans le glossaire
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('glossary-search');
+    const entries = document.querySelectorAll('.glossary-entry');
+    const sections = document.querySelectorAll('.glossary-section');
+    const emptyMsg = document.getElementById('glossary-empty');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      entries.forEach(function(entry) {
+        const text = entry.textContent.toLowerCase();
+        if (text.includes(q)) {
+          entry.style.display = 'block';
+          visibleCount++;
+        } else {
+          entry.style.display = 'none';
+        }
+      });
+
+      // Masquer les sections dont tous les termes sont masqués
+      sections.forEach(function(section) {
+        const visibleEntries = section.querySelectorAll('.glossary-entry:not([style*="display: none"])');
+        const hasVisible = Array.from(visibleEntries).some(e => e.style.display !== 'none');
+        section.style.display = hasVisible ? 'block' : 'none';
+      });
+
+      // Message "aucun résultat"
+      emptyMsg.style.display = (visibleCount === 0 && q !== '') ? 'block' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

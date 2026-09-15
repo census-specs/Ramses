@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Module 02b — Préparer et nettoyer ses données avant toute analyse statistique.">
+  <title>02b. Préparer et nettoyer mes données — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link active">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 02b</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Préparer et nettoyer mes données</h1>
+    <div class="course-subtitle">Avant toute analyse : vérifier, corriger et fiabiliser son fichier</div>
+
+    <!-- 1. POURQUOI CE CHAPITRE EST CAPITAL -->
+    <h2><i class="fa-solid fa-triangle-exclamation" style="color:#DC2626;"></i> 1. La règle d'or : « Garbage in, garbage out »</h2>
+
+    <div class="callout callout-warning" style="margin:16px 0;">
+      <div class="callout-title" style="color:#991B1B;"><i class="fa-solid fa-circle-exclamation"></i> Un principe universel</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:700; color:#991B1B;">
+        « Si les données d'entrée sont mauvaises, le résultat statistique sera mauvais — même si la méthode est correcte. »
+      </p>
+    </div>
+
+    <p>
+      Dans la précipitation, beaucoup d'analyses sont lancées directement sur le fichier brut sorti du tableur ou du carnet de terrain. Le résultat ? Des moyennes faussées, des tests invalides, des conclusions trompeuses — et parfois des heures perdues à chercher pourquoi « ça ne marche pas ».
+    </p>
+
+    <p>
+      Ce module est un <strong>module de vigilance</strong>. Il ne parle pas de tests statistiques, mais d'une étape indispensable en amont : la <strong>préparation et le nettoyage des données</strong>.
+    </p>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question de l'agronome</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « J'ai un fichier Excel de 200 lignes avec mes mesures de terrain. Avant de calculer quoi que ce soit, par quoi dois-je commencer ? »
+      </p>
+    </div>
+
+    <!-- 2. LES 4 FAMILLES DE PROBLÈMES -->
+    <h2><i class="fa-solid fa-magnifying-glass" style="color:#2563EB;"></i> 2. Les 4 grandes familles de problèmes à traquer</h2>
+
+    <p>
+      Un fichier de terrain comporte presque toujours des imperfections. On les regroupe en <strong>4 familles principales</strong> :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num" style="background:#DBEAFE; color:#1E40AF;"><i class="fa-solid fa-question" style="font-size:13px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#1E40AF;">1. Valeurs manquantes</div>
+          <div class="step-desc">
+            Cellules vides, <code>NA</code>, <code>999</code>, « non mesuré », « ? »... Il faut savoir combien il y en a et où elles se trouvent.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEF3C7; color:#92400E;"><i class="fa-solid fa-clone" style="font-size:13px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#92400E;">2. Doublons</div>
+          <div class="step-desc">
+            Même parcelle saisie deux fois, même producteur enquêté par deux agents différents, copier-coller malencontreux.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEE2E2; color:#991B1B;"><i class="fa-solid fa-radiation" style="font-size:13px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#991B1B;">3. Valeurs aberrantes</div>
+          <div class="step-desc">
+            Rendement à 500 t/ha, âge à 230 ans, superficie négative... Ces valeurs faussent tout.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#EDE9FE; color:#6D28D9;"><i class="fa-solid fa-tags" style="font-size:13px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#6D28D9;">4. Formats et unités incohérents</div>
+          <div class="step-desc">
+            « Bonabéri » vs « bonaberi » vs « BONABÉRI », « 1,5 kg » vs « 1500 g », dates dans 3 formats différents...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. NOTRE JEU DE DONNÉES AVEC PROBLÈMES -->
+    <h2><i class="fa-solid fa-database" style="color:#D97706;"></i> 3. Voyons ces problèmes en vrai</h2>
+
+    <p>
+      Reprenons notre jeu habituel des 10 parcelles de maïs, mais cette fois-ci <strong>tel qu'il sortirait réellement du terrain</strong> — avec ses imperfections :
+    </p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:16%;">Parcelle</th>
+            <th style="width:24%;">Village</th>
+            <th style="width:22%; text-align:right;">Superficie</th>
+            <th style="width:22%; text-align:right;">Rendement</th>
+            <th style="width:16%;">Observation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>P01</strong></td><td>Bonabéri</td><td style="text-align:right;">1.2</td><td style="text-align:right;">2.8</td><td></td></tr>
+          <tr><td><strong>P02</strong></td><td>bonaberi</td><td style="text-align:right;">0.8</td><td style="text-align:right;">2.4</td><td><span style="color:#D97706; font-size:12px;">casse différente</span></td></tr>
+          <tr><td><strong>P03</strong></td><td>Bonabéri</td><td style="text-align:right;">1.5</td><td style="text-align:right;">3.1</td><td></td></tr>
+          <tr><td><strong>P04</strong></td><td>Bonabéri</td><td style="text-align:right;">1.0</td><td style="text-align:right;">2.7</td><td></td></tr>
+          <tr><td><strong>P04</strong></td><td>Bonabéri</td><td style="text-align:right;">1.0</td><td style="text-align:right;">2.7</td><td><span style="color:#DC2626; font-size:12px;">doublon</span></td></tr>
+          <tr><td><strong>P05</strong></td><td>Bonabéri</td><td style="text-align:right;">2.0</td><td style="text-align:right;">3.4</td><td></td></tr>
+          <tr><td><strong>P06</strong></td><td>Bépanda</td><td style="text-align:right;">0.7</td><td style="text-align:right;">2.1</td><td></td></tr>
+          <tr><td><strong>P07</strong></td><td>Bépanda</td><td style="text-align:right;">1.1</td><td style="text-align:right;"><span style="color:#DC2626;">NA</span></td><td><span style="color:#DC2626; font-size:12px;">valeur manquante</span></td></tr>
+          <tr><td><strong>P08</strong></td><td>Bépanda</td><td style="text-align:right;">1.4</td><td style="text-align:right;">2.9</td><td></td></tr>
+          <tr><td><strong>P09</strong></td><td>Bépanda</td><td style="text-align:right;">0.9</td><td style="text-align:right;">2.3</td><td></td></tr>
+          <tr><td><strong>P10</strong></td><td>Bépanda</td><td style="text-align:right;">1.8</td><td style="text-align:right;"><span style="color:#DC2626; font-weight:700;">32.0</span></td><td><span style="color:#DC2626; font-size:12px;">aberrant (faute de saisie)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Ce tableau contient <strong>4 problèmes</strong> à corriger avant toute analyse :
+    </p>
+    <ul>
+      <li><strong>P02</strong> : « bonaberi » au lieu de « Bonabéri » &rarr; format incohérent</li>
+      <li><strong>P04</strong> : ligne dupliquée &rarr; doublon</li>
+      <li><strong>P07</strong> : rendement manquant &rarr; <code>NA</code></li>
+      <li><strong>P10</strong> : rendement à 32,0 t/ha &rarr; aberrant (probablement 3,0 saisi par erreur)</li>
+    </ul>
+
+    <!-- 4. LES VALEURS MANQUANTES -->
+    <h2><i class="fa-solid fa-question" style="color:#2563EB;"></i> 4. Les valeurs manquantes</h2>
+
+    <p>
+      Une valeur manquante n'est <strong>pas la même chose que zéro</strong>. Un rendement non mesuré n'est pas un rendement nul. Il faut donc :
+    </p>
+
+    <ol style="margin-left:20px; margin-bottom:16px;">
+      <li><strong>Les identifier</strong> précisément.</li>
+      <li><strong>Décider</strong> quoi faire de chaque cas.</li>
+      <li><strong>Documenter</strong> la décision dans votre méthodologie.</li>
+    </ol>
+
+    <p>Dans <strong>R</strong>, on les détecte avec la fonction <code>is.na()</code> :</p>
+
+    <pre><code># Compter le nombre de valeurs manquantes par colonne
+colSums(is.na(donnees))
+
+# Afficher les lignes qui contiennent au moins une valeur manquante
+donnees[!complete.cases(donnees), ]</code></pre>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Trois stratégies classiques</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li><strong>Suppression ligne par ligne :</strong> on retire la parcelle. Simple, mais fait perdre de l'information.</li>
+        <li><strong>Imputation par la moyenne/médiane :</strong> on remplace la valeur manquante. Rapide, mais affaiblit la variabilité.</li>
+        <li><strong>Imputation par modèle :</strong> on prédit la valeur manquante à partir des autres variables. Plus fin, mais plus complexe.</li>
+      </ul>
+      <p style="margin-bottom:0; margin-top:8px; font-size:13.5px; color:#4B5563;">
+        Dans un cours de terrain, la <strong>suppression</strong> est souvent la plus honnête, à condition de rester marginale (&lt; 5 % des lignes).
+      </p>
+    </div>
+
+    <!-- 5. LES DOUBLONS -->
+    <h2><i class="fa-solid fa-clone" style="color:#D97706;"></i> 5. Les doublons</h2>
+
+    <p>
+      Un doublon, c'est une ligne saisie deux fois. Il gonfle artificiellement la taille de l'échantillon et fausse toutes les moyennes.
+    </p>
+
+    <pre><code># Repérer les doublons
+donnees[duplicated(donnees), ]
+
+# Supprimer les doublons
+donnees <- donnees[!duplicated(donnees), ]</code></pre>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Attention aux faux doublons</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Deux parcelles différentes peuvent avoir les <em>mêmes valeurs</em> de superficie et de rendement. Avant de supprimer, vérifiez qu'il s'agit bien du <strong>même identifiant</strong> (même code parcelle, même date, même village).
+      </p>
+    </div>
+
+    <!-- 6. LES VALEURS ABERRANTES -->
+    <h2><i class="fa-solid fa-radiation" style="color:#DC2626;"></i> 6. Les valeurs aberrantes</h2>
+
+    <p>
+      Une valeur aberrante (<em>outlier</em>) est une observation <strong>anormalement éloignée</strong> du reste. Deux catégories très différentes :
+    </p>
+
+    <div class="comparison-grid">
+      <div class="comparison-box" style="border-left:4px solid #DC2626;">
+        <h4><i class="fa-solid fa-bug" style="color:#DC2626;"></i> Aberrante par erreur</h4>
+        <p style="font-size:13.5px; color:#4B5563; margin-bottom:0;">
+          Faute de saisie (32,0 au lieu de 3,0), confusion d'unités (kg au lieu de t), inversion de chiffres. <strong>&rarr; À corriger ou supprimer.</strong>
+        </p>
+      </div>
+
+      <div class="comparison-box" style="border-left:4px solid #059669;">
+        <h4><i class="fa-solid fa-star" style="color:#059669;"></i> Aberrante par réalité</h4>
+        <p style="font-size:13.5px; color:#4B5563; margin-bottom:0;">
+          Vraie parcelle exceptionnelle (sol très fertile, variété d'élite). <strong>&rarr; À conserver</strong>, mais à signaler dans l'analyse.
+        </p>
+      </div>
+    </div>
+
+    <p>Le <strong>boxplot</strong> est l'outil visuel de référence pour les repérer :</p>
+
+    <pre><code># Boxplot pour visualiser les valeurs atypiques
+boxplot(donnees$rendement,
+        main = "Rendements des parcelles",
+        ylab = "Rendement (t/ha)")</code></pre>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Boxplot révélant la valeur aberrante (32,0 t/ha)</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Le point à 32,0 est nettement détaché du reste de la distribution</div>
+        </div>
+        <span class="chart-badge" style="background:#FEE2E2; color:#991B1B; border-color:#FECACA;">Détection visuelle</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Boxplot montrant une valeur aberrante isolée à 32 tonnes par hectare">
+        <rect width="620" height="260" fill="#FAFAFA" rx="8" />
+
+        <!-- Grille horizontale -->
+        <line x1="80" y1="40"  x2="560" y2="40"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="80"  x2="560" y2="80"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="120" x2="560" y2="120" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="160" x2="560" y2="160" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="200" x2="560" y2="200" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="240" x2="560" y2="240" stroke="#E5E7EB" stroke-width="1.5" />
+
+        <!-- Axe Y -->
+        <text x="70" y="244" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+        <text x="70" y="204" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">5</text>
+        <text x="70" y="164" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">10</text>
+        <text x="70" y="124" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">15</text>
+        <text x="70" y="84"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">20</text>
+        <text x="70" y="44"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">25</text>
+        <text x="30" y="140" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 30 140)">Rendement (t/ha)</text>
+
+        <!-- Boîte principale (autour de 2.1 à 3.1 → y entre 215 et 227) -->
+        <line x1="320" y1="215" x2="320" y2="227" stroke="#1F2937" stroke-width="2" stroke-dasharray="4 2" />
+        <line x1="290" y1="215" x2="350" y2="215" stroke="#1F2937" stroke-width="2" />
+        <rect x="280" y="221" width="80" height="6" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <line x1="280" y1="224" x2="360" y2="224" stroke="#1E3A8A" stroke-width="2.5" />
+        <line x1="320" y1="221" x2="320" y2="227" stroke="#1F2937" stroke-width="2" stroke-dasharray="4 2" />
+        <line x1="290" y1="227" x2="350" y2="227" stroke="#1F2937" stroke-width="2" />
+
+        <!-- Valeur aberrante à 32 t/ha (y ≈ -16, mais on la remonte à y=60) -->
+        <circle cx="320" cy="60" r="8" fill="#DC2626" stroke="#FFFFFF" stroke-width="2" />
+        <text x="345" y="64" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#DC2626">32,0 t/ha</text>
+        <text x="345" y="80" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#991B1B">(valeur aberrante)</text>
+      </svg>
+    </div>
+
+    <!-- 7. FORMATS ET UNITÉS -->
+    <h2><i class="fa-solid fa-tags" style="color:#7C3AED;"></i> 7. Formats et unités</h2>
+
+    <p>
+      La moindre incohérence dans le nom d'une catégorie crée une <strong>nouvelle modalité fantôme</strong>. R aura l'impression d'avoir 3 villages au lieu de 2 !
+    </p>
+
+    <pre><code># Voir les modalités uniques d'une colonne qualitative
+unique(donnees$village)
+# [1] "Bonabéri" "bonaberi" "Bonabéri" "Bépanda" ... → 3 modalités au lieu de 2 !
+
+# Uniformiser la casse
+donnees$village <- tolower(donnees$village)
+donnees$village <- tools::toTitleCase(donnees$village)
+
+# Ou directement recoder
+donnees$village[donnees$village == "bonaberi"] <- "Bonabéri"</code></pre>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Les 5 vérifications de format</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li><strong>Casse :</strong> « Bonabéri » vs « bonaberi »</li>
+        <li><strong>Espaces invisibles :</strong> « Bonabéri » vs « Bonabéri » (espace en fin)</li>
+        <li><strong>Accents :</strong> « Bépanda » vs « Bepanda »</li>
+        <li><strong>Unités :</strong> « 1,5 kg » vs « 1500 g »</li>
+        <li><strong>Types :</strong> chiffre stocké en texte, date en texte, etc.</li>
+      </ul>
+    </div>
+
+    <!-- 8. RECODER UNE VARIABLE -->
+    <h2><i class="fa-solid fa-code" style="color:#059669;"></i> 8. Recoder une variable</h2>
+
+    <p>
+      Souvent, on doit transformer une variable quantitative en variable qualitative (ou l'inverse). Par exemple, classer les rendements en « faible / moyen / élevé » :
+    </p>
+
+    <pre><code># Créer une classe de rendement à partir de la valeur numérique
+donnees$classe_rdt <- cut(donnees$rendement,
+                          breaks = c(0, 2.5, 3.0, Inf),
+                          labels = c("Faible", "Moyen", "Élevé"))
+
+# Vérifier le résultat
+table(donnees$classe_rdt)</code></pre>
+
+    <p>
+      À l'inverse, on peut transformer une variable qualitative en indicatrice binaire (0/1) :
+    </p>
+
+    <pre><code># Créer une indicatrice : 1 si Bépanda, 0 sinon
+donnees$est_bepanda <- ifelse(donnees$village == "Bépanda", 1, 0)</code></pre>
+
+    <!-- 9. AVEC RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 9. Et dans Ramses ?</h2>
+
+    <p>
+      Ramses propose un onglet dédié à la préparation des données, accessible dès l'import du fichier :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-file-import" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Importer et ouvrir l'onglet « Préparer »</div>
+          <div class="step-desc">
+            Après importation, cliquez sur l'onglet <strong>« Préparer les données »</strong> dans la barre latérale gauche.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-list-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Diagnostiquer automatiquement</div>
+          <div class="step-desc">
+            Ramses affiche un tableau de bord avec :<br>
+            • Nombre de valeurs manquantes par colonne ;<br>
+            • Nombre de lignes dupliquées ;<br>
+            • Détection automatique des valeurs aberrantes (boxplot) ;<br>
+            • Incohérences de casse ou d'accents dans les variables qualitatives.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-broom" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Corriger en un clic</div>
+          <div class="step-desc">
+            • <strong>Valeurs manquantes :</strong> supprimer la ligne ou imputer par la moyenne/médiane ;<br>
+            • <strong>Doublons :</strong> suppression automatique ;<br>
+            • <strong>Formats :</strong> uniformisation de la casse en un clic ;<br>
+            • <strong>Recodage :</strong> création de classes ou d'indicatrices guidée.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-clipboard-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Journaliser les corrections</div>
+          <div class="step-desc">
+            Chaque correction est enregistrée automatiquement dans le journal R Markdown avec la commande R correspondante. Indispensable pour la reproductibilité scientifique.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-shield-halved"></i> Un principe scientifique</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Toute modification des données brutes <strong>doit être documentée</strong> dans votre méthodologie. En cas de publication, un relecteur peut demander à voir le fichier original et le fichier nettoyé. Ramses facilite cette traçabilité.
+      </p>
+    </div>
+
+    <!-- 10. CHECKLIST DE FIN DE NETTOYAGE -->
+    <h2><i class="fa-solid fa-clipboard-list" style="color:#059669;"></i> 10. La checklist avant toute analyse</h2>
+
+    <p>
+      Avant de lancer la moindre moyenne ou le moindre test, répondez par « oui » à ces 7 questions :
+    </p>
+
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:18px; margin:16px 0; box-shadow:var(--shadow-sm);">
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;">
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Ai-je vérifié qu'il n'y a pas de <strong>doublons</strong> ?</div>
+        </li>
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Ai-je identifié et traité les <strong>valeurs manquantes</strong> ?</div>
+        </li>
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Ai-je visualisé les <strong>valeurs aberrantes</strong> avec un boxplot ou un histogramme ?</div>
+        </li>
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Les <strong>unités</strong> sont-elles homogènes partout ?</div>
+        </li>
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Les <strong>modalités</strong> des variables qualitatives sont-elles cohérentes (pas de casse différente) ?</div>
+        </li>
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Les <strong>types</strong> des variables sont-ils corrects (qualitatif, quantitatif, date) ?</div>
+        </li>
+        <li style="display:flex; gap:10px; font-size:14.5px; align-items:flex-start;">
+          <i class="fa-regular fa-square-check" style="color:#059669; margin-top:3px;" aria-hidden="true"></i>
+          <div>Ai-je <strong>documenté</strong> toutes mes corrections ?</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 11. QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 11. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; color:#1F2937;">
+        Vous découvrez une parcelle dont le rendement est indiqué comme <strong>« 12.5 »</strong>, alors que tous les autres rendements de l'échantillon sont compris entre 2 et 3,5 t/ha. Que faites-vous en <em>premier</em> réflexe ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:520px;">
+        <button class="quiz-btn quiz-module02b-btn" data-answer="wrong1">Je supprime immédiatement cette ligne du fichier.</button>
+        <button class="quiz-btn quiz-module02b-btn" data-answer="correct">Je vérifie le fichier source ou je contacte la personne qui a saisi la donnée.</button>
+        <button class="quiz-btn quiz-module02b-btn" data-answer="wrong2">Je remplace la valeur par la moyenne des autres parcelles.</button>
+        <button class="quiz-btn quiz-module02b-btn" data-answer="wrong3">Je ne fais rien, la donnée est peut-être réelle.</button>
+      </div>
+
+      <div id="quiz-module02b-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 12. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">
+        • <strong>Nettoyer ses données</strong> est une étape <em>obligatoire</em> avant toute analyse.<br>
+        • Les 4 familles de problèmes : valeurs manquantes, doublons, valeurs aberrantes, formats incohérents.<br>
+        • <strong>Documenter</strong> chaque correction est indispensable pour la reproductibilité.<br>
+        • Ramses dispose d'un onglet dédié <em>« Préparer les données »</em> qui automatise une grande partie du travail.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Des données propres, c'est la moitié du travail statistique déjà réussie. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="02-comprendre-mes-variables.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">02. Comprendre mes variables</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">03. Compter et résumer mes données</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

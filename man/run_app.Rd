@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_app.R
 \name{run_app}
 \alias{run_app}
-\title{Lancer l'interface utilisateur graphique Ramses}
+\title{Lancer l'interface utilisateur graphique Ramses 1.0}
 \usage{
 run_app(
   standalone = TRUE,
@@ -15,7 +15,7 @@ run_app(
 \arguments{
 \item{standalone}{Valeur logique indiquant si l'application doit être ouverte dans
 sa propre fenêtre de bureau dédiée (mode standalone sans barre d'adresse ni onglets
-via le mode \code{--app=} de Chromium / Microsoft Edge). Par défaut \code{TRUE}.
+via le mode \code{--app=} de Chromium / Microsoft Edge / Google Chrome / Brave). Par défaut \code{TRUE}.
 Si aucun navigateur compatible n'est trouvé, bascule automatiquement et de façon
 transparente sur le navigateur système standard.}
 
@@ -24,7 +24,8 @@ Par défaut \code{NULL} : un port local libre est automatiquement attribué via
 \code{httpuv::randomPort()} afin d'éviter tout conflit entre instances.}
 
 \item{launch.browser}{Valeur logique ou fonction indiquant s'il faut ouvrir
-automatiquement l'application au démarrage. Par défaut \code{TRUE} en session interactive.}
+automatiquement l'application au démarrage. Par défaut \code{TRUE} en session interactive.
+Définir à \code{FALSE} pour démarrer le serveur en arrière-plan sans ouvrir de fenêtre.}
 
 \item{host}{Adresse IP sur laquelle écouter. Par défaut \code{"127.0.0.1"} (localhost).
 Utiliser \code{"0.0.0.0"} pour autoriser les connexions réseau externes ou conteneurisées.}
@@ -36,7 +37,7 @@ Un objet d'application Shiny exécutable (\code{shiny.appobj}).
 }
 \description{
 Lance l'application graphique interactive Shiny fournie par le
-package Ramses. Conçue comme une alternative moderne, fluide et intuitive à Rcmdr,
+package Ramses (version 1.0). Conçue comme une alternative moderne, fluide et intuitive à Rcmdr,
 cette interface permet d'importer des fichiers (CSV, Excel, SPSS, Stata, RDS),
 d'explorer les données de manière interactive, de calculer des statistiques
 descriptives univariées et bivariées, de construire des graphiques de type Tableau

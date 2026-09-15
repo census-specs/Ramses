@@ -618,7 +618,404 @@ ramses_pedagogy_multi <- function(multi_state, df) {
   group_levels <- unique(as.character(sub_df[[var_g]]))
   k_groups <- length(group_levels)
 
-  if (test_type == "anova") {
+  if (test_type == "anova_twoway") {
+    var_g1 <- multi_state$var_group
+    var_g2 <- multi_state$var_group2
+    has_int <- isTRUE(multi_state$interaction)
+    res_obj <- multi_state$result
+
+    h0_txt <- if (has_int) {
+      paste0("1. Aucun effet principal de '", var_g1, "' ; 2. Aucun effet principal de '", var_g2, "' ; 3. Aucune interaction entre '", var_g1, "' et '", var_g2, "' (l'effet de ", var_g1, " ne d\u00e9pend pas du niveau de ", var_g2, ").")
+    } else {
+      paste0("1. Aucun effet principal de '", var_g1, "' (moyennes \u00e9gales) ; 2. Aucun effet principal de '", var_g2, "' (moyennes \u00e9gales).")
+    }
+
+    h1_txt <- if (has_int) {
+      "Au moins un effet principal ou l'interaction entre les deux facteurs est statistiquement significatif dans la population."
+    } else {
+      "Au moins l'un des deux facteurs explique une variation significative des moyennes de la variable d\u00e9pendante."
+    }
+
+    shapiro_res <- if (!is.null(res_obj) && !is.null(res_obj$shapiro)) res_obj$shapiro else NULL
+    fligner_res <- if (!is.null(res_obj) && !is.null(res_obj$fligner)) res_obj$fligner else NULL
+    n_total <- if (!is.null(res_obj) && !is.null(res_obj$n_obs)) res_obj$n_obs else nrow(sub_df)
+
+    cond_items <- list(
+      shiny::tags$li(
+        shiny::tags$strong("Ind\u00e9pendance des observations : "),
+        "Les observations doivent \u00eatre ind\u00e9pendantes entre les sujets et entre les cellules du plan factoriel (d\u00e9pend du protocole exp\u00e9rimental)."
+      ),
+      shiny::tags$li(
+        shiny::tags$strong("Normalit\u00e9 des r\u00e9sidus du mod\u00e8le : "),
+        if (!is.null(shapiro_res)) {
+          if (shapiro_res$p.value >= 0.05 || n_total >= 30) {
+            shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 Valid\u00e9 (test de Shapiro-Wilk sur les r\u00e9sidus p = ", round(shapiro_res$p.value, 4), if (n_total >= 30) ", effectif total n \u2265 30 robuste" else "", ")."))
+          } else {
+            shiny::tags$span(class = "text-danger fw-semibold", paste0("\u26a0 D\u00e9viation de normalit\u00e9 (Shapiro-Wilk sur r\u00e9sidus p = ", round(shapiro_res$p.value, 4), " < 0.05). Interpr\u00e9ter avec prudence si les effectifs par cellule sont faibles."))
+          }
+        } else {
+          "Effectif analys\u00e9."
+        }
+      ),
+      shiny::tags$li(
+        shiny::tags$strong("Homog\u00e9n\u00e9it\u00e9 des variances (Fligner-Killeen) : "),
+        if (!is.null(fligner_res)) {
+          if (fligner_res$p.value >= 0.05) {
+            shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 Valid\u00e9 (test de Fligner-Killeen p = ", round(fligner_res$p.value, 4), " \u2265 0.05 : variances homog\u00e8nes entre cellules)."))
+          } else {
+            shiny::tags$span(class = "text-danger fw-semibold", paste0("\u26a0 H\u00e9t\u00e9rog\u00e9n\u00e9it\u00e9 des variances (test de Fligner-Killeen p = ", round(fligner_res$p.value, 4), " < 0.05). Prudence accrue sur les F-tests si les effectifs par cellule sont in\u00e9gaux."))
+          }
+        } else {
+          "Test de variances non calculable."
+        }
+      )
+    )
+
+    t_info <- if (!is.null(res_obj)) res_obj$terms_info else list()
+    term_ab <- paste0(var_g1, ":", var_g2)
+
+    guide_content <- shiny::tags$div(
+      shiny::tags$p(class = "mb-2", "L'ANOVA factorielle d\u00e9compose la variance en effets principaux de chaque facteur et en effet d'interaction conjointe."),
+      shiny::tags$ul(
+        class = "ps-3 mb-2 space-y-1 small",
+        shiny::tags$li(
+          shiny::tags$strong(paste0("Facteur ", var_g1, " : ")),
+          "Permet-il d'expliquer une diff\u00e9rence de moyenne globale ?",
+          if (!is.null(t_info[[var_g1]])) {
+            if (t_info[[var_g1]]$sig) shiny::tags$span(class = "text-success fw-bold ms-1", "[Significatif]") else shiny::tags$span(class = "text-muted ms-1", "[Non significatif]")
+          }
+        ),
+        shiny::tags$li(
+          shiny::tags$strong(paste0("Facteur ", var_g2, " : ")),
+          "Permet-il d'expliquer une diff\u00e9rence de moyenne globale ?",
+          if (!is.null(t_info[[var_g2]])) {
+            if (t_info[[var_g2]]$sig) shiny::tags$span(class = "text-success fw-bold ms-1", "[Significatif]") else shiny::tags$span(class = "text-muted ms-1", "[Non significatif]")
+          }
+        ),
+        if (has_int) {
+          shiny::tags$li(
+            shiny::tags$strong("Interaction A \u00d7 B : "),
+            "L'effet de A d\u00e9pend-il du niveau de B ?",
+            if (!is.null(t_info[[term_ab]])) {
+              if (t_info[[term_ab]]$sig) shiny::tags$span(class = "text-danger fw-bold ms-1", "[Interaction significative !]") else shiny::tags$span(class = "text-muted ms-1", "[Non significative]")
+            }
+          )
+        }
+      ),
+      if (has_int && !is.null(t_info[[term_ab]]) && t_info[[term_ab]]$sig) {
+        shiny::div(
+          class = "alert alert-warning py-2 px-3 small mt-2 mb-0",
+          shiny::tags$strong("\u26a0 Attention : "),
+          "L'interaction \u00e9tant statistiquement significative, l'effet d'un facteur varie selon la modalit\u00e9 de l'autre. Il est recommand\u00e9 d'\u00e9tudier les effets simples (profils d'interaction) plut\u00f4t que d'interpr\u00e9ter isol\u00e9ment les effets principaux."
+        )
+      } else {
+        shiny::tags$p(class = "text-muted small mb-0", "Une interaction signifie que l'effet d'un facteur d\u00e9pend du niveau de l'autre facteur.")
+      }
+    )
+
+    extra_block <- if (isTRUE(multi_state$post_hoc)) {
+      shiny::div(
+        class = "p-3 rounded bg-light border",
+        shiny::tags$h6(class = "fw-bold text-dark mb-2", "Comparaisons multiples (Post-Hoc) :"),
+        shiny::tags$p(
+          class = "small text-secondary mb-0",
+          "Comparaisons multiples pour les effets factoriels : fonctionnalit\u00e9 pr\u00e9vue dans une phase ult\u00e9rieure (analyse des moyennes marginales ajust\u00e9es et contrastes simples)."
+        )
+      )
+    } else NULL
+
+    return(ramses_pedagogy_container(h0_txt, h1_txt, cond_items, guide_content, extra_block))
+
+  } else if (test_type == "anova_rm") {
+    rm_res <- multi_state$result
+    w_factor <- rm_res$within_factor
+    s_var <- rm_res$subject
+    k_levs <- if (!is.null(rm_res$data_info$k_levels)) rm_res$data_info$k_levels else 0
+    n_subj <- if (!is.null(rm_res$data_info$final_subjects)) rm_res$data_info$final_subjects else 0
+    n_obs <- if (!is.null(rm_res$data_info$n_obs)) rm_res$data_info$n_obs else 0
+    tab <- rm_res$anova_table
+    mauchly <- rm_res$mauchly
+    corrections <- rm_res$corrections
+    ph <- rm_res$post_hoc
+
+    h0_txt <- paste0(
+      "Les moyennes de la variable '", var_y, "' sont \u00e9gales entre tous les niveaux du facteur intra-sujets '", w_factor, "' ",
+      "(\u03bc_1 = \u03bc_2 = ... = \u03bc_", k_levs, ")."
+    )
+    h1_txt <- paste0(
+      "Au moins un niveau du facteur intra-sujets '", w_factor, "' pr\u00e9sente une moyenne significativement diff\u00e9rente dans la population."
+    )
+
+    is_sph_viol <- isTRUE(mauchly$applicable) && is.numeric(mauchly$p_value) && !is.na(mauchly$p_value) && (mauchly$p_value < alpha_val)
+
+    cond_items <- list(
+      shiny::tags$li(
+        shiny::tags$strong("Structure des donn\u00e9es & Appariement : "),
+        shiny::tags$span(
+          class = "text-success fw-semibold",
+          paste0("\u2714 Plan complet et \u00e9quilibr\u00e9 (N = ", n_subj, " sujets mesur\u00e9s chacun sur ", k_levs, " modalit\u00e9s, soit ", n_obs, " observations). ")
+        ),
+        "Cette analyse est utilis\u00e9e lorsque les m\u00eames sujets sont mesur\u00e9s plusieurs fois. Les observations d'un m\u00eame sujet sont li\u00e9es. L'analyse tient compte de cette d\u00e9pendance en isolant la variabilit\u00e9 inter-sujets."
+      ),
+      shiny::tags$li(
+        shiny::tags$strong("Hypoth\u00e8se de sph\u00e9ricit\u00e9 (Mauchly) : "),
+        if (isTRUE(mauchly$applicable)) {
+          w_val_str <- if (is.numeric(mauchly$w) && length(mauchly$w) == 1 && !is.na(mauchly$w)) round(mauchly$w, 4) else "\u2014"
+          p_val_str <- if (is.numeric(mauchly$p_value) && length(mauchly$p_value) == 1 && !is.na(mauchly$p_value)) format.pval(mauchly$p_value, digits = 4) else "\u2014"
+          if (!is_sph_viol) {
+            shiny::tags$span(
+              class = "text-success fw-semibold",
+              paste0("\u2714 Valid\u00e9 (Test de Mauchly W = ", w_val_str, ", p = ", p_val_str, " \u2265 0.05). Les variances de toutes les diff\u00e9rences entre paires sont \u00e9gales. Le F-test standard est valide.")
+            )
+          } else {
+            shiny::tags$span(
+              class = "text-danger fw-semibold",
+              paste0("\u26a0 Violation de la sph\u00e9ricit\u00e9 (Test de Mauchly W = ", w_val_str, ", p = ", p_val_str, " < 0.05). Les variances des diff\u00e9rences diff\u00e8rent. L'utilisation des corrections d'\u00e9psilon (Greenhouse-Geisser ou Huynh-Feldt) est requise.")
+            )
+          }
+        } else {
+          shiny::tags$span(
+            class = "text-success fw-semibold",
+            "\u2714 Avec 2 modalit\u00e9s, l'hypoth\u00e8se de sph\u00e9ricit\u00e9 est automatiquement satisfaite et le test de Mauchly n'est pas n\u00e9cessaire."
+          )
+        }
+      ),
+      shiny::tags$li(
+        shiny::tags$strong("Normalit\u00e9 des r\u00e9sidus intra-sujets : "),
+        "La distribution des r\u00e9sidus du mod\u00e8le intra-sujets doit \u00eatre approximativement normale (robuste pour des \u00e9chantillons mod\u00e9r\u00e9s \u00e0 grands)."
+      )
+    )
+
+    row_w <- if (!is.null(tab)) tab[tab$Source == w_factor, ] else NULL
+    p_raw <- if (!is.null(row_w) && nrow(row_w) > 0 && is.numeric(row_w$p_value)) row_w$p_value[1] else NA_real_
+    p_use <- if (is_sph_viol && !is.null(corrections) && is.numeric(corrections$p_gg)) corrections$p_gg else p_raw
+    sig_f <- is.numeric(p_use) && !is.na(p_use) && (p_use < alpha_val)
+
+    guide_content <- shiny::tags$div(
+      shiny::tags$p(
+        class = "mb-2",
+        "L'ANOVA \u00e0 mesures r\u00e9p\u00e9t\u00e9es compare les moyennes d'une variable quantitative mesur\u00e9e plusieurs fois sur les m\u00eames individus (par exemple : \u00c9volution avant/apr\u00e8s traitement, suivi temporel \u00e0 plusieurs dates, r\u00e9ponses \u00e0 diff\u00e9rentes conditions exp\u00e9rimentales)."
+      ),
+      shiny::tags$ul(
+        class = "ps-3 mb-2 space-y-1 small",
+        shiny::tags$li(
+          shiny::tags$strong(paste0("Effet du facteur intra-sujets '", w_factor, "' : ")),
+          if (sig_f) {
+            p_disp <- if (is.numeric(p_use) && !is.na(p_use)) format.pval(p_use, digits = 4) else "\u2014"
+            shiny::tags$span(class = "text-success fw-bold ms-1", paste0("[Significatif, p = ", p_disp, "] - Les mesures diff\u00e8rent entre les conditions/temps."))
+          } else {
+            p_disp <- if (is.numeric(p_use) && !is.na(p_use)) format.pval(p_use, digits = 4) else "\u2014"
+            shiny::tags$span(class = "text-muted ms-1", paste0("[Non significatif, p = ", p_disp, "] - Pas de diff\u00e9rence significative d\u00e9tect\u00e9e."))
+          }
+        ),
+        if (is_sph_viol && !is.null(corrections) && isTRUE(corrections$applicable)) {
+          eps_gg_str <- if (is.numeric(corrections$eps_gg) && !is.na(corrections$eps_gg)) round(corrections$eps_gg, 3) else "\u2014"
+          p_gg_str <- if (is.numeric(corrections$p_gg) && !is.na(corrections$p_gg)) format.pval(corrections$p_gg, digits = 4) else "\u2014"
+          p_hf_str <- if (is.numeric(corrections$p_hf) && !is.na(corrections$p_hf)) format.pval(corrections$p_hf, digits = 4) else "\u2014"
+          shiny::tags$li(
+            shiny::tags$strong("Correction recommand\u00e9e : "),
+            paste0(
+              "En pr\u00e9sence de non-sph\u00e9ricit\u00e9, si \u03b5_GG = ", eps_gg_str, " < 0.75, Greenhouse-Geisser est recommand\u00e9 (p = ",
+              p_gg_str, ") ; si \u03b5 > 0.75, Huynh-Feldt peut \u00eatre pr\u00e9f\u00e9r\u00e9 (p = ", p_hf_str, ")."
+            )
+          )
+        } else NULL
+      )
+    )
+
+    extra_block <- if (!is.null(ph) && is.data.frame(ph) && nrow(ph) > 0) {
+      shiny::div(
+        class = "p-3 rounded bg-light border mt-3",
+        shiny::tags$h6(class = "fw-bold text-dark mb-2", "Comparaisons par paires intra-sujets (Holm) :"),
+        shiny::tags$div(
+          class = "table-responsive",
+          shiny::tags$table(
+            class = "table table-sm table-striped table-hover small mb-0",
+            shiny::tags$thead(
+              shiny::tags$tr(
+                shiny::tags$th("Comparaison"),
+                shiny::tags$th("Diff\u00e9rence moyenne"),
+                shiny::tags$th("Erreur-type (SE)"),
+                shiny::tags$th("Statistique t"),
+                shiny::tags$th("ddl"),
+                shiny::tags$th("p-value brute"),
+                shiny::tags$th("p-value Holm"),
+                shiny::tags$th("Significativit\u00e9")
+              )
+            ),
+            shiny::tags$tbody(
+              lapply(seq_len(nrow(ph)), function(idx) {
+                row_item <- ph[idx, ]
+                diff_str <- if (is.numeric(row_item$Difference) && !is.na(row_item$Difference)) round(row_item$Difference, 3) else "\u2014"
+                se_str <- if (is.numeric(row_item$SE) && !is.na(row_item$SE)) round(row_item$SE, 3) else "\u2014"
+                t_str <- if (is.numeric(row_item$t_value) && !is.na(row_item$t_value)) round(row_item$t_value, 3) else "\u2014"
+                df_str <- if (!is.null(row_item$Df) && !is.na(row_item$Df)) row_item$Df else if (!is.null(row_item$df) && !is.na(row_item$df)) row_item$df else "\u2014"
+                p_raw_str <- if (is.numeric(row_item$p_value_raw) && !is.na(row_item$p_value_raw)) format.pval(row_item$p_value_raw, digits = 4) else "\u2014"
+                p_adj_str <- if (is.numeric(row_item$p_value_adj) && !is.na(row_item$p_value_adj)) format.pval(row_item$p_value_adj, digits = 4) else "\u2014"
+
+                shiny::tags$tr(
+                  shiny::tags$td(paste0(row_item$Niveau_1, " vs ", row_item$Niveau_2)),
+                  shiny::tags$td(diff_str),
+                  shiny::tags$td(se_str),
+                  shiny::tags$td(t_str),
+                  shiny::tags$td(df_str),
+                  shiny::tags$td(p_raw_str),
+                  shiny::tags$td(class = "fw-bold", p_adj_str),
+                  shiny::tags$td(
+                    if (isTRUE(row_item$sig)) {
+                      shiny::tags$span(class = "badge bg-success", "Significatif")
+                    } else {
+                      shiny::tags$span(class = "badge bg-secondary", "Non sign.")
+                    }
+                  )
+                )
+              })
+            )
+          )
+        )
+      )
+    } else NULL
+
+    return(ramses_pedagogy_container(h0_txt, h1_txt, cond_items, guide_content, extra_block))
+
+  } else if (test_type == "ancova") {
+    var_fact <- multi_state$var_group
+    var_cov <- multi_state$var_covar
+    res_obj <- multi_state$result
+
+    h0_txt <- paste0(
+      "1. Facteur '", var_fact, "' : Apr\u00e8s prise en compte de la covariable '", var_cov, "', les moyennes ajust\u00e9es des groupes sont \u00e9gales. ",
+      "2. Covariable '", var_cov, "' : La covariable n'a aucun effet lin\u00e9aire significatif sur '", var_y, "' apr\u00e8s ajustement sur le groupe."
+    )
+    h1_txt <- paste0(
+      "1. Facteur '", var_fact, "' : Au moins une moyenne ajust\u00e9e diff\u00e8re significativement entre les groupes. ",
+      "2. Covariable '", var_cov, "' : La covariable est significativement associ\u00e9e \u00e0 la variable d\u00e9pendante."
+    )
+
+    slopes_info <- if (!is.null(res_obj) && !is.null(res_obj$slopes_test)) res_obj$slopes_test else NULL
+    shapiro_res <- if (!is.null(res_obj) && !is.null(res_obj$shapiro)) res_obj$shapiro else NULL
+    fligner_res <- if (!is.null(res_obj) && !is.null(res_obj$fligner)) res_obj$fligner else NULL
+    n_total <- if (!is.null(res_obj) && !is.null(res_obj$n_obs)) res_obj$n_obs else nrow(sub_df)
+
+    cond_items <- list(
+      shiny::tags$li(
+        shiny::tags$strong("Homog\u00e9n\u00e9it\u00e9 des pentes (Parall\u00e9lisme) : "),
+        if (!is.null(slopes_info) && !is.na(slopes_info$p_value)) {
+          if (isTRUE(slopes_info$pentes_homogenes)) {
+            shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 Valid\u00e9 (Test Facteur \u00d7 Covariable p = ", round(slopes_info$p_value, 4), " > \u03b1). Les pentes de r\u00e9gression sont comparables entre groupes. L'hypoth\u00e8se de pente commune est respect\u00e9e."))
+          } else {
+            shiny::tags$span(class = "text-danger fw-semibold", paste0("\u26a0 Attention : Les pentes diff\u00e8rent significativement entre les groupes (p = ", round(slopes_info$p_value, 4), " \u2264 \u03b1). L'hypoth\u00e8se de pentes communes de l'ANCOVA classique n'est pas respect\u00e9e. Les moyennes ajust\u00e9es issues du mod\u00e8le \u00e0 pente commune doivent donc \u00eatre interpr\u00e9t\u00e9es avec prudence."))
+          }
+        } else {
+          "Test d'homog\u00e9n\u00e9it\u00e9 des pentes \u00e9valu\u00e9."
+        }
+      ),
+      shiny::tags$li(
+        shiny::tags$strong("Normalit\u00e9 des r\u00e9sidus : "),
+        if (!is.null(shapiro_res)) {
+          if (shapiro_res$p.value >= 0.05 || n_total >= 30) {
+            shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 Valid\u00e9 (test de Shapiro-Wilk sur les r\u00e9sidus p = ", round(shapiro_res$p.value, 4), if (n_total >= 30) ", n \u2265 30 robuste" else "", ")."))
+          } else {
+            shiny::tags$span(class = "text-danger fw-semibold", paste0("\u26a0 D\u00e9viation de normalit\u00e9 (Shapiro-Wilk p = ", round(shapiro_res$p.value, 4), " < 0.05). \u00c0 interpr\u00e9ter avec prudence si l'effectif est faible."))
+          }
+        } else {
+          "Effectif analys\u00e9."
+        }
+      ),
+      shiny::tags$li(
+        shiny::tags$strong("Homog\u00e9n\u00e9it\u00e9 des variances r\u00e9siduelles (Fligner-Killeen) : "),
+        if (!is.null(fligner_res)) {
+          if (fligner_res$p.value >= 0.05) {
+            shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 Valid\u00e9 (test de Fligner-Killeen p = ", round(fligner_res$p.value, 4), " \u2265 0.05)."))
+          } else {
+            shiny::tags$span(class = "text-danger fw-semibold", paste0("\u26a0 H\u00e9t\u00e9rog\u00e9n\u00e9it\u00e9 des variances r\u00e9siduelles (p = ", round(fligner_res$p.value, 4), " < 0.05)."))
+          }
+        } else {
+          "Test de variances r\u00e9siduelles."
+        }
+      )
+    )
+
+    a_tab <- if (!is.null(res_obj)) res_obj$anova_table else NULL
+    row_f <- if (!is.null(a_tab)) a_tab[a_tab$Term == var_fact, ] else NULL
+    row_c <- if (!is.null(a_tab)) a_tab[a_tab$Term == var_cov, ] else NULL
+
+    guide_content <- shiny::tags$div(
+      shiny::tags$p(
+        class = "mb-2",
+        "L'ANCOVA (Analyse de Covariance) permet de comparer plusieurs groupes tout en tenant compte de l'effet d'une variable quantitative appel\u00e9e covariable (par exemple, comparer le rendement de plusieurs vari\u00e9t\u00e9s en tenant compte de l'\u00e2ge des plants)."
+      ),
+      shiny::tags$ul(
+        class = "ps-3 mb-2 space-y-1 small",
+        shiny::tags$li(
+          shiny::tags$strong(paste0("Facteur ", var_fact, " : ")),
+          "Existe-t-il une diff\u00e9rence entre les groupes apr\u00e8s contr\u00f4le de la covariable ?",
+          if (!is.null(row_f) && nrow(row_f) > 0 && !is.na(row_f$p_value[1])) {
+            if (row_f$p_value[1] < alpha_val) shiny::tags$span(class = "text-success fw-bold ms-1", "[Significatif]") else shiny::tags$span(class = "text-muted ms-1", "[Non significatif]")
+          }
+        ),
+        shiny::tags$li(
+          shiny::tags$strong(paste0("Covariable ", var_cov, " : ")),
+          "La covariable apporte-t-elle un ajustement lin\u00e9aire significatif ?",
+          if (!is.null(row_c) && nrow(row_c) > 0 && !is.na(row_c$p_value[1])) {
+            if (row_c$p_value[1] < alpha_val) shiny::tags$span(class = "text-success fw-bold ms-1", "[Significative]") else shiny::tags$span(class = "text-muted ms-1", "[Non significative]")
+          }
+        )
+      ),
+      shiny::tags$p(
+        class = "text-muted small mb-0",
+        "Les effets du facteur et de la covariable sont \u00e9valu\u00e9s apr\u00e8s prise en compte de l'autre terme du mod\u00e8le. Cette approche correspond au principe des sommes des carr\u00e9s de type II pour ce mod\u00e8le additif."
+      )
+    )
+
+    extra_block <- if (!is.null(res_obj) && !is.null(res_obj$post_hoc) && nrow(res_obj$post_hoc) > 0) {
+      ph <- res_obj$post_hoc
+      shiny::div(
+        class = "p-3 rounded bg-light border mt-3",
+        shiny::tags$h6(class = "fw-bold text-dark mb-2", "Comparaisons deux \u00e0 deux des moyennes ajust\u00e9es (Correction de Holm) :"),
+        shiny::tags$div(
+          class = "table-responsive",
+          shiny::tags$table(
+            class = "table table-sm table-striped table-hover small mb-0",
+            shiny::tags$thead(
+              shiny::tags$tr(
+                shiny::tags$th("Comparaison"),
+                shiny::tags$th("Diff\u00e9rence"),
+                shiny::tags$th("SE"),
+                shiny::tags$th("Statistique t"),
+                shiny::tags$th("p-value brute"),
+                shiny::tags$th("p-value Holm"),
+                shiny::tags$th("Significativit\u00e9")
+              )
+            ),
+            shiny::tags$tbody(
+              lapply(seq_len(nrow(ph)), function(idx) {
+                row_item <- ph[idx, ]
+                shiny::tags$tr(
+                  shiny::tags$td(paste0(row_item$Groupe_1, " vs ", row_item$Groupe_2)),
+                  shiny::tags$td(round(row_item$Difference, 3)),
+                  shiny::tags$td(round(row_item$SE, 3)),
+                  shiny::tags$td(round(row_item$t_value, 3)),
+                  shiny::tags$td(format.pval(row_item$p_value_raw, digits = 3)),
+                  shiny::tags$td(format.pval(row_item$p_value_adj, digits = 3)),
+                  shiny::tags$td(
+                    if (isTRUE(row_item$sig)) {
+                      shiny::tags$span(class = "badge bg-success", "Significatif")
+                    } else {
+                      shiny::tags$span(class = "badge bg-secondary", "Non sign.")
+                    }
+                  )
+                )
+              })
+            )
+          )
+        )
+      )
+    } else NULL
+
+    return(ramses_pedagogy_container(h0_txt, h1_txt, cond_items, guide_content, extra_block))
+
+  } else if (test_type == "anova") {
     h0_txt <- paste0("Toutes les moyennes des ", k_groups, " groupes de population sont \u00e9gales (\u03bc_1 = \u03bc_2 = ... = \u03bc_", k_groups, ").")
     h1_txt <- "Au moins une moyenne de groupe est significativement diff\u00e9rente des autres dans la population."
 
@@ -1014,13 +1411,20 @@ ramses_pedagogy_reg <- function(reg_state, df) {
     return(ramses_pedagogy_waiting_ui("l'ajustement du mod\u00e8le de r\u00e9gression"))
   }
 
-  model_type <- reg_state$model_type
-  mod <- reg_state$model
+  mod <- if (!is.null(reg_state$model)) reg_state$model else NULL
   var_y <- reg_state$var_y
   vars_x <- reg_state$vars_x
   alpha_val <- as.numeric(reg_state$alpha)
 
-  if (model_type == "linear") {
+  model_type <- if (!is.null(reg_state$model_type) && length(reg_state$model_type) > 0 && nzchar(reg_state$model_type)) {
+    reg_state$model_type
+  } else if (!is.null(mod) && inherits(mod, "glm")) {
+    "logistic"
+  } else {
+    "linear"
+  }
+
+  if (identical(model_type, "linear")) {
     p_pred <- length(vars_x)
     h0_txt <- paste0(
       "Hypoth\u00e8se globale (Test F) : Aucun des pr\u00e9dicteurs n'explique la variabilit\u00e9 de '", var_y,
@@ -1072,8 +1476,8 @@ ramses_pedagogy_reg <- function(reg_state, df) {
 
   } else {
     # R\u00e9gression logistique binaire
-    h0_txt <- paste0("Aucun pr\u00e9dicteur n'am\u00e9liore la pr\u00e9diction de l'\u00e9v\u00e9nement par rapport au mod\u00e8le nul (\u03b2_1 = ... = \u03b2_p = 0, tous les Odds Ratios = 1).")
-    h1_txt <- "Au moins un des pr\u00e9dicteurs modifie significativement la probabilit\u00e9 de survenue de l'\u00e9v\u00e9nement."
+    h0_txt <- paste0("Aucun pr\u00e9dicteur n'am\u00e9liore la mod\u00e9lisation de l'\u00e9v\u00e9nement par rapport au mod\u00e8le nul (\u03b2_1 = ... = \u03b2_p = 0, tous les Odds Ratios = 1).")
+    h1_txt <- "Au moins un des pr\u00e9dicteurs modifie significativement les odds (cotes) de survenue de l'\u00e9v\u00e9nement."
 
     y_vals <- mod$y
     n_events <- sum(y_vals == 1)
@@ -1089,21 +1493,22 @@ ramses_pedagogy_reg <- function(reg_state, df) {
         shiny::tags$span(class = "text-success fw-semibold", "\u2714 Valid\u00e9")
       ),
       shiny::tags$li(
-        shiny::tags$strong("\u00c9v\u00e9nements par Variable (R\u00e8gle EPV) : "),
+        shiny::tags$strong("\u00c9v\u00e9nements par Variable (R\u00e8gle empirique EPV de prudence) : "),
         if (epv >= 10) {
-          shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 R\u00e8gle respect\u00e9e : EPV = ", round(epv, 1), " \u2265 10 \u00e9v\u00e9nements par pr\u00e9dicteur."))
+          shiny::tags$span(class = "text-success fw-semibold", paste0("\u2714 Ratio satisfaisant : EPV = ", round(epv, 1), " \u2265 10 \u00e9v\u00e9nements par pr\u00e9dicteur (stabilit\u00e9 num\u00e9rique convenable)."))
         } else {
-          shiny::tags$span(class = "text-warning fw-semibold", paste0("\u26a0 Attention : EPV = ", round(epv, 1), " < 10. Risque de sur-ajustement ou d'instabilit\u00e9 des estimations d'Odds Ratio."))
+          shiny::tags$span(class = "text-warning fw-semibold", paste0("\u26a0 Attention : EPV = ", round(epv, 1), " < 10. R\u00e8gle de prudence sur la stabilit\u00e9 num\u00e9rique et le risque de sur-ajustement (ce n'est pas un test de puissance)."))
         }
       ),
       shiny::tags$li(
-        shiny::tags$strong("Interpr\u00e9tation des coefficients : "),
-        "L'exponentielle des coefficients exp(\u03b2) fournit les Odds Ratios ajust\u00e9s. Un OR > 1 indique un facteur augmentant le risque / la probabilit\u00e9."
+        shiny::tags$strong("Interpr\u00e9tation rigoureuse des Odds Ratios (OR = exp(\u03b2)) : "),
+        "L'Odds Ratio quantifie une variation relative de cotes (odds = p / (1 - p)). Un OR > 1 indique que l'exposition augmente la cote de l'\u00e9v\u00e9nement, ce qui ne doit pas \u00eatre confondu avec un risque relatif (RR) ni une variation lin\u00e9aire directe de probabilit\u00e9."
       )
     )
 
     guide_content <- shiny::tags$div(
-      shiny::tags$p(class = "mb-1", "Mod\u00e9lise le logarithme de la cote (logit) de la probabilit\u00e9 de l'\u00e9v\u00e9nement en fonction d'une combinaison lin\u00e9aire des pr\u00e9dicteurs.")
+      shiny::tags$p(class = "mb-1", "Mod\u00e9lise le logarithme de la cote (logit(p) = ln(p / (1 - p))) en fonction d'une combinaison lin\u00e9aire des pr\u00e9dicteurs."),
+      shiny::tags$p(class = "mb-0 text-muted extra-small", "Rappel : Odds (Cote) = P / (1 - P). L'Odds Ratio compare les cotes entre deux sous-groupes ou pour un saut unitaire du pr\u00e9dicteur.")
     )
 
     return(ramses_pedagogy_container(h0_txt, h1_txt, cond_items, guide_content))

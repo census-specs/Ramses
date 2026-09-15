@@ -1,7 +1,7 @@
-#' @title Lancer l'interface utilisateur graphique Ramses
+#' @title Lancer l'interface utilisateur graphique Ramses 1.0
 #'
 #' @description Lance l'application graphique interactive Shiny fournie par le
-#'   package Ramses. Con\u00e7ue comme une alternative moderne, fluide et intuitive \u00e0 Rcmdr,
+#'   package Ramses (version 1.0). Con\u00e7ue comme une alternative moderne, fluide et intuitive \u00e0 Rcmdr,
 #'   cette interface permet d'importer des fichiers (CSV, Excel, SPSS, Stata, RDS),
 #'   d'explorer les donn\u00e9es de mani\u00e8re interactive, de calculer des statistiques
 #'   descriptives univari\u00e9es et bivari\u00e9es, de construire des graphiques de type Tableau
@@ -11,7 +11,7 @@
 #'
 #' @param standalone Valeur logique indiquant si l'application doit \u00eatre ouverte dans
 #'   sa propre fen\u00eatre de bureau d\u00e9di\u00e9e (mode standalone sans barre d'adresse ni onglets
-#'   via le mode \code{--app=} de Chromium / Microsoft Edge). Par d\u00e9faut \code{TRUE}.
+#'   via le mode \code{--app=} de Chromium / Microsoft Edge / Google Chrome / Brave). Par d\u00e9faut \code{TRUE}.
 #'   Si aucun navigateur compatible n'est trouv\u00e9, bascule automatiquement et de fa\u00e7on
 #'   transparente sur le navigateur syst\u00e8me standard.
 #' @param port Entier optionnel sp\u00e9cifiant le port TCP sur lequel \u00e9couter (ex: \code{3838} ou \code{3000}).
@@ -19,6 +19,7 @@
 #'   \code{httpuv::randomPort()} afin d'\u00e9viter tout conflit entre instances.
 #' @param launch.browser Valeur logique ou fonction indiquant s'il faut ouvrir
 #'   automatiquement l'application au d\u00e9marrage. Par d\u00e9faut \code{TRUE} en session interactive.
+#'   D\u00e9finir \u00e0 \code{FALSE} pour d\u00e9marrer le serveur en arri\u00e8re-plan sans ouvrir de fen\u00eatre.
 #' @param host Adresse IP sur laquelle \u00e9couter. Par d\u00e9faut \code{"127.0.0.1"} (localhost).
 #'   Utiliser \code{"0.0.0.0"} pour autoriser les connexions r\u00e9seau externes ou conteneuris\u00e9es.
 #' @param ... Arguments suppl\u00e9mentaires transmis \u00e0 \code{\link[shiny]{shinyApp}}.
@@ -28,7 +29,6 @@
 #'
 #' @import shiny
 #' @import bslib
-#' @importFrom DT dataTableOutput renderDataTable datatable
 #' @importFrom plotly plotlyOutput renderPlotly ggplotly
 #' @importFrom rmarkdown render html_document
 #' @importFrom dplyr %>% select mutate filter group_by summarize arrange desc across everything

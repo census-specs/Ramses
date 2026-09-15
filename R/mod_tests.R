@@ -272,6 +272,9 @@ mod_tests_multi_ui <- function(id) {
             label = "Test \u00e0 effectuer :",
             choices = c(
               "ANOVA \u00e0 1 facteur (aov) + Tukey HSD Post-hoc" = "anova",
+              "ANOVA factorielle \u00e0 2 facteurs (inter-sujets)" = "anova_twoway",
+              "ANCOVA (1 facteur + 1 covariable quantitative)" = "ancova",
+              "ANOVA \u00e0 mesures r\u00e9p\u00e9t\u00e9es (1 facteur intra-sujets)" = "anova_rm",
               "Test de Kruskal-Wallis (non-param\u00e9trique)" = "kruskal"
             ),
             selected = "anova"
@@ -281,15 +284,83 @@ mod_tests_multi_ui <- function(id) {
             label = "Variable quantitative d\u00e9pendante (Y) :",
             choices = NULL
           ),
-          shiny::selectInput(
-            inputId = ns("multi_var_group_direct"),
-            label = "Variable de regroupement (Facteur X) :",
-            choices = NULL
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct != 'anova_rm'",
+            ns = ns,
+            shiny::selectInput(
+              inputId = ns("multi_var_group_direct"),
+              label = "Facteur 1 (X1) / Groupe :",
+              choices = NULL
+            )
           ),
-          shiny::checkboxInput(
-            inputId = ns("multi_posthoc_direct"),
-            label = "Calculer les tests Post-Hoc (Tukey HSD / Dunn)",
-            value = TRUE
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct == 'anova_rm'",
+            ns = ns,
+            shiny::selectInput(
+              inputId = ns("multi_var_subject_direct"),
+              label = "Identifiant du sujet (Sujet) :",
+              choices = NULL
+            ),
+            shiny::selectInput(
+              inputId = ns("multi_var_within_direct"),
+              label = "Facteur intra-sujets (Temps / Condition) :",
+              choices = NULL
+            )
+          ),
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct == 'anova_twoway'",
+            ns = ns,
+            shiny::selectInput(
+              inputId = ns("multi_var_group2_direct"),
+              label = "Facteur 2 (X2) :",
+              choices = NULL
+            ),
+            shiny::checkboxInput(
+              inputId = ns("multi_interaction_direct"),
+              label = "Inclure l'interaction (Facteur 1 \u00d7 Facteur 2)",
+              value = TRUE
+            )
+          ),
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct == 'ancova'",
+            ns = ns,
+            shiny::selectInput(
+              inputId = ns("multi_var_covar_direct"),
+              label = "Covariable quantitative (C) :",
+              choices = NULL
+            ),
+            shiny::checkboxInput(
+              inputId = ns("multi_posthoc_ancova_direct"),
+              label = "Calculer les comparaisons par paires (Holm)",
+              value = TRUE
+            )
+          ),
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct == 'anova_rm'",
+            ns = ns,
+            shiny::checkboxInput(
+              inputId = ns("multi_posthoc_rm_direct"),
+              label = "Calculer les comparaisons par paires (Holm)",
+              value = TRUE
+            )
+          ),
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct == 'anova'",
+            ns = ns,
+            shiny::checkboxInput(
+              inputId = ns("multi_posthoc_direct"),
+              label = "Calculer les tests Post-Hoc (Tukey HSD)",
+              value = TRUE
+            )
+          ),
+          shiny::conditionalPanel(
+            condition = "input.multi_test_direct == 'kruskal'",
+            ns = ns,
+            shiny::checkboxInput(
+              inputId = ns("multi_posthoc_kruskal_direct"),
+              label = "Calculer les tests Post-Hoc (Wilcoxon par paires)",
+              value = TRUE
+            )
           ),
           shiny::selectInput(
             inputId = ns("multi_alpha_direct"),
@@ -321,6 +392,23 @@ mod_tests_multi_ui <- function(id) {
           title = "Distribution par groupe",
           bslib::card_body(
             padding = 1,
+            shiny::conditionalPanel(
+              condition = "input.multi_test_direct == 'anova_rm'",
+              ns = ns,
+              shiny::div(
+                class = "px-3 pt-2 pb-0 d-flex justify-content-end align-items-center gap-2",
+                shiny::radioButtons(
+                  inputId = ns("rm_plot_type_direct"),
+                  label = NULL,
+                  choices = c(
+                    "Trajectoires individuelles + Moyenne" = "spaghetti",
+                    "Moyennes & IC 95%" = "means"
+                  ),
+                  selected = "spaghetti",
+                  inline = TRUE
+                )
+              )
+            ),
             plotly::plotlyOutput(ns("multi_plot"), height = "400px")
           )
         ),
@@ -937,6 +1025,11 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
       test = "anova",
       var_y = NULL,
       var_group = NULL,
+      var_group2 = NULL,
+      var_covar = NULL,
+      var_subject = NULL,
+      var_within = NULL,
+      interaction = TRUE,
       post_hoc = TRUE,
       alpha = 0.05,
       calculated = FALSE,
@@ -1024,6 +1117,10 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
       # 3. 3+ groupes
       multi_state$var_y <- NULL
       multi_state$var_group <- NULL
+      multi_state$var_group2 <- NULL
+      multi_state$var_covar <- NULL
+      multi_state$var_subject <- NULL
+      multi_state$var_within <- NULL
       multi_state$calculated <- FALSE
       multi_state$result <- NULL
       multi_state$post_hoc_result <- NULL
@@ -1083,6 +1180,10 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
 
       shiny::updateSelectInput(session, "multi_var_y_direct", choices = num_cols, selected = if (length(num_cols) > 0) num_cols[1] else NULL)
       shiny::updateSelectInput(session, "multi_var_group_direct", choices = cat_cols, selected = if (length(cat_cols) > 0) cat_cols[1] else NULL)
+      shiny::updateSelectInput(session, "multi_var_subject_direct", choices = all_cols, selected = if (length(all_cols) > 0) all_cols[1] else NULL)
+      shiny::updateSelectInput(session, "multi_var_within_direct", choices = all_cols, selected = if (length(all_cols) > 1) all_cols[2] else NULL)
+      shiny::updateSelectInput(session, "multi_var_group2_direct", choices = cat_cols, selected = if (length(cat_cols) > 1) cat_cols[2] else NULL)
+      shiny::updateSelectInput(session, "multi_var_covar_direct", choices = num_cols, selected = if (length(num_cols) > 1) num_cols[2] else NULL)
 
       shiny::updateSelectInput(session, "cont_var_row_direct", choices = cat_cols, selected = if (length(cat_cols) > 0) cat_cols[1] else NULL)
       shiny::updateSelectInput(session, "cont_var_col_direct", choices = cat_cols, selected = if (length(cat_cols) > 1) cat_cols[2] else NULL)
@@ -1322,7 +1423,15 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           )
         })
 
+        tiles_norm_grp <- list(
+          list(label = "Groupes analys\u00e9s", value = as.character(nrow(st)), subtext = paste0("Facteur : ", norm_state$group)),
+          list(label = "Effectif total (N)", value = as.character(sum(st$N)), subtext = "Observations"),
+          list(label = "Groupes normaux", value = paste0(sum(st$Status == "compatible"), " / ", nrow(st)), subtext = paste0("\u03b1 = ", norm_state$alpha)),
+          list(label = "Statut global", value = if (all(st$Status == "compatible")) "Compatible" else "\u00c9cart d\u00e9tect\u00e9", status = if (all(st$Status == "compatible")) "success" else "warning", subtext = if (all(st$Status == "compatible")) "Tous groupes normaux" else paste0(sum(st$Status == "deviation"), " groupe(s) d\u00e9viant(s)"))
+        )
+
         return(shiny::tagList(
+          ramses_result_tiles(tiles_norm_grp, title = paste0("R\u00e9sum\u00e9 du test de normalit\u00e9 par groupe (", norm_state$var, ")")),
           shiny::tags$div(
             class = "table-responsive",
             shiny::tags$table(
@@ -1378,7 +1487,18 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
         }
       }
 
+      df_act <- data_holder$df
+      n_obs <- if (!is.null(df_act) && !is.null(norm_state$var) && norm_state$var %in% names(df_act)) sum(!is.na(df_act[[norm_state$var]])) else "\u2014"
+      tiles_norm_single <- list(
+        list(label = "Variable", value = norm_state$var, subtext = res$method),
+        list(label = "Effectif (n)", value = as.character(n_obs), subtext = "Observations valides"),
+        list(label = paste0("Statistique (", stat_name, ")"), value = as.character(round(stat_val, 4)), subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else NULL),
+        list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = paste0("Seuil \u03b1 = ", norm_state$alpha), status = if (is_normal_rejected) "danger" else "success"),
+        list(label = "D\u00e9cision", value = if (is_normal_rejected) "Rejet H0" else "Conservation H0", status = if (is_normal_rejected) "danger" else "success", subtext = if (is_normal_rejected) "Non normal" else "Normal")
+      )
+
       shiny::tagList(
+        ramses_result_tiles(tiles_norm_single, title = "Indicateurs cl\u00e9s du test"),
         shiny::tags$table(
           class = "table table-sm table-bordered text-center align-middle mb-3",
           shiny::tags$thead(
@@ -2095,7 +2215,70 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
         "\u2014"
       }
 
+      tiles_two <- if (two_state$test == "t_one_sample") {
+        obs_m <- if (!is.null(res$estimate)) round(res$estimate[1], 3) else "\u2014"
+        list(
+          list(label = "Moyenne observ\u00e9e", value = as.character(obs_m), subtext = two_state$var_y),
+          list(label = "Moyenne th\u00e9orique", value = as.character(two_state$mu_val), subtext = "Valeur mu test\u00e9e"),
+          list(label = "Statistique t", value = as.character(round(stat_val, 3)), subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else NULL),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "Taille d'effet", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) paste0(es$symbol, " (", es$magnitude, ")") else NULL)
+        )
+      } else if (two_state$test == "t_indep") {
+        m1 <- if (!is.null(res$estimate) && length(res$estimate) >= 1) round(res$estimate[1], 3) else "\u2014"
+        m2 <- if (!is.null(res$estimate) && length(res$estimate) >= 2) round(res$estimate[2], 3) else "\u2014"
+        lbl1 <- if (!is.null(names(res$estimate)) && length(names(res$estimate)) >= 1) names(res$estimate)[1] else "Groupe 1"
+        lbl2 <- if (!is.null(names(res$estimate)) && length(names(res$estimate)) >= 2) names(res$estimate)[2] else "Groupe 2"
+        diff_m <- if (!is.null(res$estimate) && length(res$estimate) >= 2) round(res$estimate[1] - res$estimate[2], 3) else "\u2014"
+        list(
+          list(label = lbl1, value = as.character(m1), subtext = "Moyenne"),
+          list(label = lbl2, value = as.character(m2), subtext = "Moyenne"),
+          list(label = "Diff\u00e9rence", value = as.character(diff_m), subtext = "M1 - M2"),
+          list(label = "Statistique t", value = as.character(round(stat_val, 3)), subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else NULL),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "d de Cohen", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) es$magnitude else NULL)
+        )
+      } else if (two_state$test == "t_paired") {
+        diff_m <- if (!is.null(res$estimate)) round(res$estimate[1], 3) else "\u2014"
+        list(
+          list(label = "S\u00e9rie 1", value = two_state$var_y, subtext = "Avant / Var 1"),
+          list(label = "S\u00e9rie 2", value = two_state$var_x2, subtext = "Apr\u00e8s / Var 2"),
+          list(label = "Diff\u00e9rence moyenne", value = as.character(diff_m), subtext = "Moyenne diff."),
+          list(label = "Statistique t", value = as.character(round(stat_val, 3)), subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else NULL),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "Taille d'effet", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) paste0(es$symbol, " (", es$magnitude, ")") else NULL)
+        )
+      } else if (two_state$test == "wilcox_indep") {
+        list(
+          list(label = "Variable", value = two_state$var_y, subtext = "Test de Mann-Whitney"),
+          list(label = "Facteur", value = two_state$var_group, subtext = "Comparaison 2 groupes"),
+          list(label = "Statistique W", value = as.character(round(stat_val, 2)), subtext = "Somme des rangs"),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "Taille d'effet (r)", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) es$magnitude else NULL)
+        )
+      } else if (two_state$test == "wilcox_paired") {
+        pseudo_m <- if (!is.null(res$estimate)) round(res$estimate[1], 3) else "\u2014"
+        list(
+          list(label = "S\u00e9rie 1", value = two_state$var_y, subtext = "Avant / Var 1"),
+          list(label = "S\u00e9rie 2", value = two_state$var_x2, subtext = "Apr\u00e8s / Var 2"),
+          list(label = "Pseudo-m\u00e9diane", value = as.character(pseudo_m), subtext = "Diff\u00e9rence"),
+          list(label = "Statistique V", value = as.character(round(stat_val, 2)), subtext = "Rangs sign\u00e9s"),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "Taille d'effet (r)", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) es$magnitude else NULL)
+        )
+      } else {
+        pseudo_m <- if (!is.null(res$estimate)) round(res$estimate[1], 3) else "\u2014"
+        list(
+          list(label = "Variable", value = two_state$var_y, subtext = "1 \u00e9chantillon"),
+          list(label = "Valeur mu test\u00e9e", value = as.character(two_state$mu_val), subtext = "Th\u00e9orique"),
+          list(label = "Pseudo-m\u00e9diane", value = as.character(pseudo_m), subtext = "Observ\u00e9e"),
+          list(label = "Statistique V", value = as.character(round(stat_val, 2)), subtext = "Rangs sign\u00e9s"),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark")
+        )
+      }
+
       shiny::tagList(
+        ramses_result_tiles(tiles_two, title = "Indicateurs cl\u00e9s du test"),
         shiny::tags$div(
           class = "table-responsive",
           shiny::tags$table(
@@ -2354,30 +2537,190 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
     })
 
     # =========================================================================
-    # 3. COMPARAISON DE 3+ GROUPES (ANOVA / KRUSKAL-WALLIS)
+    # 3. COMPARAISON DE 3+ GROUPES (ANOVA 1 FACTEUR / FACTORIELLE / ANCOVA / RM / KRUSKAL-WALLIS)
     # =========================================================================
-    run_multi_analysis <- function(test_type, var_y, var_group, post_hoc_opt, alpha_val) {
+    run_multi_analysis <- function(test_type, var_y, var_group = NULL, var_group2 = NULL, var_covar = NULL, var_subject = NULL, var_within = NULL, interaction_opt = TRUE, post_hoc_opt = TRUE, alpha_val = 0.05) {
       df <- data_holder$df
-      if (is.null(df) || is.null(var_y) || is.null(var_group)) {
-        shiny::showNotification("Veuillez s\u00e9lectionner une variable d\u00e9pendante et un facteur de groupe.", type = "warning")
+      if (is.null(df) || is.null(var_y)) {
+        shiny::showNotification("Veuillez s\u00e9lectionner une variable d\u00e9pendante.", type = "warning")
         return()
       }
+
+      if (identical(test_type, "anova_rm")) {
+        if (is.null(var_subject) || !nzchar(var_subject)) {
+          shiny::showNotification("Veuillez s\u00e9lectionner la variable identifiant du sujet.", type = "warning")
+          return()
+        }
+        if (is.null(var_within) || !nzchar(var_within)) {
+          shiny::showNotification("Veuillez s\u00e9lectionner le facteur intra-sujets.", type = "warning")
+          return()
+        }
+        if (identical(var_y, var_subject) || identical(var_y, var_within) || identical(var_subject, var_within)) {
+          shiny::showNotification("La variable d\u00e9pendante, l'identifiant sujet et le facteur intra-sujets doivent \u00eatre trois variables distinctes.", type = "warning")
+          return()
+        }
+      } else {
+        if (is.null(var_group) || !nzchar(var_group)) {
+          shiny::showNotification("Veuillez s\u00e9lectionner au moins un facteur explicatif.", type = "warning")
+          return()
+        }
+      }
+
+      if (identical(test_type, "anova_twoway")) {
+        if (is.null(var_group2) || !nzchar(var_group2)) {
+          shiny::showNotification("Veuillez s\u00e9lectionner un second facteur pour l'ANOVA \u00e0 2 facteurs.", type = "warning")
+          return()
+        }
+        if (identical(var_group, var_group2)) {
+          shiny::showNotification("Les deux facteurs explicatifs doivent \u00eatre distincts.", type = "warning")
+          return()
+        }
+      }
+
+      if (identical(test_type, "ancova")) {
+        if (is.null(var_covar) || !nzchar(var_covar)) {
+          shiny::showNotification("Veuillez s\u00e9lectionner une covariable quantitative pour l'ANCOVA.", type = "warning")
+          return()
+        }
+        if (identical(var_group, var_covar) || identical(var_y, var_covar)) {
+          shiny::showNotification("La variable d\u00e9pendante, le facteur et la covariable doivent \u00eatre trois variables distinctes.", type = "warning")
+          return()
+        }
+      }
+
       multi_state$test <- test_type
       multi_state$var_y <- var_y
       multi_state$var_group <- var_group
+      multi_state$var_group2 <- var_group2
+      multi_state$var_covar <- var_covar
+      multi_state$var_subject <- var_subject
+      multi_state$var_within <- var_within
+      multi_state$interaction <- isTRUE(interaction_opt)
       multi_state$post_hoc <- isTRUE(post_hoc_opt)
       multi_state$alpha <- as.numeric(alpha_val)
 
       res <- NULL
       post_res <- NULL
       err <- NULL
+      es <- NULL
+      pwr <- NULL
       code_entry <- ""
       ds_name <- data_holder$name
 
       tryCatch({
-        fml <- ramses_formula(response = multi_state$var_y, terms = multi_state$var_group)
-        fml_code <- ramses_formula_code(response = multi_state$var_y, terms = multi_state$var_group)
-        if (multi_state$test == "anova") {
+        if (multi_state$test == "anova_rm") {
+          # ANOVA a mesures repetees (1 facteur intra-sujets)
+          rm_res <- ramses_anova_rm(
+            data = df,
+            response = multi_state$var_y,
+            subject = multi_state$var_subject,
+            within_factor = multi_state$var_within,
+            alpha = multi_state$alpha
+          )
+          res <- rm_res
+          post_res <- rm_res$post_hoc
+
+          # R Markdown reproductible complet (Sections A a I)
+          code_entry <- ramses_rmd_anova_rm(
+            rm_res = rm_res,
+            ds_name = ds_name,
+            include_posthoc = isTRUE(multi_state$post_hoc)
+          )
+
+        } else if (multi_state$test == "ancova") {
+          # ANCOVA a 1 facteur + 1 covariable quantitative
+          ancova_res <- ramses_ancova(
+            df = df,
+            var_y = multi_state$var_y,
+            var_factor = multi_state$var_group,
+            var_covar = multi_state$var_covar,
+            alpha = multi_state$alpha
+          )
+          res <- ancova_res
+
+          # R Markdown reproductible
+          fml_code_pentes <- ramses_formula_code(
+            response = multi_state$var_y,
+            terms = c(multi_state$var_group, multi_state$var_covar),
+            op = "*"
+          )
+          fml_code_main <- ramses_formula_code(
+            response = multi_state$var_y,
+            terms = c(multi_state$var_group, multi_state$var_covar),
+            op = "+"
+          )
+
+          code_entry <- paste0(
+            "# Analyse de Covariance (ANCOVA : 1 facteur + 1 covariable quantitative)\n",
+            "analysis_df <- ", ramses_code_symbol(ds_name), "[complete.cases(", ramses_code_symbol(ds_name), "[, c(",
+            ramses_code_string(multi_state$var_y), ", ", ramses_code_string(multi_state$var_group), ", ", ramses_code_string(multi_state$var_covar), ")]), ]\n",
+            "analysis_df[[", ramses_code_string(multi_state$var_group), "]] <- factor(analysis_df[[", ramses_code_string(multi_state$var_group), "]])\n",
+            "\n# 1. Verification de l'homogeneite des pentes (modele complet avec interaction)\n",
+            "mod_pentes <- lm(", fml_code_pentes, ", data = analysis_df)\n",
+            "drop1(mod_pentes, ~ ., test = 'F')\n",
+            "\n# 2. Modele ANCOVA principal (Sommes des carres de Type II)\n",
+            "mod_ancova <- lm(", fml_code_main, ", data = analysis_df)\n",
+            "drop1(mod_ancova, test = 'F')\n",
+            "\n# 3. Moyennes ajustees (evaluees a la moyenne globale de la covariable)\n",
+            "mean_cov <- mean(analysis_df[[", ramses_code_string(multi_state$var_covar), "]])\n",
+            "grid_df <- data.frame(\n",
+            "  ", multi_state$var_group, " = factor(levels(analysis_df[[", ramses_code_string(multi_state$var_group), "]])),\n",
+            "  ", multi_state$var_covar, " = mean_cov\n",
+            ")\n",
+            "predict(mod_ancova, newdata = grid_df, se.fit = TRUE)\n",
+            "\n# 4. Diagnostics des residus\n",
+            "shapiro.test(residuals(mod_ancova))\n",
+            "fligner.test(residuals(mod_ancova) ~ analysis_df[[", ramses_code_string(multi_state$var_group), "]])\n"
+          )
+
+        } else if (multi_state$test == "anova_twoway") {
+          # ANOVA factorielle a 2 facteurs
+          fact_res <- ramses_anova_factorial(
+            df = df,
+            var_y = multi_state$var_y,
+            var_factor1 = multi_state$var_group,
+            var_factor2 = multi_state$var_group2,
+            interaction = multi_state$interaction,
+            alpha = multi_state$alpha
+          )
+          res <- fact_res
+
+          # R Markdown reproductible
+          fml_code_fact <- ramses_formula_code(
+            response = multi_state$var_y,
+            terms = c(multi_state$var_group, multi_state$var_group2),
+            op = if (multi_state$interaction) "*" else "+"
+          )
+
+          code_entry <- paste0(
+            "# ANOVA factorielle a 2 facteurs (", if (multi_state$interaction) "Type III avec interaction" else "Type II sans interaction", ")\n",
+            "analysis_df <- ", ramses_code_symbol(ds_name), "[complete.cases(", ramses_code_symbol(ds_name), "[, c(",
+            ramses_code_string(multi_state$var_y), ", ", ramses_code_string(multi_state$var_group), ", ", ramses_code_string(multi_state$var_group2), ")]), ]\n",
+            "analysis_df[[", ramses_code_string(multi_state$var_group), "]] <- factor(analysis_df[[", ramses_code_string(multi_state$var_group), "]])\n",
+            "analysis_df[[", ramses_code_string(multi_state$var_group2), "]] <- factor(analysis_df[[", ramses_code_string(multi_state$var_group2), "]])\n",
+            if (multi_state$interaction) {
+              paste0(
+                "contrasts(analysis_df[[", ramses_code_string(multi_state$var_group), "]]) <- contr.sum\n",
+                "contrasts(analysis_df[[", ramses_code_string(multi_state$var_group2), "]]) <- contr.sum\n",
+                "mod_fact <- lm(", fml_code_fact, ", data = analysis_df)\n",
+                "drop1(mod_fact, ~ ., test = 'F') # Sommes des carres de Type III\n"
+              )
+            } else {
+              paste0(
+                "mod_fact <- lm(", fml_code_fact, ", data = analysis_df)\n",
+                "drop1(mod_fact, test = 'F') # Sommes des carres de Type II\n"
+              )
+            },
+            "\n# Diagnostics des hypotheses\n",
+            "shapiro.test(residuals(mod_fact))\n",
+            "fligner.test(", ramses_code_column("analysis_df", multi_state$var_y), " ~ interaction(",
+            ramses_code_column("analysis_df", multi_state$var_group), ", ", ramses_code_column("analysis_df", multi_state$var_group2), "))\n"
+          )
+
+        } else if (multi_state$test == "anova") {
+          # ANOVA 1 facteur
+          fml <- ramses_formula(response = multi_state$var_y, terms = multi_state$var_group)
+          fml_code <- ramses_formula_code(response = multi_state$var_y, terms = multi_state$var_group)
           aov_fit <- stats::aov(fml, data = df)
           res <- aov_fit
           es <- ramses_compute_effect_size("anova", stat_result = aov_fit)
@@ -2392,6 +2735,9 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
             if (multi_state$post_hoc) "TukeyHSD(mod_aov)" else ""
           )
         } else {
+          # Kruskal-Wallis
+          fml <- ramses_formula(response = multi_state$var_y, terms = multi_state$var_group)
+          fml_code <- ramses_formula_code(response = multi_state$var_y, terms = multi_state$var_group)
           res <- stats::kruskal.test(fml, data = df)
           es <- ramses_compute_effect_size("kruskal", stat_result = res, y1 = df[[multi_state$var_y]])
           pwr <- NULL
@@ -2405,7 +2751,7 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           )
         }
       }, error = function(e) {
-        err <- e$message
+        err <<- e$message
       })
 
       multi_state$result <- res
@@ -2421,28 +2767,49 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           code = code_entry
         )
       }
-      shiny::showNotification("ANOVA / Kruskal-Wallis ex\u00e9cut\u00e9e !", type = "message")
+      if (is.null(err)) {
+        shiny::showNotification("Analyse ex\u00e9cut\u00e9e avec succ\u00e8s !", type = "message")
+      } else {
+        shiny::showNotification(paste0("Erreur : ", err), type = "error")
+      }
     }
 
     shiny::observeEvent(input$btn_run_multi, {
+      post_opt <- if (identical(input$multi_test_direct, "kruskal")) {
+        isTRUE(input$multi_posthoc_kruskal_direct)
+      } else if (identical(input$multi_test_direct, "ancova")) {
+        isTRUE(input$multi_posthoc_ancova_direct)
+      } else if (identical(input$multi_test_direct, "anova_rm")) {
+        isTRUE(input$multi_posthoc_rm_direct)
+      } else {
+        isTRUE(input$multi_posthoc_direct)
+      }
+
       run_multi_analysis(
-        input$multi_test_direct,
-        input$multi_var_y_direct,
-        input$multi_var_group_direct,
-        input$multi_posthoc_direct,
-        input$multi_alpha_direct
+        test_type = input$multi_test_direct,
+        var_y = input$multi_var_y_direct,
+        var_group = input$multi_var_group_direct,
+        var_group2 = input$multi_var_group2_direct,
+        var_covar = input$multi_var_covar_direct,
+        var_subject = input$multi_var_subject_direct,
+        var_within = input$multi_var_within_direct,
+        interaction_opt = isTRUE(input$multi_interaction_direct),
+        post_hoc_opt = post_opt,
+        alpha_val = input$multi_alpha_direct
       )
     })
 
     shiny::observeEvent(input$btn_open_multi_modal, {
+      df <- data_holder$df
       num_cols <- get_num_vars()
       cat_cols <- get_cat_vars()
+      all_cols <- if (!is.null(df) && is.data.frame(df)) names(df) else character(0)
 
       shiny::showModal(
         shiny::modalDialog(
           title = shiny::div(
             class = "d-flex align-items-center gap-2",
-            shiny::tags$span(style = "font-weight: 600;", "Param\u00e8tres : Comparaison de 3+ Groupes")
+            shiny::tags$span(style = "font-weight: 600;", "Param\u00e8tres : Comparaison de Groupes & ANOVA")
           ),
           size = "m",
           easyClose = TRUE,
@@ -2457,6 +2824,9 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
               label = "Test \u00e0 effectuer :",
               choices = c(
                 "ANOVA \u00e0 1 facteur (aov) + Tukey HSD Post-hoc" = "anova",
+                "ANOVA factorielle \u00e0 2 facteurs (inter-sujets)" = "anova_twoway",
+                "ANCOVA (1 facteur + 1 covariable quantitative)" = "ancova",
+                "ANOVA \u00e0 mesures r\u00e9p\u00e9t\u00e9es (1 facteur intra-sujets)" = "anova_rm",
                 "Test de Kruskal-Wallis (non-param\u00e9trique)" = "kruskal"
               ),
               selected = multi_state$test
@@ -2467,16 +2837,88 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
               choices = num_cols,
               selected = multi_state$var_y
             ),
-            shiny::selectInput(
-              inputId = ns("multi_var_group"),
-              label = "Variable qualitative de regroupement (Facteur X) :",
-              choices = cat_cols,
-              selected = multi_state$var_group
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice != 'anova_rm'",
+              ns = ns,
+              shiny::selectInput(
+                inputId = ns("multi_var_group"),
+                label = "Facteur 1 (X1) / Groupe :",
+                choices = cat_cols,
+                selected = multi_state$var_group
+              )
             ),
-            shiny::checkboxInput(
-              inputId = ns("multi_posthoc_opt"),
-              label = "Calculer les tests Post-Hoc (comparaisons par paires)",
-              value = multi_state$post_hoc
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice == 'anova_rm'",
+              ns = ns,
+              shiny::selectInput(
+                inputId = ns("multi_var_subject"),
+                label = "Identifiant du sujet (Sujet) :",
+                choices = all_cols,
+                selected = multi_state$var_subject
+              ),
+              shiny::selectInput(
+                inputId = ns("multi_var_within"),
+                label = "Facteur intra-sujets (Temps / Condition) :",
+                choices = all_cols,
+                selected = multi_state$var_within
+              )
+            ),
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice == 'anova_twoway'",
+              ns = ns,
+              shiny::selectInput(
+                inputId = ns("multi_var_group2"),
+                label = "Facteur 2 (X2) :",
+                choices = cat_cols,
+                selected = multi_state$var_group2
+              ),
+              shiny::checkboxInput(
+                inputId = ns("multi_interaction_opt"),
+                label = "Inclure l'interaction (Facteur 1 \u00d7 Facteur 2)",
+                value = multi_state$interaction
+              )
+            ),
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice == 'ancova'",
+              ns = ns,
+              shiny::selectInput(
+                inputId = ns("multi_var_covar"),
+                label = "Covariable quantitative (C) :",
+                choices = num_cols,
+                selected = multi_state$var_covar
+              ),
+              shiny::checkboxInput(
+                inputId = ns("multi_posthoc_ancova_opt"),
+                label = "Calculer les comparaisons par paires (Holm)",
+                value = multi_state$post_hoc
+              )
+            ),
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice == 'anova_rm'",
+              ns = ns,
+              shiny::checkboxInput(
+                inputId = ns("multi_posthoc_rm_opt"),
+                label = "Calculer les comparaisons par paires (Holm)",
+                value = multi_state$post_hoc
+              )
+            ),
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice == 'anova'",
+              ns = ns,
+              shiny::checkboxInput(
+                inputId = ns("multi_posthoc_opt"),
+                label = "Calculer les tests Post-Hoc (Tukey HSD)",
+                value = multi_state$post_hoc
+              )
+            ),
+            shiny::conditionalPanel(
+              condition = "input.multi_test_choice == 'kruskal'",
+              ns = ns,
+              shiny::checkboxInput(
+                inputId = ns("multi_posthoc_kruskal_opt"),
+                label = "Calculer les comparaisons par paires (Wilcoxon)",
+                value = multi_state$post_hoc
+              )
             ),
             shiny::selectInput(
               inputId = ns("multi_alpha_select"),
@@ -2491,34 +2933,114 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
 
     shiny::observeEvent(input$btn_confirm_multi, {
       shiny::removeModal()
+      post_opt <- if (identical(input$multi_test_choice, "kruskal")) {
+        isTRUE(input$multi_posthoc_kruskal_opt)
+      } else if (identical(input$multi_test_choice, "ancova")) {
+        isTRUE(input$multi_posthoc_ancova_opt)
+      } else if (identical(input$multi_test_choice, "anova_rm")) {
+        isTRUE(input$multi_posthoc_rm_opt)
+      } else {
+        isTRUE(input$multi_posthoc_opt)
+      }
+
       run_multi_analysis(
-        input$multi_test_choice,
-        input$multi_var_y,
-        input$multi_var_group,
-        input$multi_posthoc_opt,
-        input$multi_alpha_select
+        test_type = input$multi_test_choice,
+        var_y = input$multi_var_y,
+        var_group = input$multi_var_group,
+        var_group2 = input$multi_var_group2,
+        var_covar = input$multi_var_covar,
+        var_subject = input$multi_var_subject,
+        var_within = input$multi_var_within,
+        interaction_opt = isTRUE(input$multi_interaction_opt),
+        post_hoc_opt = post_opt,
+        alpha_val = input$multi_alpha_select
       )
     })
 
     output$multi_status_badge <- shiny::renderUI({
       if (!multi_state$calculated) {
-        return(shiny::div(class = "alert alert-secondary py-2 px-3 small", "Cliquez sur 'Ex\u00e9cuter' pour lancer l'ANOVA ou le test de Kruskal-Wallis."))
+        return(shiny::div(class = "alert alert-secondary py-2 px-3 small", "Cliquez sur 'Ex\u00e9cuter' pour lancer l'analyse."))
       }
       if (!is.null(multi_state$error)) {
         return(shiny::div(class = "alert alert-danger py-2 px-3 small", paste0("Erreur : ", multi_state$error)))
       }
-      p_val <- if (multi_state$test == "anova") {
+
+      if (multi_state$test == "ancova") {
+        anc_res <- multi_state$result
+        a_tab <- anc_res$anova_table
+        row_fact <- a_tab[a_tab$Term == multi_state$var_group, ]
+        row_cov <- a_tab[a_tab$Term == multi_state$var_covar, ]
+        fact_sig <- !is.null(row_fact) && nrow(row_fact) > 0 && !is.na(row_fact$p_value[1]) && row_fact$p_value[1] < multi_state$alpha
+        cov_sig <- !is.null(row_cov) && nrow(row_cov) > 0 && !is.na(row_cov$p_value[1]) && row_cov$p_value[1] < multi_state$alpha
+
+        msg <- if (fact_sig && cov_sig) {
+          "Effet du facteur et effet de la covariable tous deux statistiquement significatifs"
+        } else if (fact_sig) {
+          "Effet du facteur significatif apr\u00e8s ajustement sur la covariable"
+        } else if (cov_sig) {
+          "Effet significatif de la covariable (ajustement pertinent), pas d'effet groupe d\u00e9tect\u00e9"
+        } else {
+          "Aucun effet significatif du facteur ni de la covariable d\u00e9tect\u00e9"
+        }
+
+        shiny::div(
+          class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (fact_sig || cov_sig) "alert-success" else "alert-info"),
+          shiny::tags$span(msg),
+          shiny::tags$span(class = "badge text-dark border", style = "background-color: #F3F4F6; border-color: #D1D5DB !important;", "ANCOVA Type II")
+        )
+      } else if (multi_state$test == "anova_twoway") {
+        fact_res <- multi_state$result
+        t_info <- fact_res$terms_info
+        any_sig <- any(vapply(t_info[names(t_info) != "Residuals"], function(x) isTRUE(x$sig), logical(1)))
+        
+        shiny::div(
+          class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (any_sig) "alert-success" else "alert-info"),
+          shiny::tags$span(
+            if (any_sig) "Au moins un effet principal ou l'interaction est statistiquement significatif" 
+            else "Aucun effet principal ni interaction significatif d\u00e9tect\u00e9"
+          ),
+          shiny::tags$span(class = "badge text-dark border", style = "background-color: #F3F4F6; border-color: #D1D5DB !important;", fact_res$type_ss)
+        )
+      } else if (multi_state$test == "anova_rm") {
+        rm_res <- multi_state$result
+        tab <- rm_res$anova_table
+        row_w <- tab[tab$Source == rm_res$within_factor, ]
+        p_val <- if (nrow(row_w) > 0) row_w$p_value[1] else NA_real_
+
+        mauchly <- rm_res$mauchly
+        use_gg <- isTRUE(mauchly$applicable) && !is.na(mauchly$p_value) && (mauchly$p_value < multi_state$alpha)
+        p_eff <- if (use_gg && !is.null(rm_res$corrections)) rm_res$corrections$p_gg else p_val
+        sig <- !is.na(p_eff) && (p_eff < multi_state$alpha)
+
+        msg <- if (sig) {
+          paste0("Effet du facteur intra-sujets '", rm_res$within_factor, "' statistiquement significatif (H0 rejet\u00e9e)")
+        } else {
+          paste0("Aucun effet significatif du facteur intra-sujets '", rm_res$within_factor, "' (H0 conserv\u00e9e)")
+        }
+
+        shiny::div(
+          class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (sig) "alert-success" else "alert-info"),
+          shiny::tags$span(msg),
+          shiny::tags$span(class = "badge text-dark border", style = "background-color: #F3F4F6; border-color: #D1D5DB !important;", if (use_gg) "ANOVA RM (p GG)" else "ANOVA RM")
+        )
+      } else if (multi_state$test == "anova") {
         smry <- summary(multi_state$result)
-        smry[[1]][["Pr(>F)"]][1]
+        p_val <- smry[[1]][["Pr(>F)"]][1]
+        sig <- p_val < multi_state$alpha
+        shiny::div(
+          class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (sig) "alert-success" else "alert-info"),
+          shiny::tags$span(if (sig) "Effet de groupe globalement significatif (au moins 2 groupes diff\u00e8rent)" else "Aucune diff\u00e9rence globale significative d\u00e9tect\u00e9e"),
+          shiny::tags$span(class = "badge text-dark border", style = "background-color: #F3F4F6; border-color: #D1D5DB !important;", paste0("p = ", format.pval(p_val, digits = 3)))
+        )
       } else {
-        multi_state$result$p.value
+        p_val <- multi_state$result$p.value
+        sig <- p_val < multi_state$alpha
+        shiny::div(
+          class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (sig) "alert-success" else "alert-info"),
+          shiny::tags$span(if (sig) "Diff\u00e9rence de distribution globalement significative" else "Aucune diff\u00e9rence globale significative d\u00e9tect\u00e9e"),
+          shiny::tags$span(class = "badge text-dark border", style = "background-color: #F3F4F6; border-color: #D1D5DB !important;", paste0("p = ", format.pval(p_val, digits = 3)))
+        )
       }
-      sig <- p_val < multi_state$alpha
-      shiny::div(
-        class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (sig) "alert-success" else "alert-info"),
-        shiny::tags$span(if (sig) "Effet de groupe globalement significatif (au moins 2 groupes diff\u00e8rent)" else "Aucune diff\u00e9rence globale significative d\u00e9tect\u00e9e"),
-        shiny::tags$span(class = "badge text-dark border", style = "background-color: #F3F4F6; border-color: #D1D5DB !important;", paste0("p = ", format.pval(p_val, digits = 3)))
-      )
     })
 
     output$multi_results_ui <- shiny::renderUI({
@@ -2526,10 +3048,612 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
       if (!is.null(multi_state$error)) {
         return(shiny::p(class = "text-danger small", multi_state$error))
       }
-      es <- multi_state$effect_size
-      pwr <- multi_state$power
 
-      if (multi_state$test == "anova") {
+      if (multi_state$test == "ancova") {
+        anc_res <- multi_state$result
+        a_tab <- anc_res$anova_table
+        adj_m <- anc_res$adjusted_means
+        ph <- anc_res$post_hoc
+        var_f <- anc_res$var_factor
+        var_c <- anc_res$var_covar
+        slopes_info <- anc_res$slopes_test
+
+        row_f <- a_tab[a_tab$Term == var_f, ]
+        row_c <- a_tab[a_tab$Term == var_c, ]
+        row_res <- a_tab[a_tab$Term == "R\u00e9sidus", ]
+
+        fact_sig <- !is.null(row_f) && nrow(row_f) > 0 && !is.na(row_f$p_value[1]) && row_f$p_value[1] < multi_state$alpha
+        cov_sig <- !is.null(row_c) && nrow(row_c) > 0 && !is.na(row_c$p_value[1]) && row_c$p_value[1] < multi_state$alpha
+
+        # Lignes du tableau ANOVA Type II
+        table_rows <- lapply(seq_len(nrow(a_tab)), function(i) {
+          row_item <- a_tab[i, ]
+          is_res <- identical(row_item$Term, "R\u00e9sidus")
+          
+          shiny::tags$tr(
+            shiny::tags$td(class = if (is_res) "text-start text-muted" else "text-start fw-bold", row_item$Term),
+            shiny::tags$td(row_item$Df),
+            shiny::tags$td(round(row_item$Sum_Sq, 2)),
+            shiny::tags$td(round(row_item$Mean_Sq, 2)),
+            shiny::tags$td(class = if (!is_res) "fw-bold" else "", if (!is.na(row_item$F_value)) round(row_item$F_value, 3) else "\u2014"),
+            shiny::tags$td(class = if (!is_res) "fw-bold text-primary" else "", if (!is.na(row_item$p_value)) format.pval(row_item$p_value, digits = 4, eps = 0.0001) else "\u2014"),
+            shiny::tags$td(class = "small", if (!is.na(row_item$eta_p_sq)) paste0(round(row_item$eta_p_sq, 3), " (", row_item$eta_p_sq_mag, ")") else "\u2014")
+          )
+        })
+
+        # Lignes du tableau des moyennes ajustees
+        means_rows <- lapply(seq_len(nrow(adj_m)), function(i) {
+          row_m <- adj_m[i, ]
+          shiny::tags$tr(
+            shiny::tags$td(class = "text-start fw-medium", row_m$Groupe),
+            shiny::tags$td(row_m$N),
+            shiny::tags$td(round(row_m$Moyenne_Brute, 3)),
+            shiny::tags$td(class = "fw-bold text-dark", round(row_m$Moyenne_Ajustee, 3)),
+            shiny::tags$td(round(row_m$SE, 3)),
+            shiny::tags$td(paste0("[", round(row_m$CI_lower, 3), " ; ", round(row_m$CI_upper, 3), "]"))
+          )
+        })
+
+        # Synthese textuelle
+        synth_items <- list(
+          shiny::tags$li(
+            shiny::tags$strong(paste0("Effet du facteur '", var_f, "' (ajust\u00e9) : ")),
+            if (fact_sig) {
+              paste0("L'effet principal du facteur est statistiquement significatif apr\u00e8s contr\u00f4le de la covariable (F(", row_f$Df[1], ", ", row_res$Df[1], ") = ", round(row_f$F_value[1], 2), ", p = ", format.pval(row_f$p_value[1], digits = 4, eps = 0.0001), ", \u03b7p\u00b2 = ", round(row_f$eta_p_sq[1], 3), " - ", row_f$eta_p_sq_mag[1], ").")
+            } else {
+              paste0("Aucune diff\u00e9rence significative entre les groupes apr\u00e8s prise en compte de la covariable (F(", row_f$Df[1], ", ", row_res$Df[1], ") = ", round(row_f$F_value[1], 2), ", p = ", format.pval(row_f$p_value[1], digits = 4, eps = 0.0001), ").")
+            }
+          ),
+          shiny::tags$li(
+            shiny::tags$strong(paste0("Effet de la covariable '", var_c, "' : ")),
+            if (cov_sig) {
+              paste0("La covariable est significativement li\u00e9e \u00e0 la variable d\u00e9pendante (F(1, ", row_res$Df[1], ") = ", round(row_c$F_value[1], 2), ", p = ", format.pval(row_c$p_value[1], digits = 4, eps = 0.0001), ", \u03b7p\u00b2 = ", round(row_c$eta_p_sq[1], 3), " - ", row_c$eta_p_sq_mag[1], "). Son int\u00e9gration r\u00e9duit la variance r\u00e9siduelle et affine la comparaison des groupes.")
+            } else {
+              paste0("La covariable n'apporte pas d'ajustement lin\u00e9aire statistiquement significatif (F(1, ", row_res$Df[1], ") = ", round(row_c$F_value[1], 2), ", p = ", format.pval(row_c$p_value[1], digits = 4, eps = 0.0001), ").")
+            }
+          ),
+          shiny::tags$li(
+            shiny::tags$strong("Contr\u00f4le d'homog\u00e9n\u00e9it\u00e9 des pentes : "),
+            if (!is.null(slopes_info) && !is.na(slopes_info$p_value)) {
+              if (isTRUE(slopes_info$pentes_homogenes)) {
+                paste0("L'interaction Facteur \u00d7 Covariable n'est pas significative (p = ", round(slopes_info$p_value, 4), " > ", multi_state$alpha, "). L'hypoth\u00e8se de pentes parall\u00e8les est valid\u00e9e.")
+              } else {
+                paste0("Attention : L'interaction Facteur \u00d7 Covariable est significative (p = ", round(slopes_info$p_value, 4), " \u2264 ", multi_state$alpha, "). Les pentes diff\u00e8rent selon les groupes ; les moyennes ajust\u00e9es du mod\u00e8le \u00e0 pente commune doivent \u00eatre interpr\u00e9t\u00e9es avec pr\u00e9caution.")
+              }
+            } else {
+              "Test d'homog\u00e9n\u00e9it\u00e9 des pentes r\u00e9alis\u00e9."
+            }
+          )
+        )
+
+        slopes_alert <- if (!is.null(slopes_info) && !is.na(slopes_info$p_value) && !isTRUE(slopes_info$pentes_homogenes)) {
+          shiny::div(
+            class = "alert alert-warning py-2 px-3 small mt-3 mb-0",
+            shiny::tags$strong("\u26a0 Alerte m\u00e9thodologique : "),
+            "L'hypoth\u00e8se de parall\u00e9lisme des pentes n'\u00e9tant pas strictement respect\u00e9e, l'effet du traitement d\u00e9pend de la valeur de la covariable. Il convient d'analyser les droites de r\u00e9gression sp\u00e9cifiques \u00e0 chaque groupe dans l'onglet 'Graphiques d'\u00e9valuation'."
+          )
+        } else NULL
+
+        tiles_ancova <- list(
+          list(label = paste0("Facteur (", var_f, ")"), value = paste0("F = ", round(row_f$F_value[1], 2)), subtext = paste0("p = ", format.pval(row_f$p_value[1], digits = 4, eps = 0.0001)), status = if (fact_sig) "success" else "dark"),
+          list(label = paste0("Covariable (", var_c, ")"), value = paste0("F = ", round(row_c$F_value[1], 2)), subtext = paste0("p = ", format.pval(row_c$p_value[1], digits = 4, eps = 0.0001)), status = if (cov_sig) "primary" else "dark"),
+          list(label = "Taille d'effet (\u03b7p\u00b2)", value = as.character(round(row_f$eta_p_sq[1], 3)), subtext = row_f$eta_p_sq_mag[1]),
+          list(label = "Homog\u00e9n\u00e9it\u00e9 des pentes", value = if (!is.null(slopes_info) && isTRUE(slopes_info$pentes_homogenes)) "Valid\u00e9e" else "Attention", status = if (!is.null(slopes_info) && isTRUE(slopes_info$pentes_homogenes)) "success" else "warning", subtext = if (!is.null(slopes_info)) paste0("p = ", round(slopes_info$p_value, 3)) else NULL),
+          list(label = "D\u00e9cision globale", value = if (fact_sig) "Effet significatif" else "Non significatif", status = if (fact_sig) "success" else "dark", subtext = "Apr\u00e8s ajustement")
+        )
+
+        shiny::tagList(
+          ramses_result_tiles(tiles_ancova, title = "Indicateurs cl\u00e9s de l'ANCOVA"),
+          # Tableau ANOVA Type II
+          shiny::tags$h6(class = "fw-bold text-dark mb-2", "Tableau de l'ANCOVA (Sommes des carr\u00e9s de Type II) :"),
+          shiny::tags$div(
+            class = "table-responsive mb-3",
+            shiny::tags$table(
+              class = "table table-sm table-bordered text-center align-middle mb-0",
+              shiny::tags$thead(
+                class = "table-light",
+                shiny::tags$tr(
+                  shiny::tags$th("Source"),
+                  shiny::tags$th("ddl"),
+                  shiny::tags$th("Somme des carr\u00e9s"),
+                  shiny::tags$th("Carr\u00e9 moyen"),
+                  shiny::tags$th("F value"),
+                  shiny::tags$th("Pr(>F)"),
+                  shiny::tags$th("Taille d'effet (\u03b7p\u00b2)")
+                )
+              ),
+              shiny::tags$tbody(
+                table_rows
+              )
+            )
+          ),
+          # Tableau des moyennes ajustees
+          shiny::tags$h6(class = "fw-bold text-dark mb-2", paste0("Moyennes ajust\u00e9es (\u00e9valu\u00e9es \u00e0 la covariable moyenne = ", round(anc_res$mean_covar, 2), ") :")),
+          shiny::tags$div(
+            class = "table-responsive mb-3",
+            shiny::tags$table(
+              class = "table table-sm table-bordered text-center align-middle mb-0",
+              shiny::tags$thead(
+                class = "table-light",
+                shiny::tags$tr(
+                  shiny::tags$th("Groupe"),
+                  shiny::tags$th("N"),
+                  shiny::tags$th("Moyenne brute"),
+                  shiny::tags$th("Moyenne ajust\u00e9e"),
+                  shiny::tags$th("Erreur type (SE)"),
+                  shiny::tags$th("IC 95% ajust\u00e9")
+                )
+              ),
+              shiny::tags$tbody(
+                means_rows
+              )
+            )
+          ),
+          # Synthese & Interpretation
+          shiny::div(
+            class = "p-3 rounded bg-light border text-secondary small mb-3",
+            shiny::tags$div(class = "d-flex justify-content-between align-items-center mb-2",
+              shiny::tags$span(class = "fw-bold text-dark", "Synth\u00e8se & Interpr\u00e9tation :"),
+              shiny::tags$span(class = "badge bg-white text-secondary border", "ANCOVA Type II")
+            ),
+            shiny::tags$ul(
+              class = "mb-0 ps-3 space-y-1",
+              synth_items
+            ),
+            slopes_alert
+          ),
+          # Post-Hoc Holm
+          if (!is.null(ph) && nrow(ph) > 0) {
+            shiny::div(
+              class = "p-3 rounded bg-white border text-secondary small",
+              shiny::tags$h6(class = "fw-bold text-dark mb-2", "Comparaisons deux \u00e0 deux des moyennes ajust\u00e9es (Correction de Holm) :"),
+              shiny::tags$div(
+                class = "table-responsive",
+                shiny::tags$table(
+                  class = "table table-sm table-striped table-hover small mb-0 text-center",
+                  shiny::tags$thead(
+                    shiny::tags$tr(
+                      shiny::tags$th("Comparaison"),
+                      shiny::tags$th("Diff\u00e9rence"),
+                      shiny::tags$th("SE"),
+                      shiny::tags$th("Statistique t"),
+                      shiny::tags$th("p-value brute"),
+                      shiny::tags$th("p-value Holm"),
+                      shiny::tags$th("Significativit\u00e9")
+                    )
+                  ),
+                  shiny::tags$tbody(
+                    lapply(seq_len(nrow(ph)), function(idx) {
+                      row_p <- ph[idx, ]
+                      shiny::tags$tr(
+                        shiny::tags$td(class = "text-start fw-medium", paste0(row_p$Groupe_1, " vs ", row_p$Groupe_2)),
+                        shiny::tags$td(round(row_p$Difference, 3)),
+                        shiny::tags$td(round(row_p$SE, 3)),
+                        shiny::tags$td(round(row_p$t_value, 3)),
+                        shiny::tags$td(format.pval(row_p$p_value_raw, digits = 3)),
+                        shiny::tags$td(class = "fw-bold", format.pval(row_p$p_value_adj, digits = 3)),
+                        shiny::tags$td(
+                          if (isTRUE(row_p$sig)) {
+                            shiny::tags$span(class = "badge bg-success", "Significatif")
+                          } else {
+                            shiny::tags$span(class = "badge bg-secondary", "Non sign.")
+                          }
+                        )
+                      )
+                    })
+                  )
+                )
+              )
+            )
+          } else NULL
+        )
+
+      } else if (multi_state$test == "anova_rm") {
+        rm_res <- multi_state$result
+        tab <- rm_res$anova_table
+        mauchly <- rm_res$mauchly
+        corrections <- rm_res$corrections
+        es_res <- rm_res$effect_sizes
+        ph <- rm_res$post_hoc
+        w_factor <- rm_res$within_factor
+        s_var <- rm_res$subject
+
+        # Creation des lignes du tableau ANOVA
+        anova_rows <- lapply(seq_len(nrow(tab)), function(i) {
+          row_data <- tab[i, ]
+          is_total <- identical(row_data$Source, "Total")
+          is_within <- identical(row_data$Source, w_factor)
+          is_error <- identical(row_data$Source, "R\u00e9sidus") || identical(row_data$Source, "Sujets")
+
+          shiny::tags$tr(
+            class = if (is_total) "table-light fw-bold" else if (is_within) "table-active fw-semibold" else "",
+            shiny::tags$td(class = "text-start", row_data$Source),
+            shiny::tags$td(row_data$Df),
+            shiny::tags$td(round(row_data$Sum_Sq, 3)),
+            shiny::tags$td(if (!is.na(row_data$Mean_Sq)) round(row_data$Mean_Sq, 3) else "\u2014"),
+            shiny::tags$td(if (!is.na(row_data$F_value)) round(row_data$F_value, 3) else "\u2014"),
+            shiny::tags$td(
+              if (!is.na(row_data$p_value)) {
+                if (row_data$p_value < multi_state$alpha) {
+                  shiny::tags$span(class = "fw-bold text-success", format.pval(row_data$p_value, digits = 4, eps = 0.0001))
+                } else {
+                  format.pval(row_data$p_value, digits = 4, eps = 0.0001)
+                }
+              } else "\u2014"
+            ),
+            shiny::tags$td(
+              if (is_within && !is.null(es_res)) {
+                paste0(round(es_res$eta_p_sq, 4), " (", es_res$eta_p_sq_mag, ")")
+              } else "\u2014"
+            )
+          )
+        })
+
+        # Mauchly & Corrections UI
+        mauchly_ui <- if (isTRUE(mauchly$applicable)) {
+          is_viol <- !is.na(mauchly$p_value) && (mauchly$p_value < multi_state$alpha)
+          shiny::div(
+            class = "p-3 rounded bg-light border mb-3 small",
+            shiny::tags$div(
+              class = "d-flex justify-content-between align-items-center mb-2",
+              shiny::tags$span(class = "fw-bold text-dark", "Test de sph\u00e9ricit\u00e9 de Mauchly :"),
+              if (is_viol) {
+                shiny::tags$span(class = "badge bg-warning text-dark", "Non-sph\u00e9ricit\u00e9 d\u00e9tect\u00e9e (p < \u03b1)")
+              } else {
+                shiny::tags$span(class = "badge bg-success", "Sph\u00e9ricit\u00e9 respect\u00e9e")
+              }
+            ),
+            shiny::tags$p(
+              class = "mb-2",
+              paste0("Statistique W = ", round(mauchly$w, 4), " ; ddl = ", mauchly$df, " ; p-value = ", format.pval(mauchly$p_value, digits = 4, eps = 0.0001), ".")
+            ),
+            if (is_viol) {
+              shiny::tags$div(
+                class = "alert alert-warning py-2 px-3 mb-2 small",
+                shiny::tags$strong("\u26a0 Attention : "),
+                "L'hypoth\u00e8se de sph\u00e9ricit\u00e9 est viol\u00e9e. Les degr\u00e9s de libert\u00e9 standards gonflent le risque d'erreur de Type I. Utilisez les p-values corrig\u00e9es ci-dessous (Greenhouse-Geisser ou Huynh-Feldt)."
+              )
+            } else {
+              shiny::tags$div(
+                class = "text-muted mb-2",
+                "L'hypoth\u00e8se de sph\u00e9ricit\u00e9 est satisfaite. Les r\u00e9sultats de l'ANOVA non-corrig\u00e9e sont statistiquement valides."
+              )
+            },
+            if (!is.null(corrections)) {
+              shiny::tags$div(
+                class = "table-responsive mt-2",
+                shiny::tags$table(
+                  class = "table table-sm table-bordered text-center align-middle mb-0 bg-white",
+                  shiny::tags$thead(
+                    class = "table-light",
+                    shiny::tags$tr(
+                      shiny::tags$th("Correction"),
+                      shiny::tags$th("Epsilon (\u03b5)"),
+                      shiny::tags$th("ddl corrig\u00e9s (num, den)"),
+                      shiny::tags$th("p-value corrig\u00e9e"),
+                      shiny::tags$th("D\u00e9cision (\u03b1 = ", multi_state$alpha, ")")
+                    )
+                  ),
+                  shiny::tags$tbody(
+                    shiny::tags$tr(
+                      shiny::tags$td(class = "fw-medium text-start", "Greenhouse-Geisser (GG)"),
+                      shiny::tags$td(round(corrections$eps_gg, 4)),
+                      shiny::tags$td(paste0(round(corrections$df1_gg, 2), " ; ", round(corrections$df2_gg, 2))),
+                      shiny::tags$td(class = "fw-bold", format.pval(corrections$p_gg, digits = 4, eps = 0.0001)),
+                      shiny::tags$td(
+                        if (corrections$p_gg < multi_state$alpha) {
+                          shiny::tags$span(class = "badge bg-success", "Significatif")
+                        } else {
+                          shiny::tags$span(class = "badge bg-secondary", "Non sign.")
+                        }
+                      )
+                    ),
+                    shiny::tags$tr(
+                      shiny::tags$td(class = "fw-medium text-start", "Huynh-Feldt (HF)"),
+                      shiny::tags$td(round(corrections$eps_hf, 4)),
+                      shiny::tags$td(paste0(round(corrections$df1_hf, 2), " ; ", round(corrections$df2_hf, 2))),
+                      shiny::tags$td(class = "fw-bold", format.pval(corrections$p_hf, digits = 4, eps = 0.0001)),
+                      shiny::tags$td(
+                        if (corrections$p_hf < multi_state$alpha) {
+                          shiny::tags$span(class = "badge bg-success", "Significatif")
+                        } else {
+                          shiny::tags$span(class = "badge bg-secondary", "Non sign.")
+                        }
+                      )
+                    )
+                  )
+                )
+              )
+            } else NULL
+          )
+        } else {
+          shiny::div(
+            class = "p-3 rounded bg-light border mb-3 small text-muted",
+            shiny::tags$strong("Sph\u00e9ricit\u00e9 : "),
+            "Le facteur intra-sujets comporte k = 2 niveaux. La condition de sph\u00e9ricit\u00e9 est automatiquement et exactement satisfaite (1 seule diff\u00e9rence de paires)."
+          )
+        }
+
+        # Synthese
+        row_w <- tab[tab$Source == w_factor, ]
+        p_raw <- if (nrow(row_w) > 0) row_w$p_value[1] else NA_real_
+        f_val_w <- if (nrow(row_w) > 0) row_w$F_value[1] else NA_real_
+        df_num_w <- if (nrow(row_w) > 0) row_w$Df[1] else NA_integer_
+        row_err <- tab[tab$Source == "R\u00e9sidus", ]
+        df_den_w <- if (nrow(row_err) > 0) row_err$Df[1] else NA_integer_
+
+        use_corr <- isTRUE(mauchly$applicable) && !is.na(mauchly$p_value) && (mauchly$p_value < multi_state$alpha)
+        p_eval <- if (use_corr && !is.null(corrections)) corrections$p_gg else p_raw
+        sig_eval <- !is.na(p_eval) && (p_eval < multi_state$alpha)
+
+        synth_ui <- shiny::div(
+          class = "p-3 rounded bg-light border text-secondary small mb-3",
+          shiny::tags$div(
+            class = "d-flex justify-content-between align-items-center mb-2",
+            shiny::tags$span(class = "fw-bold text-dark", "Synth\u00e8se & Interpr\u00e9tation :"),
+            shiny::tags$span(class = "badge bg-white text-secondary border", paste0("N = ", rm_res$data_info$final_subjects, " sujets | k = ", rm_res$data_info$k_levels, " mesures"))
+          ),
+          shiny::tags$p(
+            class = "mb-1",
+            if (sig_eval) {
+              paste0(
+                "Au seuil alpha = ", multi_state$alpha, ", l'effet du facteur intra-sujets '", w_factor, "' est statistiquement significatif ",
+                if (use_corr) {
+                  paste0("(F(", round(corrections$df1_gg, 2), ", ", round(corrections$df2_gg, 2), ") = ", round(f_val_w, 2), ", p [GG] = ", format.pval(p_eval, digits = 4, eps = 0.0001), "). ")
+                } else {
+                  paste0("(F(", df_num_w, ", ", df_den_w, ") = ", round(f_val_w, 2), ", p = ", format.pval(p_eval, digits = 4, eps = 0.0001), "). ")
+                },
+                "L'hypoth\u00e8se nulle d'\u00e9galit\u00e9 des r\u00e9ponses entre les modalit\u00e9s temporelles / conditions est rejet\u00e9e."
+              )
+            } else {
+              paste0(
+                "Au seuil alpha = ", multi_state$alpha, ", aucun effet statistiquement significatif du facteur intra-sujets '", w_factor, "' n'est d\u00e9tect\u00e9 ",
+                if (use_corr) {
+                  paste0("(F(", round(corrections$df1_gg, 2), ", ", round(corrections$df2_gg, 2), ") = ", round(f_val_w, 2), ", p [GG] = ", format.pval(p_eval, digits = 4, eps = 0.0001), "). ")
+                } else {
+                  paste0("(F(", df_num_w, ", ", df_den_w, ") = ", round(f_val_w, 2), ", p = ", format.pval(p_eval, digits = 4, eps = 0.0001), "). ")
+                },
+                "L'hypoth\u00e8se nulle d'\u00e9galit\u00e9 des r\u00e9ponses est conserv\u00e9e."
+              )
+            }
+          ),
+          shiny::tags$p(
+            class = "mb-0 text-muted",
+            "Cette analyse mod\u00e9lise la corr\u00e9lation intra-sujet en isolant la variabilit\u00e9 inter-individuelle du terme d'erreur r\u00e9siduel."
+          )
+        )
+
+        # Post-Hoc UI
+        post_hoc_ui <- if (!is.null(ph) && nrow(ph) > 0) {
+          shiny::div(
+            class = "p-3 rounded bg-white border text-secondary small",
+            shiny::tags$div(
+              class = "d-flex justify-content-between align-items-center mb-2",
+              shiny::tags$h6(class = "fw-bold text-dark mb-0", "Comparaisons par paires intra-sujets (Tests t appari\u00e9s avec correction de Holm) :"),
+              shiny::tags$span(class = "badge bg-light text-dark border", paste0(nrow(ph), " comparaisons"))
+            ),
+            shiny::tags$div(
+              class = "table-responsive",
+              shiny::tags$table(
+                class = "table table-sm table-bordered text-center align-middle mb-0",
+                shiny::tags$thead(
+                  class = "table-light",
+                  shiny::tags$tr(
+                    shiny::tags$th("Comparaison"),
+                    shiny::tags$th("Diff\u00e9rence moyenne"),
+                    shiny::tags$th("Erreur-type (SE)"),
+                    shiny::tags$th("Statistique t"),
+                    shiny::tags$th("ddl"),
+                    shiny::tags$th("p-value brute"),
+                    shiny::tags$th("p-value Holm"),
+                    shiny::tags$th("Significativit\u00e9")
+                  )
+                ),
+                shiny::tags$tbody(
+                  lapply(seq_len(nrow(ph)), function(idx) {
+                    row_p <- ph[idx, ]
+                    shiny::tags$tr(
+                      shiny::tags$td(class = "text-start fw-medium", paste0(row_p$Niveau_1, " vs ", row_p$Niveau_2)),
+                      shiny::tags$td(round(row_p$Difference, 3)),
+                      shiny::tags$td(round(row_p$SE, 3)),
+                      shiny::tags$td(round(row_p$t_value, 3)),
+                      shiny::tags$td(row_p$Df),
+                      shiny::tags$td(format.pval(row_p$p_value_raw, digits = 4)),
+                      shiny::tags$td(class = "fw-bold", format.pval(row_p$p_value_adj, digits = 4)),
+                      shiny::tags$td(
+                        if (isTRUE(row_p$sig)) {
+                          shiny::tags$span(class = "badge bg-success", "Significatif")
+                        } else {
+                          shiny::tags$span(class = "badge bg-secondary", "Non sign.")
+                        }
+                      )
+                    )
+                  })
+                )
+              )
+            )
+          )
+        } else NULL
+
+        tiles_rm <- list(
+          list(label = paste0("Facteur intra (", w_factor, ")"), value = if (!is.na(f_val_w)) paste0("F = ", round(f_val_w, 2)) else "\u2014", subtext = paste0("k = ", rm_res$data_info$k_levels, " modalit\u00e9s")),
+          list(label = "p-value", value = if (!is.na(p_eval)) format.pval(p_eval, digits = 4, eps = 0.0001) else "\u2014", status = if (sig_eval) "success" else "dark", subtext = if (use_corr) "Corrig\u00e9e (GG)" else "Standard"),
+          list(label = "Taille d'effet (\u03b7p\u00b2)", value = if (!is.null(es_res)) as.character(round(es_res$eta_p_sq, 3)) else "\u2014", subtext = if (!is.null(es_res)) es_res$eta_p_sq_mag else NULL),
+          list(label = "Sph\u00e9ricit\u00e9 (Mauchly)", value = if (isTRUE(mauchly$applicable)) { if (!is.na(mauchly$p_value) && mauchly$p_value < multi_state$alpha) "Viol\u00e9e" else "Respect\u00e9e" } else "k = 2", status = if (isTRUE(mauchly$applicable) && !is.na(mauchly$p_value) && mauchly$p_value < multi_state$alpha) "warning" else "success", subtext = if (isTRUE(mauchly$applicable)) paste0("W = ", round(mauchly$w, 3)) else "Automatique"),
+          list(label = "D\u00e9cision globale", value = if (sig_eval) "Effet significatif" else "Non significatif", status = if (sig_eval) "success" else "dark", subtext = paste0("N = ", rm_res$data_info$final_subjects, " sujets"))
+        )
+
+        shiny::tagList(
+          ramses_result_tiles(tiles_rm, title = "Indicateurs cl\u00e9s de l'ANOVA \u00e0 mesures r\u00e9p\u00e9t\u00e9es"),
+          # En-tete d'information sur le plan experimental
+          shiny::div(
+            class = "d-flex flex-wrap gap-2 mb-3",
+            shiny::tags$span(class = "badge bg-light text-dark border p-2", paste0("Variable d\u00e9pendante : ", rm_res$response)),
+            shiny::tags$span(class = "badge bg-light text-dark border p-2", paste0("Identifiant sujet : ", s_var, " (N = ", rm_res$data_info$final_subjects, ")")),
+            shiny::tags$span(class = "badge bg-light text-dark border p-2", paste0("Facteur intra-sujets : ", w_factor, " (k = ", rm_res$data_info$k_levels, ")")),
+            shiny::tags$span(class = "badge bg-light text-dark border p-2", paste0("Total observations : ", rm_res$data_info$n_obs))
+          ),
+          # Tableau ANOVA
+          shiny::tags$div(
+            class = "table-responsive",
+            shiny::tags$table(
+              class = "table table-sm table-bordered text-center align-middle mb-3",
+              shiny::tags$thead(
+                class = "table-light",
+                shiny::tags$tr(
+                  shiny::tags$th("Source de variation"),
+                  shiny::tags$th("ddl"),
+                  shiny::tags$th("Somme des carr\u00e9s"),
+                  shiny::tags$th("Carr\u00e9 moyen"),
+                  shiny::tags$th("F value"),
+                  shiny::tags$th("Pr(>F)"),
+                  shiny::tags$th("Taille d'effet (\u03b7p\u00b2)")
+                )
+              ),
+              shiny::tags$tbody(
+                anova_rows
+              )
+            )
+          ),
+          mauchly_ui,
+          synth_ui,
+          post_hoc_ui
+        )
+
+      } else if (multi_state$test == "anova_twoway") {
+        fact_res <- multi_state$result
+        t_info <- fact_res$terms_info
+        var_a <- fact_res$var_factor1
+        var_b <- fact_res$var_factor2
+        term_ab <- paste0(var_a, ":", var_b)
+        has_int <- fact_res$has_interaction
+
+        # Creation dynamique des lignes du tableau ANOVA factoriel
+        table_rows <- lapply(names(t_info), function(term_name) {
+          info <- t_info[[term_name]]
+          is_res <- identical(term_name, "Residuals")
+          
+          shiny::tags$tr(
+            shiny::tags$td(class = if (is_res) "text-start text-muted" else "text-start fw-bold", info$term),
+            shiny::tags$td(info$df),
+            shiny::tags$td(round(info$sum_sq, 2)),
+            shiny::tags$td(round(info$mean_sq, 2)),
+            shiny::tags$td(class = if (!is_res) "fw-bold" else "", if (!is.na(info$f_value)) round(info$f_value, 3) else "\u2014"),
+            shiny::tags$td(class = if (!is_res) "fw-bold text-primary" else "", if (!is.na(info$p_value)) format.pval(info$p_value, digits = 4, eps = 0.0001) else "\u2014"),
+            shiny::tags$td(class = "small", if (!is.na(info$eta_p_sq)) paste0(round(info$eta_p_sq, 3), " (", info$eta_p_sq_mag, ")") else "\u2014")
+          )
+        })
+
+        # Synthese et interpretation
+        synth_items <- list()
+
+        # Section Effet Facteur A
+        if (!is.null(t_info[[var_a]])) {
+          info_a <- t_info[[var_a]]
+          dec_a <- if (info_a$sig) {
+            paste0("L'effet principal du facteur '", var_a, "' est statistiquement significatif (F(", info_a$df, ", ", t_info$Residuals$df, ") = ", round(info_a$f_value, 2), ", p = ", format.pval(info_a$p_value, digits = 4, eps = 0.0001), ", \u03b7p\u00b2 = ", round(info_a$eta_p_sq, 3), " - ", info_a$eta_p_sq_mag, ").")
+          } else {
+            paste0("Aucun effet principal significatif du facteur '", var_a, "' (F(", info_a$df, ", ", t_info$Residuals$df, ") = ", round(info_a$f_value, 2), ", p = ", format.pval(info_a$p_value, digits = 4, eps = 0.0001), ").")
+          }
+          synth_items[[length(synth_items) + 1]] <- shiny::tags$li(
+            shiny::tags$strong(paste0("Effet du facteur ", var_a, " : ")),
+            dec_a
+          )
+        }
+
+        # Section Effet Facteur B
+        if (!is.null(t_info[[var_b]])) {
+          info_b <- t_info[[var_b]]
+          dec_b <- if (info_b$sig) {
+            paste0("L'effet principal du facteur '", var_b, "' est statistiquement significatif (F(", info_b$df, ", ", t_info$Residuals$df, ") = ", round(info_b$f_value, 2), ", p = ", format.pval(info_b$p_value, digits = 4, eps = 0.0001), ", \u03b7p\u00b2 = ", round(info_b$eta_p_sq, 3), " - ", info_b$eta_p_sq_mag, ").")
+          } else {
+            paste0("Aucun effet principal significatif du facteur '", var_b, "' (F(", info_b$df, ", ", t_info$Residuals$df, ") = ", round(info_b$f_value, 2), ", p = ", format.pval(info_b$p_value, digits = 4, eps = 0.0001), ").")
+          }
+          synth_items[[length(synth_items) + 1]] <- shiny::tags$li(
+            shiny::tags$strong(paste0("Effet du facteur ", var_b, " : ")),
+            dec_b
+          )
+        }
+
+        # Section Interaction A x B
+        int_alert <- NULL
+        if (has_int && !is.null(t_info[[term_ab]])) {
+          info_ab <- t_info[[term_ab]]
+          dec_ab <- if (info_ab$sig) {
+            paste0("L'interaction entre '", var_a, "' et '", var_b, "' est statistiquement significative (F(", info_ab$df, ", ", t_info$Residuals$df, ") = ", round(info_ab$f_value, 2), ", p = ", format.pval(info_ab$p_value, digits = 4, eps = 0.0001), ", \u03b7p\u00b2 = ", round(info_ab$eta_p_sq, 3), " - ", info_ab$eta_p_sq_mag, ").")
+          } else {
+            paste0("L'interaction entre '", var_a, "' et '", var_b, "' n'est pas statistiquement significative (p = ", format.pval(info_ab$p_value, digits = 4, eps = 0.0001), "). Les effets principaux s'interpr\u00e8tent de mani\u00e8re ind\u00e9pendante.")
+          }
+          synth_items[[length(synth_items) + 1]] <- shiny::tags$li(
+            shiny::tags$strong(paste0("Interaction ", var_a, " \u00d7 ", var_b, " : ")),
+            dec_ab
+          )
+
+          if (info_ab$sig) {
+            int_alert <- shiny::div(
+              class = "alert alert-warning py-2 px-3 small mt-3 mb-0",
+              shiny::tags$strong("\u26a0 Interaction significative d\u00e9tect\u00e9e : "),
+              "Une interaction signifie que l'effet d'un facteur d\u00e9pend du niveau de l'autre facteur. Les effets principaux ne doivent pas \u00eatre g\u00e9n\u00e9ralis\u00e9s globalement sans examiner les profils par cellule (effets simples)."
+            )
+          }
+        }
+
+        sig_a <- !is.null(t_info[[var_a]]) && isTRUE(t_info[[var_a]]$sig)
+        sig_b <- !is.null(t_info[[var_b]]) && isTRUE(t_info[[var_b]]$sig)
+        sig_ab <- has_int && !is.null(t_info[[term_ab]]) && isTRUE(t_info[[term_ab]]$sig)
+
+        tiles_twoway <- list(
+          list(label = paste0("Effet ", var_a), value = if (!is.null(t_info[[var_a]])) paste0("F = ", round(t_info[[var_a]]$f_value, 2)) else "\u2014", subtext = if (!is.null(t_info[[var_a]])) paste0("p = ", format.pval(t_info[[var_a]]$p_value, digits = 3)) else NULL, status = if (sig_a) "success" else "dark"),
+          list(label = paste0("Effet ", var_b), value = if (!is.null(t_info[[var_b]])) paste0("F = ", round(t_info[[var_b]]$f_value, 2)) else "\u2014", subtext = if (!is.null(t_info[[var_b]])) paste0("p = ", format.pval(t_info[[var_b]]$p_value, digits = 3)) else NULL, status = if (sig_b) "success" else "dark"),
+          list(label = "Interaction", value = if (has_int && !is.null(t_info[[term_ab]])) paste0("F = ", round(t_info[[term_ab]]$f_value, 2)) else "Non test\u00e9e", subtext = if (has_int && !is.null(t_info[[term_ab]])) paste0("p = ", format.pval(t_info[[term_ab]]$p_value, digits = 3)) else NULL, status = if (sig_ab) "warning" else "dark"),
+          list(label = "Mod\u00e8le ANOVA", value = fact_res$type_ss, subtext = "Type de somme des carr\u00e9s")
+        )
+
+        shiny::tagList(
+          ramses_result_tiles(tiles_twoway, title = "Indicateurs cl\u00e9s de l'ANOVA factorielle"),
+          shiny::tags$div(
+            class = "table-responsive",
+            shiny::tags$table(
+              class = "table table-sm table-bordered text-center align-middle mb-3",
+              shiny::tags$thead(
+                class = "table-light",
+                shiny::tags$tr(
+                  shiny::tags$th("Source"),
+                  shiny::tags$th("ddl"),
+                  shiny::tags$th("Somme des carr\u00e9s"),
+                  shiny::tags$th("Carr\u00e9 moyen"),
+                  shiny::tags$th("F value"),
+                  shiny::tags$th("Pr(>F)"),
+                  shiny::tags$th("Taille d'effet (\u03b7p\u00b2)")
+                )
+              ),
+              shiny::tags$tbody(
+                table_rows
+              )
+            )
+          ),
+          shiny::div(
+            class = "p-3 rounded bg-light border text-secondary small mb-3",
+            shiny::tags$div(class = "d-flex justify-content-between align-items-center mb-2",
+              shiny::tags$span(class = "fw-bold text-dark", "Synth\u00e8se & Interpr\u00e9tation :"),
+              shiny::tags$span(class = "badge bg-white text-secondary border", fact_res$type_ss)
+            ),
+            shiny::tags$ul(
+              class = "mb-0 ps-3 space-y-1",
+              synth_items
+            ),
+            int_alert
+          ),
+          shiny::div(
+            class = "p-3 rounded bg-white border text-secondary small",
+            shiny::tags$h6(class = "fw-bold text-dark mb-1", "Comparaisons multiples (Post-Hoc) :"),
+            shiny::tags$p(class = "mb-0", "Comparaisons multiples pour les effets factoriels : fonctionnalit\u00e9 pr\u00e9vue dans une phase ult\u00e9rieure.")
+          )
+        )
+
+      } else if (multi_state$test == "anova") {
+        es <- multi_state$effect_size
+        pwr <- multi_state$power
         smry <- summary(multi_state$result)[[1]]
         f_val <- smry[["F value"]][1]
         p_val <- smry[["Pr(>F)"]][1]
@@ -2543,7 +3667,17 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           paste0("Au risque alpha = ", multi_state$alpha, ", aucune diff\u00e9rence globale significative n'est mise en \u00e9vidence entre les groupes de '", multi_state$var_group, "' (p = ", format.pval(p_val, digits = 4, eps = 0.0001), "). L'hypoth\u00e8se nulle d'\u00e9galit\u00e9 des moyennes est conserv\u00e9e.")
         }
 
+        tiles_anova <- list(
+          list(label = "Facteur", value = multi_state$var_group, subtext = "ANOVA \u00e0 1 facteur"),
+          list(label = "Statistique F", value = as.character(round(f_val, 3)), subtext = paste0("ddl = ", df_group, " ; ", df_res)),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "Taille d'effet (\u03b7\u00b2)", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) es$magnitude else NULL),
+          list(label = "Puissance", value = if (!is.null(pwr)) pwr$percentage else "\u2014", subtext = if (!is.null(pwr)) pwr$magnitude else NULL),
+          list(label = "D\u00e9cision", value = if (sig) "Diff\u00e9rence significative" else "Non significatif", status = if (sig) "success" else "dark")
+        )
+
         shiny::tagList(
+          ramses_result_tiles(tiles_anova, title = "Indicateurs cl\u00e9s de l'ANOVA"),
           shiny::tags$div(
             class = "table-responsive",
             shiny::tags$table(
@@ -2604,6 +3738,7 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           }
         )
       } else {
+        es <- multi_state$effect_size
         res <- multi_state$result
         p_val <- res$p.value
         stat_val <- unname(res$statistic)
@@ -2615,7 +3750,16 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           paste0("Au risque alpha = ", multi_state$alpha, ", aucune diff\u00e9rence significative de distribution n'est constat\u00e9e entre les groupes (p = ", format.pval(p_val, digits = 4, eps = 0.0001), "). L'hypoth\u00e8se nulle est conserv\u00e9e.")
         }
 
+        tiles_kruskal <- list(
+          list(label = "Facteur", value = multi_state$var_group, subtext = "Kruskal-Wallis"),
+          list(label = "Chi-deux (H)", value = as.character(round(stat_val, 3)), subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else NULL),
+          list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+          list(label = "Taille d'effet (\u03b7\u00b2_H)", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) es$magnitude else NULL),
+          list(label = "D\u00e9cision", value = if (sig) "Diff\u00e9rence significative" else "Non significatif", status = if (sig) "success" else "dark")
+        )
+
         shiny::tagList(
+          ramses_result_tiles(tiles_kruskal, title = "Indicateurs cl\u00e9s du test de Kruskal-Wallis"),
           shiny::tags$div(
             class = "table-responsive",
             shiny::tags$table(
@@ -2670,70 +3814,229 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
 
     output$multi_plot <- plotly::renderPlotly({
       df <- data_holder$df
-      shiny::req(df, multi_state$var_y, multi_state$var_group)
-      grp_col <- multi_state$var_group
+      shiny::req(df, multi_state$var_y)
       y_col <- multi_state$var_y
 
-      clean_df <- df[!is.na(df[[y_col]]) & !is.na(df[[grp_col]]), ]
-      shiny::req(nrow(clean_df) > 0)
-      clean_df[[grp_col]] <- droplevels(as.factor(clean_df[[grp_col]]))
+      if (identical(multi_state$test, "anova_rm")) {
+        shiny::req(multi_state$var_within, multi_state$var_subject)
+        within_col <- multi_state$var_within
+        subj_col <- multi_state$var_subject
 
-      title_text <- if (multi_state$calculated && !is.null(multi_state$result)) {
-        if (multi_state$test == "anova") {
-          smry <- summary(multi_state$result)[[1]]
-          f_val <- round(smry[["F value"]][1], 2)
-          p_val <- smry[["Pr(>F)"]][1]
-          p_str <- if (p_val < 0.001) "p < 0.001" else paste0("p = ", round(p_val, 3))
-          paste0("ANOVA : F = ", f_val, ", ", p_str)
-        } else {
-          h_val <- round(unname(multi_state$result$statistic), 2)
-          p_val <- multi_state$result$p.value
-          p_str <- if (p_val < 0.001) "p < 0.001" else paste0("p = ", round(p_val, 3))
-          paste0("Kruskal-Wallis : Chi2 = ", h_val, ", ", p_str)
+        rm_res <- multi_state$result
+        if (is.null(rm_res) || !is.list(rm_res) || is.null(rm_res$anova_table)) {
+          rm_res <- tryCatch({
+            ramses_anova_rm(
+              data = df,
+              response = y_col,
+              subject = subj_col,
+              within_factor = within_col,
+              alpha = if (!is.null(multi_state$alpha)) multi_state$alpha else 0.05
+            )
+          }, error = function(e) NULL)
         }
-      } else {
-        paste0("Comparaison multiple : ", y_col, " par ", grp_col)
+        shiny::req(rm_res)
+        plot_type <- if (!is.null(input$rm_plot_type_direct)) input$rm_plot_type_direct else "spaghetti"
+        return(ramses_plot_anova_rm(rm_res, type = plot_type, interactive = TRUE))
       }
 
-      p <- ggplot2::ggplot(clean_df, ggplot2::aes(x = .data[[grp_col]], y = .data[[y_col]], group = .data[[grp_col]])) +
-        ggplot2::geom_boxplot(fill = "#F3F4F6", color = "#1F2937", width = 0.45) +
-        ggplot2::geom_jitter(width = 0.15, alpha = 0.5, size = 2, color = "#4B5563") +
-        ggplot2::labs(
-          title = title_text,
-          x = grp_col,
-          y = y_col
-        ) +
-        ggplot2::theme_minimal(base_family = "IBM Plex Sans") +
-        ggplot2::theme(
-          text = ggplot2::element_text(family = "sans"),
-          plot.title = ggplot2::element_text(face = "bold", size = 12, color = "#111827"),
-          axis.title = ggplot2::element_text(size = 11, color = "#374151"),
-          axis.text = ggplot2::element_text(size = 10, color = "#4B5563"),
-          panel.grid.minor = ggplot2::element_blank(),
-          panel.grid.major = ggplot2::element_line(color = "#E5E7EB", linewidth = 0.5)
-        )
+      shiny::req(multi_state$var_group)
+      grp_col <- multi_state$var_group
 
-      tryCatch({
-        plotly::layout(plotly::ggplotly(p), font = list(family = "IBM Plex Sans"))
-      }, error = function(e) {
+      if (identical(multi_state$test, "ancova")) {
+        shiny::req(multi_state$var_covar)
+        cov_col <- multi_state$var_covar
+
+        clean_df <- df[!is.na(df[[y_col]]) & !is.na(df[[grp_col]]) & !is.na(df[[cov_col]]), ]
+        shiny::req(nrow(clean_df) > 0)
+        clean_df[[grp_col]] <- droplevels(as.factor(clean_df[[grp_col]]))
+        clean_df[[cov_col]] <- as.numeric(clean_df[[cov_col]])
+        mean_c <- mean(clean_df[[cov_col]], na.rm = TRUE)
+
+        title_text <- if (multi_state$calculated && !is.null(multi_state$result)) {
+          paste0("ANCOVA : ", y_col, " en fonction de ", cov_col, " par ", grp_col)
+        } else {
+          paste0("R\u00e9gression et ajustement ANCOVA : ", y_col, " ~ ", grp_col, " + ", cov_col)
+        }
+
+        p <- ggplot2::ggplot(clean_df, ggplot2::aes(x = .data[[cov_col]], y = .data[[y_col]], color = .data[[grp_col]], group = .data[[grp_col]])) +
+          ggplot2::geom_point(size = 2.8, alpha = 0.75) +
+          ggplot2::geom_smooth(method = "lm", se = FALSE, linewidth = 1.1) +
+          ggplot2::geom_vline(xintercept = mean_c, linetype = "dashed", color = "#6B7280", linewidth = 0.6) +
+          ggplot2::labs(
+            title = title_text,
+            subtitle = paste0("Droites par groupe (ajustement \u00e0 la covariable moyenne = ", round(mean_c, 2), ")"),
+            x = cov_col,
+            y = y_col,
+            color = grp_col
+          ) +
+          ggplot2::theme_minimal(base_family = "IBM Plex Sans") +
+          ggplot2::theme(
+            text = ggplot2::element_text(family = "sans"),
+            plot.title = ggplot2::element_text(face = "bold", size = 12, color = "#111827"),
+            axis.title = ggplot2::element_text(size = 11, color = "#374151"),
+            axis.text = ggplot2::element_text(size = 10, color = "#4B5563"),
+            panel.grid.minor = ggplot2::element_blank(),
+            panel.grid.major = ggplot2::element_line(color = "#E5E7EB", linewidth = 0.5),
+            legend.position = "right"
+          )
+
         tryCatch({
-          plotly::layout(plotly::plotly_build(p), font = list(family = "IBM Plex Sans"))
-        }, error = function(e2) {
+          plotly::layout(plotly::ggplotly(p), font = list(family = "IBM Plex Sans"))
+        }, error = function(e) {
           plotly::plot_ly(
             data = clean_df,
-            x = ramses_formula(response = NULL, terms = grp_col),
-            y = ramses_formula(response = NULL, terms = y_col),
-            type = "box",
-            boxpoints = "all",
-            jitter = 0.3
+            x = clean_df[[cov_col]],
+            y = clean_df[[y_col]],
+            color = clean_df[[grp_col]],
+            type = "scatter",
+            mode = "markers"
           ) %>%
-            plotly::layout(font = list(family = "IBM Plex Sans"), 
+            plotly::layout(
+              font = list(family = "IBM Plex Sans"),
               title = list(text = title_text, font = list(size = 13)),
-              xaxis = list(title = grp_col),
+              xaxis = list(title = cov_col),
               yaxis = list(title = y_col)
             )
         })
-      })
+
+      } else if (identical(multi_state$test, "anova_twoway")) {
+        shiny::req(multi_state$var_group2)
+        grp2_col <- multi_state$var_group2
+        
+        clean_df <- df[!is.na(df[[y_col]]) & !is.na(df[[grp_col]]) & !is.na(df[[grp2_col]]), ]
+        shiny::req(nrow(clean_df) > 0)
+        clean_df[[grp_col]] <- droplevels(as.factor(clean_df[[grp_col]]))
+        clean_df[[grp2_col]] <- droplevels(as.factor(clean_df[[grp2_col]]))
+
+        # Calcul des moyennes et IC 95% par cellule
+        stats_df <- clean_df %>%
+          dplyr::group_by(.data[[grp_col]], .data[[grp2_col]]) %>%
+          dplyr::summarise(
+            n = dplyr::n(),
+            mean_y = mean(.data[[y_col]], na.rm = TRUE),
+            sd_y = stats::sd(.data[[y_col]], na.rm = TRUE),
+            se_y = ifelse(dplyr::n() > 1, stats::sd(.data[[y_col]], na.rm = TRUE) / sqrt(dplyr::n()), 0),
+            ci_low = ifelse(dplyr::n() > 1, mean(.data[[y_col]], na.rm = TRUE) - stats::qt(0.975, df = pmax(1, dplyr::n() - 1)) * (stats::sd(.data[[y_col]], na.rm = TRUE) / sqrt(dplyr::n())), mean(.data[[y_col]], na.rm = TRUE)),
+            ci_high = ifelse(dplyr::n() > 1, mean(.data[[y_col]], na.rm = TRUE) + stats::qt(0.975, df = pmax(1, dplyr::n() - 1)) * (stats::sd(.data[[y_col]], na.rm = TRUE) / sqrt(dplyr::n())), mean(.data[[y_col]], na.rm = TRUE)),
+            .groups = "drop"
+          )
+
+        title_text <- if (multi_state$calculated && !is.null(multi_state$result)) {
+          paste0("Graphique d'interaction : ", y_col, " ~ ", grp_col, " \u00d7 ", grp2_col)
+        } else {
+          paste0("Profils d'interaction : ", grp_col, " et ", grp2_col)
+        }
+
+        p <- ggplot2::ggplot(stats_df, ggplot2::aes(x = .data[[grp_col]], y = mean_y, color = .data[[grp2_col]], group = .data[[grp2_col]])) +
+          ggplot2::geom_line(linewidth = 0.9, alpha = 0.85) +
+          ggplot2::geom_point(size = 3.5) +
+          ggplot2::geom_errorbar(ggplot2::aes(ymin = ci_low, ymax = ci_high), width = 0.12, linewidth = 0.7, alpha = 0.8) +
+          ggplot2::labs(
+            title = title_text,
+            subtitle = "Moyennes et intervalles de confiance \u00e0 95%",
+            x = grp_col,
+            y = paste0("Moyenne de ", y_col),
+            color = grp2_col
+          ) +
+          ggplot2::theme_minimal(base_family = "IBM Plex Sans") +
+          ggplot2::theme(
+            text = ggplot2::element_text(family = "sans"),
+            plot.title = ggplot2::element_text(face = "bold", size = 12, color = "#111827"),
+            axis.title = ggplot2::element_text(size = 11, color = "#374151"),
+            axis.text = ggplot2::element_text(size = 10, color = "#4B5563"),
+            panel.grid.minor = ggplot2::element_blank(),
+            panel.grid.major = ggplot2::element_line(color = "#E5E7EB", linewidth = 0.5),
+            legend.position = "right"
+          )
+
+        tryCatch({
+          plotly::layout(plotly::ggplotly(p), font = list(family = "IBM Plex Sans"))
+        }, error = function(e) {
+          plotly::plot_ly(
+            data = stats_df,
+            x = ramses_formula(response = NULL, terms = grp_col),
+            y = stats_df$mean_y,
+            color = stats_df[[grp2_col]],
+            type = "scatter",
+            mode = "lines+markers",
+            error_y = list(
+              type = "data",
+              symmetric = FALSE,
+              array = stats_df$ci_high - stats_df$mean_y,
+              arrayminus = stats_df$mean_y - stats_df$ci_low
+            )
+          ) %>%
+            plotly::layout(
+              font = list(family = "IBM Plex Sans"),
+              title = list(text = title_text, font = list(size = 13)),
+              xaxis = list(title = grp_col),
+              yaxis = list(title = paste0("Moyenne de ", y_col))
+            )
+        })
+
+      } else {
+        # ANOVA 1 facteur ou Kruskal-Wallis (Boxplot existant)
+        clean_df <- df[!is.na(df[[y_col]]) & !is.na(df[[grp_col]]), ]
+        shiny::req(nrow(clean_df) > 0)
+        clean_df[[grp_col]] <- droplevels(as.factor(clean_df[[grp_col]]))
+
+        title_text <- if (multi_state$calculated && !is.null(multi_state$result)) {
+          if (multi_state$test == "anova") {
+            smry <- summary(multi_state$result)[[1]]
+            f_val <- round(smry[["F value"]][1], 2)
+            p_val <- smry[["Pr(>F)"]][1]
+            p_str <- if (p_val < 0.001) "p < 0.001" else paste0("p = ", round(p_val, 3))
+            paste0("ANOVA : F = ", f_val, ", ", p_str)
+          } else {
+            h_val <- round(unname(multi_state$result$statistic), 2)
+            p_val <- multi_state$result$p.value
+            p_str <- if (p_val < 0.001) "p < 0.001" else paste0("p = ", round(p_val, 3))
+            paste0("Kruskal-Wallis : Chi2 = ", h_val, ", ", p_str)
+          }
+        } else {
+          paste0("Comparaison multiple : ", y_col, " par ", grp_col)
+        }
+
+        p <- ggplot2::ggplot(clean_df, ggplot2::aes(x = .data[[grp_col]], y = .data[[y_col]], group = .data[[grp_col]])) +
+          ggplot2::geom_boxplot(fill = "#F3F4F6", color = "#1F2937", width = 0.45) +
+          ggplot2::geom_jitter(width = 0.15, alpha = 0.5, size = 2, color = "#4B5563") +
+          ggplot2::labs(
+            title = title_text,
+            x = grp_col,
+            y = y_col
+          ) +
+          ggplot2::theme_minimal(base_family = "IBM Plex Sans") +
+          ggplot2::theme(
+            text = ggplot2::element_text(family = "sans"),
+            plot.title = ggplot2::element_text(face = "bold", size = 12, color = "#111827"),
+            axis.title = ggplot2::element_text(size = 11, color = "#374151"),
+            axis.text = ggplot2::element_text(size = 10, color = "#4B5563"),
+            panel.grid.minor = ggplot2::element_blank(),
+            panel.grid.major = ggplot2::element_line(color = "#E5E7EB", linewidth = 0.5)
+          )
+
+        tryCatch({
+          plotly::layout(plotly::ggplotly(p), font = list(family = "IBM Plex Sans"))
+        }, error = function(e) {
+          tryCatch({
+            plotly::layout(plotly::plotly_build(p), font = list(family = "IBM Plex Sans"))
+          }, error = function(e2) {
+            plotly::plot_ly(
+              data = clean_df,
+              x = ramses_formula(response = NULL, terms = grp_col),
+              y = ramses_formula(response = NULL, terms = y_col),
+              type = "box",
+              boxpoints = "all",
+              jitter = 0.3
+            ) %>%
+              plotly::layout(font = list(family = "IBM Plex Sans"), 
+                title = list(text = title_text, font = list(size = 13)),
+                xaxis = list(title = grp_col),
+                yaxis = list(title = y_col)
+              )
+          })
+        })
+      }
     })
 
     output$multi_pedagogy_ui <- shiny::renderUI({
@@ -2758,6 +4061,8 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
       res <- NULL
       err <- NULL
       tab <- NULL
+      es <- NULL
+      pwr <- NULL
       code_entry <- ""
       ds_name <- data_holder$name
 
@@ -2930,8 +4235,11 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
       if (!is.null(cont_state$error)) {
         return(shiny::div(class = "alert alert-danger py-2 px-3 small", paste0("Erreur : ", cont_state$error)))
       }
+      if (is.null(cont_state$result) || is.null(cont_state$result$p.value)) {
+        return(shiny::div(class = "alert alert-warning py-2 px-3 small", "Aucun r\u00e9sultat disponible."))
+      }
       p_val <- cont_state$result$p.value
-      sig <- p_val < cont_state$alpha
+      sig <- isTRUE(p_val < cont_state$alpha)
       shiny::div(
         class = paste0("alert py-2 px-3 small d-flex justify-content-between align-items-center ", if (sig) "alert-success" else "alert-info"),
         shiny::tags$span(if (sig) "Association statistiquement significative entre les deux variables !" else "Variables ind\u00e9pendantes (aucune liaison significative)"),
@@ -2942,13 +4250,16 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
     output$cont_results_ui <- shiny::renderUI({
       shiny::req(cont_state$calculated)
       if (!is.null(cont_state$error)) {
-        return(shiny::p(class = "text-danger small", cont_state$error))
+        return(shiny::div(class = "alert alert-danger py-2 px-3 small", paste0("Erreur : ", cont_state$error)))
+      }
+      if (is.null(cont_state$result) || is.null(cont_state$result$p.value)) {
+        return(shiny::p(class = "text-muted small", "Aucun r\u00e9sultat disponible."))
       }
       res <- cont_state$result
       p_val <- res$p.value
       stat_val <- unname(res$statistic)
       stat_name <- names(res$statistic)
-      sig <- p_val < cont_state$alpha
+      sig <- isTRUE(p_val < cont_state$alpha)
       es <- cont_state$effect_size
       pwr <- cont_state$power
 
@@ -2958,7 +4269,16 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
         paste0("Au risque alpha = ", cont_state$alpha, ", aucune association statistiquement significative n'est mise en \u00e9vidence (p = ", format.pval(p_val, digits = 4, eps = 0.0001), "). L'hypoth\u00e8se nulle d'ind\u00e9pendance est conserv\u00e9e.")
       }
 
+      tiles_cont <- list(
+        list(label = if (!is.null(stat_name) && nzchar(stat_name)) paste0("Statistique (", stat_name, ")") else "Statistique", value = if (!is.null(stat_val)) as.character(round(stat_val, 3)) else "\u2014", subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else NULL),
+        list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+        list(label = "Taille d'effet", value = if (!is.null(es)) es$formatted_value else "\u2014", subtext = if (!is.null(es)) paste0(es$symbol, " (", es$magnitude, ")") else NULL),
+        list(label = "Puissance", value = if (!is.null(pwr)) pwr$percentage else "\u2014", subtext = if (!is.null(pwr)) pwr$magnitude else NULL),
+        list(label = "D\u00e9cision", value = if (sig) "Association" else "Ind\u00e9pendance", status = if (sig) "success" else "dark", subtext = paste0("\u03b1 = ", cont_state$alpha))
+      )
+
       shiny::tagList(
+        ramses_result_tiles(tiles_cont, title = "Indicateurs cl\u00e9s du test de contingence"),
         if (!is.null(cont_state$exp_warn_msg)) {
           shiny::div(
             class = "alert alert-warning py-2 px-3 small mb-3 border-warning",
@@ -3530,7 +4850,16 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
         ci_str <- paste0("[", round(res$conf_int[1] * 100, 2), "% ; ", round(res$conf_int[2] * 100, 2), "%]")
         p_val_str <- if (res$p_value < 0.001) "< 0.001" else round(res$p_value, 4)
 
+        tiles_prop_one <- list(
+          list(label = "Effectif total (N)", value = as.character(res$n), subtext = paste0(res$x, " succ\u00e8s observ\u00e9s")),
+          list(label = "Proportion observ\u00e9e", value = p_pct, subtext = paste0("p0 = ", p0_pct), status = "primary"),
+          list(label = if (prop_state$method == "prop") "Chi-deux" else "Succ\u00e8s (x)", value = as.character(stat_val), subtext = res$method),
+          list(label = "p-value", value = p_val_str, subtext = paste0("Seuil \u03b1 = ", prop_state$alpha), status = if (sig) "success" else "dark"),
+          list(label = "D\u00e9cision", value = if (sig) "Diff\u00e9rence significative" else "Non significatif", status = if (sig) "success" else "dark", subtext = paste0("IC : ", ci_str))
+        )
+
         shiny::tagList(
+          ramses_result_tiles(tiles_prop_one, title = "Indicateurs cl\u00e9s du test de proportion"),
           if (!is.null(res$warning_msg)) {
             shiny::div(class = "alert alert-warning py-2 px-3 small mb-3", shiny::tags$strong("Avertissement m\u00e9thodologique : "), res$warning_msg)
           },
@@ -3590,7 +4919,17 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
         p_val_str <- if (res$p_value < 0.001) "< 0.001" else round(res$p_value, 4)
         stat_str <- if (prop_state$method == "prop") paste0("Chi2 = ", round(unname(res$htest$statistic), 3)) else "Test Exact de Fisher"
 
+        tiles_prop_two <- list(
+          list(label = paste0("Prop. ", res$group_levels[1]), value = p1_pct, subtext = paste0("n = ", res$groups_summary$Total[1])),
+          list(label = paste0("Prop. ", res$group_levels[2]), value = p2_pct, subtext = paste0("n = ", res$groups_summary$Total[2])),
+          list(label = "Diff\u00e9rence (p1 - p2)", value = diff_pct, subtext = paste0("IC : ", ci_diff_str)),
+          list(label = "Risque Relatif (RR)", value = if (!is.na(res$relative_risk)) as.character(round(res$relative_risk, 3)) else "\u2014", subtext = if (!is.na(res$odds_ratio)) paste0("OR = ", round(res$odds_ratio, 3)) else NULL),
+          list(label = "p-value", value = p_val_str, subtext = stat_str, status = if (sig) "success" else "dark"),
+          list(label = "D\u00e9cision", value = if (sig) "Diff\u00e9rence significative" else "Non significatif", status = if (sig) "success" else "dark")
+        )
+
         shiny::tagList(
+          ramses_result_tiles(tiles_prop_two, title = "Indicateurs cl\u00e9s de la comparaison de proportions"),
           if (!is.null(res$warning_msg)) {
             shiny::div(class = "alert alert-warning py-2 px-3 small mb-3", shiny::tags$strong("Avertissement m\u00e9thodologique : "), res$warning_msg)
           },
@@ -3623,45 +4962,6 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
                   shiny::tags$td(class = "fw-bold text-primary", p2_pct),
                   shiny::tags$td(paste0("[", round(res$conf_int_grp2[1] * 100, 2), "% ; ", round(res$conf_int_grp2[2] * 100, 2), "%]"))
                 )
-              )
-            )
-          ),
-          shiny::div(
-            class = "row g-2 mb-3",
-            shiny::div(
-              class = "col-md-3 col-6",
-              shiny::div(
-                class = "p-2 bg-light border rounded text-center",
-                shiny::div(class = "text-muted small", "Diff\u00e9rence (p1 - p2)"),
-                shiny::div(class = "fw-bold fs-6 text-dark", diff_pct),
-                shiny::div(class = "small text-muted", ci_diff_str)
-              )
-            ),
-            shiny::div(
-              class = "col-md-3 col-6",
-              shiny::div(
-                class = "p-2 bg-light border rounded text-center",
-                shiny::div(class = "text-muted small", "Risque Relatif (RR)"),
-                shiny::div(class = "fw-bold fs-6 text-dark", if (!is.na(res$relative_risk)) round(res$relative_risk, 3) else "\u2014"),
-                shiny::div(class = "small text-muted", "p1 / p2")
-              )
-            ),
-            shiny::div(
-              class = "col-md-3 col-6",
-              shiny::div(
-                class = "p-2 bg-light border rounded text-center",
-                shiny::div(class = "text-muted small", "Odds Ratio (OR)"),
-                shiny::div(class = "fw-bold fs-6 text-dark", if (!is.na(res$odds_ratio)) round(res$odds_ratio, 3) else "\u2014"),
-                shiny::div(class = "small text-muted", "Rapport des cotes")
-              )
-            ),
-            shiny::div(
-              class = "col-md-3 col-6",
-              shiny::div(
-                class = "p-2 bg-light border rounded text-center",
-                shiny::div(class = "text-muted small", "p-value"),
-                shiny::div(class = paste0("fw-bold fs-6 ", if (sig) "text-success" else "text-secondary"), p_val_str),
-                shiny::div(class = "small text-muted", stat_str)
               )
             )
           ),
@@ -4049,7 +5349,17 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
         paste0("Au risque alpha = ", cor_state$alpha, ", le coefficient de corr\u00e9lation observ\u00e9 (", r_name, " = ", round(r_val, 3), ") n'est pas statistiquement significatif (p = ", format.pval(p_val, digits = 4, eps = 0.0001), "). L'hypoth\u00e8se nulle est conserv\u00e9e.")
       }
 
+      tiles_cor <- list(
+        list(label = paste0("Coefficient (", r_name, ")"), value = as.character(round(r_val, 3)), subtext = res$method, status = "primary"),
+        list(label = "Statistique", value = as.character(round(unname(res$statistic), 3)), subtext = if (!is.null(res$parameter)) paste0("ddl = ", round(res$parameter, 1)) else names(res$statistic)),
+        list(label = "p-value", value = format.pval(p_val, digits = 4, eps = 0.0001), subtext = if (sig) "Rejet H0" else "Conservation H0", status = if (sig) "success" else "dark"),
+        list(label = "IC de corr\u00e9lation", value = if (!is.null(res$conf.int)) paste0("[", round(res$conf.int[1], 2), " ; ", round(res$conf.int[2], 2), "]") else "\u2014", subtext = paste0("Niveau ", round((1 - cor_state$alpha)*100), " %")),
+        list(label = "Puissance", value = if (!is.null(pwr)) pwr$percentage else "\u2014", subtext = if (!is.null(pwr)) pwr$magnitude else NULL),
+        list(label = "D\u00e9cision", value = if (sig) "Significatif" else "Non significatif", status = if (sig) "success" else "dark")
+      )
+
       shiny::tagList(
+        ramses_result_tiles(tiles_cor, title = "Indicateurs cl\u00e9s de la corr\u00e9lation"),
         shiny::tags$div(
           class = "table-responsive",
           shiny::tags$table(
@@ -4174,7 +5484,10 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
           code_entry <- paste0(
             "# Regression lineaire (lm)\n",
             "mod_lm <- lm(", fml_code, ", data = ", ramses_code_symbol(ds_name), ")\n",
-            "summary(mod_lm)"
+            "summary(mod_lm)\n",
+            "confint(mod_lm)\n",
+            "rmse_val <- sqrt(mean(residuals(mod_lm)^2))\n",
+            "cat('RMSE =', round(rmse_val, 4), '\\n')"
           )
         } else {
           sub_df <- df
@@ -4325,6 +5638,9 @@ mod_tests_server <- function(id, data_holder, append_to_rmd) {
       shiny::req(reg_state$calculated)
       if (!is.null(reg_state$error)) {
         return(shiny::p(class = "text-danger small", reg_state$error))
+      }
+      if (reg_state$model_type == "linear") {
+        return(ramses_render_lm_results(reg_state))
       }
       smry <- summary(reg_state$model)
       coef_table <- as.data.frame(smry$coefficients)

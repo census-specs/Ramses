@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Module 13 — Limites et biais des statistiques : p-hacking, biais de sélection, erreurs d'interprétation.">
+  <title>13. Limites et biais des statistiques — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+
+      <div class="nav-group-title">Approfondissement</div>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance & taille d'échantillon
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link active">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 13</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Limites et biais des statistiques</h1>
+    <div class="course-subtitle">Ce que les nombres ne peuvent pas dire à votre place</div>
+
+    <!-- 1. LE CONSTAT -->
+    <h2><i class="fa-solid fa-shield-halved" style="color:#DC2626;"></i> 1. Les statistiques ne sont pas infaillibles</h2>
+
+    <div class="callout callout-try" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question d'un jeune chercheur</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « J'ai bien appliqué les tests, j'ai une p-value significative à 0,03. Est-ce que je peux publier ma conclusion tranquillement ? »
+      </p>
+    </div>
+
+    <p>
+      La réponse honnête est : <strong>pas si vite</strong>. Une p-value significative ne garantit ni la véracité de la conclusion, ni la validité de la méthode, ni l'absence de biais. Les statistiques sont un <strong>outil puissant mais faillible</strong>. En connaître les limites fait partie d'une pratique scientifique mature.
+    </p>
+
+    <p>
+      Ce module explore les <strong>pièges les plus fréquents</strong> en analyse de données, en particulier dans les sciences agronomiques où les dispositifs sont coûteux et les tentations d'optimiser les résultats fortes.
+    </p>
+
+    <!-- 2. LE P-HACKING -->
+    <h2><i class="fa-solid fa-magnifying-glass-chart" style="color:#7C3AED;"></i> 2. Le p-hacking : quand on cherche la p-value parfaite</h2>
+
+    <div class="callout callout-warning" style="margin:16px 0;">
+      <div class="callout-title" style="color:#991B1B;"><i class="fa-solid fa-circle-exclamation"></i> Le piège le plus fréquent</div>
+      <p style="margin-bottom:0; font-size:15px; font-weight:700; color:#991B1B;">
+        Le <strong>p-hacking</strong> (ou <em>data dredging</em>) consiste à multiplier les analyses jusqu'à obtenir une p-value inférieure à 0,05.
+      </p>
+    </div>
+
+    <p>
+      Voici les tactiques typiques — souvent inconscientes :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num" style="background:#FEE2E2; color:#991B1B;">1</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#991B1B;">Multiplier les comparaisons post-hoc non corrigées</div>
+          <div class="step-desc">
+            Tester A vs B, A vs C, A vs D, B vs C… sans correction de multiplicité. Avec assez de comparaisons, on en trouve toujours une significative par hasard.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEE2E2; color:#991B1B;">2</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#991B1B;">Retirer des valeurs aberrantes « pour améliorer la significativité »</div>
+          <div class="step-desc">
+            Éliminer les points extrêmes <em>parce qu'ils ne vont pas dans le sens attendu</em> est une manipulation — pas un nettoyage. Il faut des critères <strong>objectifs et pré-définis</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEE2E2; color:#991B1B;">3</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#991B1B;">Changer d'indicateur en fonction du résultat</div>
+          <div class="step-desc">
+            Tester la moyenne, puis la médiane, puis la « sous-population pertinente » jusqu'à ce que p &lt; 0,05.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEE2E2; color:#991B1B;">4</div>
+        <div class="step-content">
+          <div class="step-title" style="color:#991B1B;">Arrêter l'expérience dès que p &lt; 0,05 (data peeking)</div>
+          <div class="step-desc">
+            Collecter des données progressivement et s'arrêter dès que la significativité est atteinte gonfle considérablement le taux d'erreur de type I.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> La règle d'or</div>
+      <p style="margin-bottom:0; font-size:15px; font-weight:600; color:#065F46;">
+        <strong>Une hypothèse doit être posée AVANT de voir les données.</strong> Toute analyse exploratoire doit être présentée comme telle et confirmée sur un nouvel échantillon.
+      </p>
+    </div>
+
+    <!-- 3. LE BIAIS DE SÉLECTION -->
+    <h2><i class="fa-solid fa-filter" style="color:#D97706;"></i> 3. Le biais de sélection</h2>
+
+    <p>
+      Le <strong>biais de sélection</strong> apparaît quand l'échantillon observé n'est <strong>pas représentatif</strong> de la population cible. La statistique peut être parfaitement correcte et la conclusion complètement fausse.
+    </p>
+
+    <div class="callout callout-info" style="margin:16px 0;">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Exemples typiques en agronomie</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li><strong>Enquête par téléphone :</strong> exclut les producteurs sans mobile.</li>
+        <li><strong>Échantillon volontaire :</strong> seuls les producteurs motivés répondent.</li>
+        <li><strong>Parcelles accessibles uniquement :</strong> celles au bord de la route sont plus faciles à visiter… mais pas représentatives.</li>
+        <li><strong>Données historiques :</strong> les rendements anciens sont souvent ceux des bonnes années conservées dans les archives.</li>
+      </ul>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Conséquence</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Aucun test statistique ne peut corriger un biais de sélection. Le résultat peut être très significatif (p &lt; 0,001) et pourtant <strong>non généralisable</strong>.
+      </p>
+    </div>
+
+    <!-- 4. LE BIAIS DE CONFUSION -->
+    <h2><i class="fa-solid fa-diagram-project" style="color:#2563EB;"></i> 4. Le biais de confusion (variable cachée)</h2>
+
+    <p>
+      Un <strong>facteur de confusion</strong> est une variable non mesurée qui influence à la fois la variable explicative et la variable réponse, créant une <strong>fausse association</strong>.
+    </p>
+
+    <div class="callout callout-try">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Exemple classique</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Une étude montre que les parcelles <strong>avec irrigation</strong> ont un rendement plus élevé (corrélation r = 0,7, p &lt; 0,001).<br>
+        Mais les parcelles irriguées sont aussi celles qui sont situées <strong>sur les meilleurs sols</strong> et exploitées par <strong>les agriculteurs les plus expérimentés</strong>.<br>
+        → L'irrigation est-elle vraiment la cause ? Ou est-ce le sol et la compétence ?
+      </p>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-shield-halved"></i> La solution : la randomisation</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Dans un <strong>essai randomisé</strong>, le traitement est attribué au hasard, ce qui équilibre les facteurs de confusion entre les groupes. C'est la seule façon d'établir solidement une <strong>relation causale</strong>.
+      </p>
+    </div>
+
+    <!-- 5. CORRÉLATION VS CAUSALITÉ -->
+    <h2><i class="fa-solid fa-link-slash" style="color:#DC2626;"></i> 5. Corrélation n'est pas causalité</h2>
+
+    <p>
+      Ce principe fondamental (déjà vu au module 10) mérite d'être approfondi, car c'est le piège d'interprétation le plus courant.
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin:20px 0;">
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#1F2937; margin-bottom:6px;">A → B</div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          <strong>Causalité directe</strong> : l'irrigation augmente le rendement. Légitime si démontré par un essai contrôlé.
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#1F2937; margin-bottom:6px;">B → A</div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          <strong>Causalité inversée</strong> : les agriculteurs qui réussissent investissent dans l'irrigation. Le rendement précède l'installation.
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#1F2937; margin-bottom:6px;">C → A et B</div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          <strong>Cause commune</strong> : la qualité du sol favorise à la fois l'irrigation et le rendement.
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#1F2937; margin-bottom:6px;">Hasard</div>
+        <p style="font-size:13px; color:#4B5563; margin:0;">
+          <strong>Corrélation fortuite</strong> : deux variables indépendantes peuvent montrer une corrélation sur un petit échantillon.
+        </p>
+      </div>
+    </div>
+
+    <!-- 6. LE BIAIS DE PUBLICATION -->
+    <h2><i class="fa-solid fa-book" style="color:#7C3AED;"></i> 6. Le biais de publication</h2>
+
+    <p>
+      Le <strong>biais de publication</strong> désigne la tendance des revues scientifiques à publier <strong>uniquement les résultats positifs</strong> (p &lt; 0,05), et à ignorer les résultats non significatifs.
+    </p>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> La conséquence invisible</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Si 20 équipes étudient la même question et qu'une seule trouve un effet significatif par hasard, seule celle-là sera publiée. Les 19 autres résultats « nuls » restent dans les tiroirs. Le monde scientifique croit alors en un effet qui n'existe pas.
+      </p>
+    </div>
+
+    <p>
+      On parle parfois de <strong>« problème du tiroir » (file-drawer problem)</strong>. Ce biais explique partiellement la crise de reproductibilité en sciences.
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Les remèdes</div>
+      <ul style="margin:6px 0 0 0; padding-left:20px; font-size:14.5px;">
+        <li><strong>Pré-enregistrement</strong> des protocoles et hypothèses (avant de voir les données).</li>
+        <li><strong>Publication des résultats négatifs</strong> dans des revues dédiées.</li>
+        <li><strong>Méta-analyses</strong> qui agrègent tous les résultats, publiés ou non.</li>
+      </ul>
+    </div>
+
+    <!-- 7. LA CRISE DE REPRODUCTIBILITÉ -->
+    <h2><i class="fa-solid fa-arrows-rotate" style="color:#059669;"></i> 7. La crise de reproductibilité</h2>
+
+    <p>
+      Depuis les années 2010, plusieurs études ont montré qu'une <strong>proportion inquiétante</strong> de résultats publiés ne peut pas être reproduite par d'autres équipes.
+    </p>
+
+    <div style="background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px; padding:20px; margin:16px 0; box-shadow:var(--shadow-sm); text-align:center;">
+      <div style="font-size:15px; color:#374151; margin-bottom:6px;">
+        Estimation dans plusieurs disciplines scientifiques :
+      </div>
+      <div style="font-size:42px; font-weight:800; color:#DC2626; line-height:1;">
+        ~40 %
+      </div>
+      <div style="font-size:14px; color:#6B7280; margin-top:6px;">
+        des résultats publiés ne sont pas reproduits lors de tentatives indépendantes.
+      </div>
+    </div>
+
+    <p>
+      Cette crise a conduit à un ensemble de <strong>bonnes pratiques</strong> que tout scientifique devrait appliquer :
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin:16px 0;">
+      <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#065F46; margin-bottom:4px;">
+          <i class="fa-solid fa-file-signature"></i> Pré-enregistrement
+        </div>
+        <p style="font-size:13px; color:#064E3B; margin:0;">
+          Publier son protocole AVANT de collecter les données sur un registre ouvert (OSF, ClinicalTrials.gov).
+        </p>
+      </div>
+
+      <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#065F46; margin-bottom:4px;">
+          <i class="fa-solid fa-code"></i> Reproductibilité
+        </div>
+        <p style="font-size:13px; color:#064E3B; margin:0;">
+          Partager les données et le code d'analyse. Ramses facilite cela via son journal R Markdown.
+        </p>
+      </div>
+
+      <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#065F46; margin-bottom:4px;">
+          <i class="fa-solid fa-users"></i> Données ouvertes
+        </div>
+        <p style="font-size:13px; color:#064E3B; margin:0;">
+          Rendre accessible le jeu de données brut pour permettre la vérification par les pairs.
+        </p>
+      </div>
+
+      <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:6px; padding:14px;">
+        <div style="font-weight:700; font-size:14px; color:#065F46; margin-bottom:4px;">
+          <i class="fa-solid fa-eye"></i> Transparence
+        </div>
+        <p style="font-size:13px; color:#064E3B; margin:0;">
+          Rapporter TOUS les tests effectués, y compris ceux qui n'ont rien donné.
+        </p>
+      </div>
+    </div>
+
+    <!-- 8. RAMSES ET L'ÉTHIQUE SCIENTIFIQUE -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 8. Comment Ramses encourage les bonnes pratiques</h2>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-clipboard-check" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Journal d'analyse automatique</div>
+          <div class="step-desc">
+            Chaque test effectué dans Ramses est <strong>enregistré automatiquement</strong> dans le journal R Markdown, ce qui permet de retracer toutes les analyses, même celles qui n'ont pas été retenues.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-clipboard-list" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Rappel des conditions d'application</div>
+          <div class="step-desc">
+            Ramses <strong>guide</strong> vers la vérification des conditions et propose l'alternative appropriée, plutôt que de laisser l'utilisateur forcer un test inadapté.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-users-gear" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Aide au dimensionnement</div>
+          <div class="step-desc">
+            Le module de puissance intégré encourage à <strong>planifier correctement</strong> les dispositifs expérimentaux, évitant ainsi les études sous-dimensionnées.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-lock" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Reproductibilité complète</div>
+          <div class="step-desc">
+            Chaque résultat est associé au code R correspondant, garantissant que l'analyse peut être <strong>rejouée</strong> par n'importe qui, sur les mêmes données.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-shield-halved"></i> Philosophie de Ramses</div>
+      <p style="margin-bottom:0; font-size:15px; font-weight:600; color:#065F46;">
+        « Ramses n'est pas un outil pour aller plus vite. C'est un outil pour aller <em>bien</em> : rigoureusement, traçablement, honnêtement. »
+      </p>
+    </div>
+
+    <!-- 9. QUIZ -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 9. Petit défi interactif</h2>
+
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-brain" style="color:#2563EB;"></i> À vous de jouer !</h3>
+      <p style="margin-bottom:12px; font-size:14.5px; color:#1F2937;">
+        Vous analysez un jeu de données de 200 parcelles. Vous testez d'abord l'effet de la <strong>variété</strong> (p = 0,32), puis l'effet du <strong>village</strong> (p = 0,18), puis l'effet du <strong>type de sol</strong> (p = 0,04). Vous décidez de ne rapporter que le type de sol. Quel problème voyez-vous ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:640px;">
+        <button class="quiz-btn quiz-module13-btn" data-answer="wrong1">Aucun problème, il faut bien rapporter ce qui est significatif.</button>
+        <button class="quiz-btn quiz-module13-btn" data-answer="correct">C'est du p-hacking : en multipliant les tests, on augmente le risque de trouver un résultat significatif par hasard. Il faut corriger pour multiplicité ou pré-enregistrer une seule hypothèse.</button>
+        <button class="quiz-btn quiz-module13-btn" data-answer="wrong2">Il faut augmenter la taille d'échantillon pour confirmer.</button>
+        <button class="quiz-btn quiz-module13-btn" data-answer="wrong3">C'est acceptable si le type de sol était l'hypothèse de départ.</button>
+      </div>
+
+      <div id="quiz-module13-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 10. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">
+        • Les statistiques sont <strong>puissantes mais faillibles</strong> : elles amplifient la qualité ou la médiocrité des données d'entrée.<br>
+        • <strong>p-hacking</strong> : multiplier les analyses pour forcer une significativité est une faute méthodologique grave.<br>
+        • <strong>Biais de sélection</strong> : aucun test ne corrige un échantillon non représentatif.<br>
+        • <strong>Confusion</strong> : une tierce variable peut créer une fausse association. La randomisation est la seule défense solide.<br>
+        • <strong>Corrélation ≠ causalité</strong> : distinguer association et cause est fondamental.<br>
+        • <strong>Biais de publication</strong> : les résultats négatifs non publiés faussent la littérature scientifique.<br>
+        • <strong>Bonnes pratiques</strong> : pré-enregistrement, transparence, reproductibilité, partage des données.
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Une statistique honnête est une statistique qui dit aussi ce qu'elle ne peut pas dire. »
+        </p>
+      </div>
+    </div>
+
+    <!-- 11. FIN DE LA FORMATION -->
+    <div style="text-align:center; margin:40px 0 30px; background:linear-gradient(135deg, #1F2937 0%, #111827 100%); color:#FFFFFF; border-radius:12px; padding:36px 24px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:12px; background:rgba(255,255,255,0.1); margin-bottom:16px; font-size:24px; color:#34D399;">
+        <i class="fa-solid fa-flag-checkered"></i>
+      </div>
+      <h3 style="font-size:22px; font-weight:700; margin:0 0 10px 0; color:#FFFFFF;">Vous avez terminé la formation !</h3>
+      <p style="font-size:15px; color:#D1D5DB; margin:0 0 22px 0; max-width:560px; margin-left:auto; margin-right:auto; line-height:1.6;">
+        Vous avez parcouru l'ensemble du programme, des premiers comptages à la rédaction scientifique, en passant par la vérification des conditions, les tests avancés et les limites éthiques de la statistique.
+      </p>
+      <a href="../index.html" class="btn-action" style="background:#059669; color:#FFFFFF; border:none; padding:12px 24px; border-radius:6px; font-size:15px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-house"></i> Retour à l'accueil
+      </a>
+    </div>
+
+    <!-- Navigation -->
+    <div class="chapter-nav-footer">
+      <a href="12-puissance-et-taille-echantillon.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">12. Puissance et taille d'échantillon</span>
+      </a>
+      <a href="../index.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Formation terminée &rarr;</span>
+        <span class="nav-target-title">Accueil de la formation</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

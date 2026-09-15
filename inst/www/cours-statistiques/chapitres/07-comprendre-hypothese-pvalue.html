@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07. Comprendre l'hypothèse et la p-value — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link active">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 07</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Comprendre l'hypothèse et la p-value</h1>
+    <div class="course-subtitle">Comment décider si une différence observée est probablement due au hasard ?</div>
+
+    <!-- 1. PARTIR D'UN VRAI PROBLÈME AGRICOLE -->
+    <h2><i class="fa-solid fa-seedling" style="color:#059669;"></i> 1. Partir d'un vrai problème agricole</h2>
+
+    <div class="callout callout-try" style="margin-top:16px;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La question de l'expérimentateur</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « J'ai testé deux variétés de maïs. La variété A donne en moyenne 2,5 t/ha et la variété B 2,9 t/ha. Puis-je dire que la variété B est réellement meilleure ? »
+      </p>
+    </div>
+
+    <p>
+      Face à ces résultats, la tentation est grande de conclure immédiatement que la variété B surpasse la variété A. Pourtant, la démarche scientifique nous impose la prudence :
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> Règle d'or de la statistique</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#065F46;">
+        Différence observée sur un échantillon ≠ forcément différence réelle dans la population.
+      </p>
+    </div>
+
+    <p>
+      Comme nous l'avons découvert au <strong>Module 6</strong>, les échantillons varient naturellement d'une parcelle à l'autre en raison de la météo, de la fertilité locale du sol ou de l'arrosage. Cet écart de $0{,}4\text{ t/ha}$ pourrait-il simplement résulter du hasard du tirage de nos parcelles ? Pour trancher objectivement, nous posons deux hypothèses en compétition.
+    </p>
+
+    <!-- 2. INTRODUIRE H0 SIMPLEMENT -->
+    <h2><i class="fa-solid fa-equals" style="color:#2563EB;"></i> 2. $H_0$ : l'hypothèse nulle</h2>
+
+    <p>
+      L'<strong>hypothèse nulle</strong>, notée <strong>$H_0$</strong> (prononcé <em>« H-zéro »</em>), est l'hypothèse du sceptique : elle suppose qu'il n'y a aucun effet particulier, aucun traitement supérieur, ni aucune différence réelle entre les groupes.
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-anchor"></i> Définition de $H_0$</div>
+      <p style="font-size:15px; margin-bottom:8px; font-weight:600; color:#1E40AF;">
+        « Il n'y a pas de différence réelle entre les deux groupes dans la population générale. »
+      </p>
+      <p style="font-size:14.5px; margin-bottom:0; color:#1F2937;">
+        Dans notre exemple agricole : <strong>$H_0$ : les rendements moyens des deux variétés sont égaux.</strong>
+      </p>
+    </div>
+
+    <div class="formula-box">
+      $$H_0 : \mu_A = \mu_B$$
+    </div>
+
+    <p style="font-size:13.5px; color:#4B5563; margin-top:8px;">
+      • $\mu$ (lettre grecque <em>« mu »</em>) désigne la vraie moyenne théorique de toute la population.<br>
+      • $\mu_A = \mu_B$ signifie que si l'on récoltait toutes les parcelles possibles, les deux variétés produiraient exactement la même moyenne.
+    </p>
+
+    <!-- 3. INTRODUIRE H1 -->
+    <h2><i class="fa-solid fa-not-equal" style="color:#D97706;"></i> 3. $H_1$ : l'hypothèse alternative</h2>
+
+    <p>
+      L'<strong>hypothèse alternative</strong>, notée <strong>$H_1$</strong> (ou parfois $H_a$), est l'hypothèse de recherche. Elle affirme qu'il existe une véritable différence dans la population.
+    </p>
+
+    <div class="callout callout-try" style="background:#FFFBEB; border-color:#FDE68A;">
+      <div class="callout-title" style="color:#92400E;"><i class="fa-solid fa-bullseye"></i> Définition de $H_1$</div>
+      <p style="font-size:15px; margin-bottom:8px; font-weight:600; color:#92400E;">
+        « Il existe une différence réelle entre les deux groupes. »
+      </p>
+      <p style="font-size:14.5px; margin-bottom:0; color:#1F2937;">
+        Dans notre exemple agricole : <strong>$H_1$ : les rendements moyens des deux variétés sont différents.</strong>
+      </p>
+    </div>
+
+    <div class="formula-box">
+      $$H_1 : \mu_A \neq \mu_B$$
+    </div>
+
+    <p style="font-size:13.5px; color:#4B5563; margin-top:8px;">
+      $H_1$ représente ce que l'agronome cherche généralement à mettre en évidence (la supériorité ou la différence d'une variété).
+    </p>
+
+    <!-- 4. ANALOGIE SIMPLE : LE TRIBUNAL -->
+    <h2><i class="fa-solid fa-gavel" style="color:#7C3AED;"></i> 4. Une analogie simple : le tribunal</h2>
+
+    <p>
+      Pour bien comprendre la logique d'un test statistique, imaginez un procès :
+    </p>
+
+    <div class="steps-list" style="margin:20px 0;">
+      <div class="step-item">
+        <div class="step-num" style="background:#DBEAFE; color:#1E40AF;"><i class="fa-solid fa-scale-balanced" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#1E40AF; font-size:15px;">La présomption d'innocence ($H_0$)</div>
+          <div class="step-desc">
+            Au début du procès, l'accusé est présumé innocent. De même, au début de l'analyse, on pose par défaut qu'il n'y a pas de différence ($H_0$).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#FEF3C7; color:#92400E;"><i class="fa-solid fa-magnifying-glass" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#92400E; font-size:15px;">L'examen des preuves (Les données)</div>
+          <div class="step-desc">
+            Le juge examine si les preuves apportées sont suffisamment accablantes pour contredire l'innocence. Le test statistique examine si les données de rendement récoltées sont suffisamment incompatibles avec $H_0$.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num" style="background:#D1FAE5; color:#065F46;"><i class="fa-solid fa-bullhorn" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title" style="color:#065F46; font-size:15px;">Le verdict</div>
+          <div class="step-desc">
+            Si les preuves sont accablantes, on <strong>rejette $H_0$</strong>. Si les preuves manquent, on <strong>ne rejette pas $H_0$</strong> (faute de preuves suffisantes, mais sans jamais avoir prouvé que l'accusé est un saint).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title"><i class="fa-solid fa-triangle-exclamation"></i> Précision fondamentale</div>
+      <p style="font-size:14.5px; margin-bottom:0;">
+        En statistique, <strong>on ne dit jamais que $H_0$ est « prouvée vraie »</strong>. On dit seulement que l'on cherche des éléments suffisamment forts dans nos données pour <strong>rejeter $H_0$</strong>.
+      </p>
+    </div>
+
+    <!-- 5. INTRODUIRE LA P-VALUE -->
+    <h2><i class="fa-solid fa-calculator" style="color:#2563EB;"></i> 5. La $p$-value (valeur $p$)</h2>
+
+    <p>
+      Le test statistique résume l'ensemble de nos mesures en un nombre décimal compris entre 0 et 1 : la <strong>$p$-value</strong>.
+    </p>
+
+    <div class="callout callout-remember" style="background:#EFF6FF; border-color:#BFDBFE;">
+      <div class="callout-title" style="color:#1E40AF;"><i class="fa-solid fa-star"></i> Définition rigoureuse de la $p$-value</div>
+      <p style="font-size:15.5px; margin-bottom:0; font-weight:700; color:#1E3A8A;">
+        La $p$-value mesure à quel point les données observées seraient surprenantes si l'hypothèse nulle $H_0$ était vraie.
+      </p>
+    </div>
+
+    <p style="margin-top:16px;">
+      Pour les débutants, on peut la reformuler de manière très intuitive :
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-comment-check"></i> En clair</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Plus la $p$-value est petite, plus les données observées sont difficiles à expliquer si $H_0$ était vraie. »
+      </p>
+    </div>
+
+    <div class="callout callout-warning" style="margin-top:20px;">
+      <div class="callout-title" style="color:#B91C1C;"><i class="fa-solid fa-ban"></i> Les deux pièges majeurs à éviter absolument</div>
+      <ul style="margin-bottom:0; padding-left:20px; font-size:14px; color:#7F1D1D;">
+        <li style="margin-bottom:6px;">❌ <strong>Ne jamais dire :</strong> <em>« La $p$-value est la probabilité que $H_0$ soit vraie. »</em></li>
+        <li>❌ <strong>Ne jamais dire :</strong> <em>« $p = 0{,}03$ signifie qu'il y a 3 % de chances que le résultat soit dû au hasard. »</em></li>
+      </ul>
+      <p style="margin-top:8px; margin-bottom:0; font-size:13px; color:#4B5563;">
+        Ces raccourcis sont scientifiquement faux : la $p$-value est calculée <em>en supposant déjà que $H_0$ est vraie</em>, elle ne donne pas la probabilité de $H_0$ elle-même.
+      </p>
+    </div>
+
+    <!-- 6. LE SEUIL DE 5% -->
+    <h2><i class="fa-solid fa-sliders" style="color:#059669;"></i> 6. Le seuil de décision ($\alpha = 0{,}05$)</h2>
+
+    <p>
+      Avant même de collecter les données, la communauté scientifique fixe une limite critique appelée <strong>seuil de signification $\alpha$</strong> (souvent fixé à <strong>$5\%$</strong>, soit <strong>$0{,}05$</strong>).
+    </p>
+
+    <div class="table-container" style="max-width:540px; margin:20px auto;">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:40%;">Résultat de la $p$-value</th>
+            <th style="width:60%;">Décision statistique</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#F0FDF4;">
+            <td><strong style="color:#065F46;">$p < 0{,}05$</strong></td>
+            <td><strong style="color:#065F46;"><i class="fa-solid fa-check"></i> Rejeter $H_0$</strong> (Différence significative)</td>
+          </tr>
+          <tr style="background:#F9FAFB;">
+            <td><strong style="color:#374151;">$p \ge 0{,}05$</strong></td>
+            <td><strong style="color:#374151;"><i class="fa-solid fa-hand"></i> Ne pas rejeter $H_0$</strong> (Pas de preuve suffisante)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="text-align:center; font-size:14px; color:#4B5563;">
+      <em>Note de rigueur :</em> On utilise toujours l'expression exacte <strong>« ne pas rejeter $H_0$ »</strong> et jamais <em>« accepter $H_0$ »</em>.
+    </p>
+
+    <!-- 7. DEUX EXEMPLES NUMÉRIQUES -->
+    <h2><i class="fa-solid fa-vial-circle-check" style="color:#2563EB;"></i> 7. Deux exemples numériques</h2>
+
+    <div class="row" style="display:flex; gap:18px; margin:20px 0; flex-wrap:wrap;">
+      <!-- Exemple A -->
+      <div style="flex:1; min-width:270px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h4 style="margin:0; color:#065F46; font-size:15px;"><i class="fa-solid fa-circle-check"></i> Situation A : $p = 0{,}02$</h4>
+          <span style="background:#DCFCE7; color:#15803D; font-size:12px; font-weight:700; padding:2px 8px; border-radius:12px;">$p < 0{,}05$</span>
+        </div>
+        <p style="font-size:14px; margin-bottom:8px;">
+          Comme <strong>$0{,}02 < 0{,}05$</strong>, on <strong>rejette $H_0$</strong>.
+        </p>
+        <div style="background:#FFFFFF; border-left:3px solid #059669; padding:8px 12px; font-size:13.5px; color:#065F46; border-radius:0 4px 4px 0;">
+          <strong>Interprétation :</strong> « Les données fournissent des éléments statistiquement significatifs en faveur d'une différence de rendement entre les deux variétés. »
+        </div>
+      </div>
+
+      <!-- Exemple B -->
+      <div style="flex:1; min-width:270px; background:#F9FAFB; border:1px solid #E5E7EB; border-radius:8px; padding:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h4 style="margin:0; color:#374151; font-size:15px;"><i class="fa-solid fa-circle-minus"></i> Situation B : $p = 0{,}31$</h4>
+          <span style="background:#F3F4F6; color:#4B5563; font-size:12px; font-weight:700; padding:2px 8px; border-radius:12px;">$p \ge 0{,}05$</span>
+        </div>
+        <p style="font-size:14px; margin-bottom:8px;">
+          Comme <strong>$0{,}31 \ge 0{,}05$</strong>, on <strong>ne rejette pas $H_0$</strong>.
+        </p>
+        <div style="background:#FFFFFF; border-left:3px solid #6B7280; padding:8px 12px; font-size:13.5px; color:#374151; border-radius:0 4px 4px 0;">
+          <strong>Interprétation :</strong> « Les données ne fournissent pas suffisamment d'éléments pour conclure à une différence statistiquement significative entre les deux variétés. »
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. SCHÉMA DU RAISONNEMENT COMPLET -->
+    <h2><i class="fa-solid fa-diagram-project" style="color:#7C3AED;"></i> 8. Le raisonnement statistique complet</h2>
+
+    <p>
+      Voici la chaîne logique universelle suivie pour toute démarche inférentielle :
+    </p>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Arbre de décision du test statistique</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">De la question agronomique à l'interprétation finale</div>
+        </div>
+        <span class="chart-badge" style="background:#F5F3FF; color:#6D28D9; border-color:#DDD6FE;">Chaîne logique</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 400" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="400" fill="#FAFAFA" rx="8" />
+
+        <!-- 1. Question -->
+        <rect x="210" y="15" width="200" height="36" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5" rx="6" />
+        <text x="310" y="38" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">1. Question de recherche</text>
+        <path d="M 310 51 L 310 68" stroke="#9CA3AF" stroke-width="2" />
+
+        <!-- 2. Hypothèses -->
+        <rect x="185" y="70" width="250" height="36" fill="#FDF2F8" stroke="#EC4899" stroke-width="1.5" rx="6" />
+        <text x="310" y="93" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#9D174D" text-anchor="middle">2. Poser H₀ (égalité) et H₁ (différence)</text>
+        <path d="M 310 106 L 310 123" stroke="#9CA3AF" stroke-width="2" />
+
+        <!-- 3. Test statistique -->
+        <rect x="200" y="125" width="220" height="36" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5" rx="6" />
+        <text x="310" y="148" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#92400E" text-anchor="middle">3. Réaliser le test statistique</text>
+        <path d="M 310 161 L 310 178" stroke="#9CA3AF" stroke-width="2" />
+
+        <!-- 4. Obtenir p-value -->
+        <rect x="210" y="180" width="200" height="36" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1.5" rx="6" />
+        <text x="310" y="203" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="700" fill="#6D28D9" text-anchor="middle">4. Obtenir la p-value</text>
+        <path d="M 310 216 L 310 238" stroke="#9CA3AF" stroke-width="2" />
+
+        <!-- 5. Comparaison embranchement -->
+        <polygon points="310,240 430,265 310,290 190,265" fill="#FFFFFF" stroke="#4B5563" stroke-width="1.5" />
+        <text x="310" y="269" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="600" fill="#1F2937" text-anchor="middle">Comparer p à 0,05</text>
+
+        <!-- Branche gauche : p < 0.05 -->
+        <path d="M 190 265 L 140 265 L 140 305" stroke="#059669" stroke-width="2" />
+        <text x="135" y="255" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#059669">p < 0,05</text>
+        <rect x="50" y="310" width="180" height="42" fill="#D1FAE5" stroke="#059669" stroke-width="1.5" rx="6" />
+        <text x="140" y="328" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Rejeter H₀</text>
+        <text x="140" y="344" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#047857" text-anchor="middle">Différence significative</text>
+
+        <!-- Branche droite : p >= 0.05 -->
+        <path d="M 430 265 L 480 265 L 480 305" stroke="#6B7280" stroke-width="2" />
+        <text x="445" y="255" font-family="'IBM Plex Sans', sans-serif" font-size="11" font-weight="700" fill="#4B5563">p ≥ 0,05</text>
+        <rect x="390" y="310" width="180" height="42" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5" rx="6" />
+        <text x="480" y="328" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#374151" text-anchor="middle">Ne pas rejeter H₀</text>
+        <text x="480" y="344" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#4B5563" text-anchor="middle">Preuves insuffisantes</text>
+
+        <!-- Étape 6 : Interprétation finale -->
+        <path d="M 140 352 L 140 375 L 300 375" stroke="#059669" stroke-width="1.5" stroke-dasharray="3,3" />
+        <path d="M 480 352 L 480 375 L 320 375" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="3,3" />
+        <text x="310" y="385" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="700" fill="#1F2937" text-anchor="middle">6. Conclusion et décision agronomique</text>
+      </svg>
+    </div>
+
+    <!-- 9. INTRODUIRE R -->
+    <h2><i class="fa-solid fa-code" style="color:#1F2937;"></i> 9. Réaliser le calcul sous R</h2>
+
+    <p>
+      Pour effectuer ce test entre nos deux variétés, R fournit des fonctions simples et directes :
+    </p>
+
+    <pre><code># Création du jeu de données pédagogique
+donnees_varietes <- data.frame(
+  variete   = c(rep("Variete_A", 5), rep("Variete_B", 5)),
+  rendement = c(2.4, 2.5, 2.6, 2.5, 2.4,   # Variété A
+                2.5, 2.6, 2.5, 2.7, 2.6)    # Variété B
+)
+
+# Réalisation du test de comparaison
+t.test(rendement ~ variete, data = donnees_varietes)</code></pre>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Rôle de R à cette étape</div>
+      <p style="margin-bottom:0; font-size:14.5px;">
+        Ici, R réalise le test statistique et nous fournit notamment une <strong>p-value</strong>. Nous apprendrons le fonctionnement détaillé du <em>test t de Student</em> dans le prochain module.
+      </p>
+    </div>
+
+    <!-- 10. ET DANS RAMSES ? -->
+    <h2><i class="fa-solid fa-desktop" style="color:#059669;"></i> 10. Et dans Ramses ?</h2>
+
+    <p>
+      Dans l'interface graphique de <strong>Ramses</strong>, aucun calcul manuel ni ligne de code n'est nécessaire pour obtenir et interpréter la $p$-value :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-flask" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Accéder au module de test</div>
+          <div class="step-desc">
+            Dans la barre de navigation principale de Ramses, cliquez sur le menu <strong>« Tests Statistiques »</strong> &rarr; puis sur <strong>« Comparaison de 2 Groupes »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-sliders" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Définir les variables et le seuil alpha</div>
+          <div class="step-desc">
+            Dans la colonne latérale gauche de configuration :<br>
+            • Sélectionnez <code>rendement</code> comme <em>Variable quantitative continue (Y)</em> ;<br>
+            • Sélectionnez <code>variete</code> comme <em>Variable qualitative de groupe (X)</em> ;<br>
+            • Vérifiez que le <em>Seuil alpha</em> est bien positionné sur <strong>« 5% (0.05) »</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-play" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Exécuter l'analyse et lire la p-value</div>
+          <div class="step-desc">
+            Cliquez sur <strong>« Exécuter & Journaliser »</strong>. Ramses affiche instantanément les résultats dans l'onglet <strong>« Inférence & Décision »</strong> :
+            <ul style="margin-top:6px; margin-bottom:0; font-size:13.5px;">
+              <li><strong>Bandeau supérieur :</strong> Indique en toutes lettres si la différence est significative (badge vert <em>« Différence statistiquement significative (H0 rejetée) ! »</em>) ou non (badge bleu <em>« Pas de différence statistiquement significative (H0 conservée) »</em>) avec la $p$-value exacte affichée à droite.</li>
+              <li><strong>Tuile de résultat « p-value » :</strong> La tuile dédiée met en évidence la valeur numérique de $p$ et sa conclusion directe (<em>Rejet H0</em> ou <em>Conservation H0</em>).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. PETIT EXERCICE INTERACTIF -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 11. Exercices interactifs</h2>
+
+    <!-- Exercice 1 -->
+    <div class="quiz-card" style="margin-bottom:20px;">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> Exercice 1 : Décision statistique</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Un test statistique donne une $p$-value de $p = 0{,}03$. Que décide-t-on avec un seuil $\alpha = 0{,}05$ ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:520px;">
+        <button class="quiz-btn quiz-module7-ex1-btn" data-answer="correct">On rejette H₀.</button>
+        <button class="quiz-btn quiz-module7-ex1-btn" data-answer="wrong1">On ne rejette pas H₀.</button>
+        <button class="quiz-btn quiz-module7-ex1-btn" data-answer="wrong2">On accepte définitivement H₀.</button>
+        <button class="quiz-btn quiz-module7-ex1-btn" data-answer="wrong3">On ne peut rien conclure.</button>
+      </div>
+
+      <div id="quiz-module7-ex1-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- Exercice 2 -->
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> Exercice 2 : Seconde situation</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Un autre test donne une $p$-value de $p = 0{,}42$. Que conclut-on avec le seuil standard $\alpha = 0{,}05$ ?
+      </p>
+
+      <div class="quiz-options" style="flex-direction:column; max-width:520px;">
+        <button class="quiz-btn quiz-module7-ex2-btn" data-answer="wrong1">On rejette H₀ car p est grand.</button>
+        <button class="quiz-btn quiz-module7-ex2-btn" data-answer="correct">On ne rejette pas H₀.</button>
+        <button class="quiz-btn quiz-module7-ex2-btn" data-answer="wrong2">On prouve que les deux variétés sont rigoureusement identiques.</button>
+      </div>
+
+      <div id="quiz-module7-ex2-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- 12. À RETENIR -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.8; margin-bottom:12px;">
+        • <strong>$H_0$ (Hypothèse nulle)</strong> &rarr; Pas de différence réelle / pas d'effet.<br>
+        • <strong>$H_1$ (Hypothèse alternative)</strong> &rarr; Existence d'une différence réelle / effet.<br>
+        • <strong>$p$-value</strong> &rarr; Indique à quel point les données observées sont compatibles avec $H_0$.<br>
+        • <strong>$p < 0{,}05$</strong> &rarr; On rejette $H_0$ (la différence est statistiquement significative).<br>
+        • <strong>$p \ge 0{,}05$</strong> &rarr; On ne rejette pas $H_0$ (preuves insuffisantes pour conclure à une différence).
+      </p>
+      <div style="background:#FFFFFF; border:1px solid #A7F3D0; border-radius:6px; padding:12px 16px; margin-top:10px;">
+        <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+          « Maintenant que nous comprenons H₀, H₁ et la p-value, nous pouvons apprendre à choisir et réaliser le bon test statistique. »
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="06-pourquoi-statistiques-incertitude.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">06. Pourquoi les statistiques ne donnent-elles pas toujours une réponse certaine ?</span>
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">08. Comparer des groupes : quel test choisir ?</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>

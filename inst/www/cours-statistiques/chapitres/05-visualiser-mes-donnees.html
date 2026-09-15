@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05. Visualiser mes données — Méthodes statistiques | Ramses 1.0</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- KaTeX pour le rendu des formules mathématiques en local -->
+  <link rel="stylesheet" href="../katex/katex.min.css">
+  <script defer src="../katex/katex.min.js"></script>
+  <script defer src="../katex/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+<div class="course-layout">
+  <aside class="course-sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <div class="brand-title">Méthodes statistiques</div>
+          <div class="brand-subtitle">Statistique appliquée à l'agriculture</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" class="search-input" placeholder="Rechercher...">
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">Sommaire général</div>
+      <a href="../index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Accueil du cours
+      </a>
+
+      <div class="nav-group-title">Fondamentaux</div>
+      <a href="01-bienvenue-ramses.html" class="nav-link">
+        <i class="fa-solid fa-compass"></i> 01. Bienvenue dans Ramses
+      </a>
+      <a href="02-comprendre-mes-variables.html" class="nav-link">
+        <i class="fa-solid fa-chart-simple"></i> 02. Comprendre mes variables
+      </a>
+      <a href="02b-preparer-et-nettoyer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-broom"></i> 02b. Préparer et nettoyer mes données <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="03-compter-et-resumer-mes-donnees.html" class="nav-link">
+        <i class="fa-solid fa-table-list"></i> 03. Compter et résumer mes données
+      </a>
+      <a href="04-mesurer-une-variable-quantitative.html" class="nav-link">
+        <i class="fa-solid fa-ruler-combined"></i> 04. Mesurer une variable quantitative
+      </a>
+      <a href="05-visualiser-mes-donnees.html" class="nav-link active">
+        <i class="fa-solid fa-chart-pie"></i> 05. Visualiser mes données
+      </a>
+      <a href="05b-intervalles-de-confiance.html" class="nav-link">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i> 05b. Les intervalles de confiance <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Inférence & Comparaisons</div>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="nav-link">
+        <i class="fa-solid fa-scale-balanced"></i> 06. Échantillon & incertitude
+      </a>
+      <a href="07-comprendre-hypothese-pvalue.html" class="nav-link">
+        <i class="fa-solid fa-flask"></i> 07. Hypothèse et p-value
+      </a>
+      <a href="08-comparer-groupes-quel-test.html" class="nav-link">
+        <i class="fa-solid fa-code-branch"></i> 08. Comparer des groupes : quel test ?
+      </a>
+      <a href="08b-verifier-les-conditions-dun-test.html" class="nav-link">
+        <i class="fa-solid fa-clipboard-check"></i> 08b. Vérifier les conditions d'un test <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="09-comparer-3-groupes-ou-plus.html" class="nav-link">
+        <i class="fa-solid fa-layer-group"></i> 09. Comparer 3 groupes ou plus
+      </a>
+      <a href="09b-anova-deux-facteurs.html" class="nav-link">
+        <i class="fa-solid fa-table-cells-large"></i> 09b. ANOVA à deux facteurs <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+
+      <div class="nav-group-title">Relations & Rédaction</div>
+      <a href="10-etudier-relation-deux-variables.html" class="nav-link">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i> 10. Relation entre 2 variables
+      </a>
+      <a href="10b-regression-lineaire-simple.html" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i> 10b. Régression linéaire simple <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="11-exploiter-resultats-rediger-article.html" class="nav-link">
+        <i class="fa-solid fa-pen-nib"></i> 11. Exploiter ses résultats et rédiger <span class="nav-badge" style="background:#059669; color:#FFFFFF;">Final</span>
+      </a>
+      <a href="12-puissance-et-taille-echantillon.html" class="nav-link">
+        <i class="fa-solid fa-users-gear"></i> 12. Puissance &amp; taille d'échantillon <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="13-limites-et-biais-statistiques.html" class="nav-link">
+        <i class="fa-solid fa-shield-halved"></i> 13. Limites et biais <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+      <a href="14-glossaire.html" class="nav-link">
+        <i class="fa-solid fa-book"></i> 14. Glossaire des symboles <span class="nav-badge" style="background:#2563EB; color:#FFFFFF;">Nouveau</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-back-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+    </div>
+  </aside>
+
+  <main class="course-main">
+    <div class="course-topbar">
+      <div class="breadcrumb">
+        <a href="../index.html">Cours</a> &nbsp;/&nbsp; <strong>Chapitre 05</strong>
+      </div>
+      <div class="topbar-actions">
+        <a href="../index.html" class="btn-action"><i class="fa-solid fa-list"></i> Sommaire</a>
+        <button class="btn-action btn-return-ramses"><i class="fa-solid fa-arrow-left"></i> Retour à Ramses</button>
+      </div>
+    </div>
+
+    <h1 class="course-title">Visualiser mes données</h1>
+    <div class="course-subtitle">Quel graphique choisir pour mieux comprendre mes données ?</div>
+
+    <!-- INTRODUCTION / SITUATION CONCRÈTE -->
+    <div class="callout callout-try" style="margin-top:20px;">
+      <div class="callout-title"><i class="fa-solid fa-comment-dots"></i> La situation de l'agronome de terrain</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « J'ai mes données sous forme de tableau, mais un tableau ne permet pas toujours de voir facilement ce qui se passe. Comment transformer mes données en graphiques utiles ? »
+      </p>
+    </div>
+
+    <!-- 1. COMMENCER PAR LE PROBLÈME -->
+    <h2><i class="fa-solid fa-circle-question" style="color:#2563EB;"></i> 1. Commencer par le problème</h2>
+
+    <p>Rappelons notre tableau habituel de 10 parcelles de maïs avec les trois variables suivies :</p>
+    <ul>
+      <li><code>village</code> : variable <strong>qualitative</strong> (catégories de lieu : Bonabéri ou Bépanda) ;</li>
+      <li><code>rendement</code> : variable <strong>quantitative</strong> (en tonnes par hectare, t/ha) ;</li>
+      <li><code>superficie</code> : variable <strong>quantitative</strong> (en hectares, ha).</li>
+    </ul>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:15%;">Parcelle</th>
+            <th style="width:25%;">Village (Qualitative)</th>
+            <th style="width:30%; text-align:right;">Superficie (ha, Quantitative)</th>
+            <th style="width:30%; text-align:right;">Rendement (t/ha, Quantitative)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>P01</strong></td><td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td><td style="text-align:right;">1.2</td><td style="text-align:right;">2.8</td></tr>
+          <tr><td><strong>P02</strong></td><td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td><td style="text-align:right;">0.8</td><td style="text-align:right;">2.4</td></tr>
+          <tr><td><strong>P03</strong></td><td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td><td style="text-align:right;">1.5</td><td style="text-align:right;">3.1</td></tr>
+          <tr><td><strong>P04</strong></td><td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td><td style="text-align:right;">1.0</td><td style="text-align:right;">2.7</td></tr>
+          <tr><td><strong>P05</strong></td><td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Bonabéri</span></td><td style="text-align:right;">2.0</td><td style="text-align:right;">3.4</td></tr>
+          <tr><td><strong>P06</strong></td><td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td><td style="text-align:right;">0.7</td><td style="text-align:right;">2.1</td></tr>
+          <tr><td><strong>P07</strong></td><td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td><td style="text-align:right;">1.1</td><td style="text-align:right;">2.5</td></tr>
+          <tr><td><strong>P08</strong></td><td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td><td style="text-align:right;">1.4</td><td style="text-align:right;">2.9</td></tr>
+          <tr><td><strong>P09</strong></td><td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td><td style="text-align:right;">0.9</td><td style="text-align:right;">2.3</td></tr>
+          <tr><td><strong>P10</strong></td><td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Bépanda</span></td><td style="text-align:right;">1.8</td><td style="text-align:right;">3.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title"><i class="fa-solid fa-compass"></i> La question fondamentale</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600; color:#1E40AF;">
+        « Quel graphique serait adapté à chacune de ces variables ? »
+      </p>
+    </div>
+
+    <p>
+      On ne choisit jamais un graphique au hasard ou pour faire « joli » : <strong>la forme du graphique dépend directement de la nature des variables</strong> (qualitative ou quantitative) et de la question que l'on se pose.
+    </p>
+
+    <!-- 2. VARIABLE QUALITATIVE -->
+    <h2><i class="fa-solid fa-chart-column" style="color:#059669;"></i> 2. Variable qualitative : le diagramme en barres</h2>
+
+    <p>
+      Lorsque l'on étudie une seule variable qualitative comme le <code>village</code>, chaque ligne appartient à une catégorie distincte.
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Règle d'or</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600;">
+        « Pour comparer des catégories, le diagramme en barres est un bon choix. »
+      </p>
+    </div>
+
+    <p>Le code R pour afficher ce diagramme :</p>
+
+    <pre><code>barplot(
+  table(donnees$village),
+  main = "Nombre de parcelles par village",
+  xlab = "Village",
+  ylab = "Effectif"
+)</code></pre>
+
+    <!-- Vrai graphique réel R : barplot -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Diagramme en barres (Barplot)</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Variable qualitative : <code>village</code> (Effectif réel : 5 parcelles à Bépanda, 5 à Bonabéri)</div>
+        </div>
+        <span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;">Graphique réel R</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="250" fill="#FAFAFA" rx="8" />
+
+        <!-- Grille Y (0 à 6) -->
+        <line x1="70" y1="190" x2="570" y2="190" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="70" y1="155" x2="570" y2="155" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="120" x2="570" y2="120" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="85"  x2="570" y2="85"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="50"  x2="570" y2="50"  stroke="#F3F4F6" stroke-width="1" />
+
+        <!-- Graduations Y -->
+        <text x="58" y="194" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+        <text x="58" y="159" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">1</text>
+        <text x="58" y="124" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2</text>
+        <text x="58" y="89"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3</text>
+        <text x="58" y="54"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">4</text>
+        <text x="58" y="19"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">5</text>
+        <text x="22" y="110" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 22 110)">Effectif</text>
+
+        <!-- Barre 1 : Bépanda = 5 -->
+        <rect x="150" y="15" width="130" height="175" fill="#2563EB" rx="4" />
+        <text x="215" y="105" font-family="'IBM Plex Sans', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">5</text>
+        <text x="215" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="600" fill="#1F2937" text-anchor="middle">Bépanda</text>
+
+        <!-- Barre 2 : Bonabéri = 5 -->
+        <rect x="360" y="15" width="130" height="175" fill="#059669" rx="4" />
+        <text x="425" y="105" font-family="'IBM Plex Sans', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">5</text>
+        <text x="425" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="12.5" font-weight="600" fill="#1F2937" text-anchor="middle">Bonabéri</text>
+
+        <text x="320" y="238" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#6B7280" text-anchor="middle">Village</text>
+      </svg>
+    </div>
+
+    <!-- 3. VARIABLE QUANTITATIVE -->
+    <h2><i class="fa-solid fa-chart-area" style="color:#D97706;"></i> 3. Variable quantitative : l'histogramme</h2>
+
+    <p>
+      Lorsque l'on a une variable numérique continue comme le <code>rendement</code>, les nombres varient de manière continue.
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Règle d'or</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600;">
+        « L'histogramme permet de voir comment les valeurs quantitatives sont réparties. »
+      </p>
+    </div>
+
+    <p>Le code R pour afficher l'histogramme :</p>
+
+    <pre><code>hist(
+  donnees$rendement,
+  main = "Distribution des rendements",
+  xlab = "Rendement",
+  ylab = "Nombre de parcelles"
+)</code></pre>
+
+    <!-- Vrai graphique réel R : histogramme -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Histogramme (Distribution des rendements)</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Variable quantitative continue : <code>rendement</code> (Classes régulières de 0.5 t/ha)</div>
+        </div>
+        <span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Graphique réel R</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="250" fill="#FAFAFA" rx="8" />
+
+        <!-- Grille Y (Effectif de 0 à 5) -->
+        <line x1="70" y1="190" x2="570" y2="190" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="70" y1="155" x2="570" y2="155" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="120" x2="570" y2="120" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="85"  x2="570" y2="85"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="50"  x2="570" y2="50"  stroke="#F3F4F6" stroke-width="1" />
+
+        <text x="58" y="194" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">0</text>
+        <text x="58" y="159" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">1</text>
+        <text x="58" y="124" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2</text>
+        <text x="58" y="89"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3</text>
+        <text x="58" y="54"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">4</text>
+        <text x="22" y="110" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 22 110)">Nombre de parcelles</text>
+
+        <!-- Tranche 1 [2.0 - 2.5] -> 4 parcelles -->
+        <rect x="110" y="50" width="130" height="140" fill="#3B82F6" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <text x="175" y="40" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1D4ED8" text-anchor="middle">4 parcelles</text>
+        <text x="175" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">2.1 à 2.5</text>
+
+        <!-- Tranche 2 ]2.5 - 3.0] -> 4 parcelles -->
+        <rect x="245" y="50" width="130" height="140" fill="#3B82F6" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <text x="310" y="40" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1D4ED8" text-anchor="middle">4 parcelles</text>
+        <text x="310" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">2.7 à 3.0</text>
+
+        <!-- Tranche 3 ]3.0 - 3.5] -> 2 parcelles -->
+        <rect x="380" y="120" width="130" height="70" fill="#60A5FA" stroke="#2563EB" stroke-width="1.5" rx="2" />
+        <text x="445" y="110" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="700" fill="#1D4ED8" text-anchor="middle">2 parcelles</text>
+        <text x="445" y="160" font-family="'IBM Plex Sans', sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">3.1 & 3.4</text>
+
+        <!-- Graduations X -->
+        <line x1="110" y1="190" x2="110" y2="196" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="245" y1="190" x2="245" y2="196" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="380" y1="190" x2="380" y2="196" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="510" y1="190" x2="510" y2="196" stroke="#4B5563" stroke-width="1.5" />
+
+        <text x="110" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">2.0</text>
+        <text x="245" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">2.5</text>
+        <text x="380" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">3.0</text>
+        <text x="510" y="212" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" fill="#374151" text-anchor="middle">3.5</text>
+        <text x="310" y="238" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Rendement</text>
+      </svg>
+    </div>
+
+    <!-- 4. COMPARER UNE VARIABLE QUANTITATIVE ENTRE GROUPES -->
+    <h2><i class="fa-solid fa-layer-group" style="color:#8B5CF6;"></i> 4. Comparer une variable quantitative entre groupes : le boxplot</h2>
+
+    <p>
+      Imaginons maintenant que nous voulons comparer les rendements <strong>selon le village</strong> (une quantitative <code>rendement</code> croisée avec une qualitative <code>village</code>).
+    </p>
+
+    <p>
+      Le <strong>boxplot (boîte à moustaches par groupe)</strong> permet de mettre côte à côte les distributions pour comparer immédiatement :
+    </p>
+    <ul>
+      <li>La médiane de chaque village (ligne centrale bleue) ;</li>
+      <li>L'étendue des récoltes de chaque terroir (la longueur de la boîte et des moustaches).</li>
+    </ul>
+
+    <p>Le code R pour afficher cette comparaison :</p>
+
+    <pre><code>boxplot(
+  rendement ~ village,
+  data = donnees,
+  main = "Rendement selon le village",
+  xlab = "Village",
+  ylab = "Rendement"
+)</code></pre>
+
+    <!-- Vrai graphique réel R : Boxplot comparatif par groupe -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Boîtes à moustaches comparatives (Boxplot par village)</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Rendement (t/ha) comparé entre Bépanda (2.1 à 3.0, médiane 2.5) et Bonabéri (2.4 à 3.4, médiane 2.8)</div>
+        </div>
+        <span class="chart-badge" style="background:#F5F3FF; color:#6D28D9; border-color:#DDD6FE;">Graphique réel R</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 270" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="270" fill="#FAFAFA" rx="8" />
+
+        <!-- Échelle Y : de 2.0 (y=210) à 3.6 (y=18) -> 120px par unité (12px par 0.1 t/ha) -->
+        <!-- Y pos = 210 - (val - 2.0) * 120 -->
+        <line x1="70" y1="210" x2="570" y2="210" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="70" y1="150" x2="570" y2="150" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="90"  x2="570" y2="90"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="70" y1="30"  x2="570" y2="30"  stroke="#F3F4F6" stroke-width="1" />
+
+        <text x="58" y="214" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.0</text>
+        <text x="58" y="154" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.5</text>
+        <text x="58" y="94"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.0</text>
+        <text x="58" y="34"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.5</text>
+        <text x="22" y="120" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 22 120)">Rendement</text>
+
+        <!-- GROUPE 1 : BÉPANDA (centre x = 220) -->
+        <!-- Données Bépanda: 2.1, 2.3, 2.5, 2.9, 3.0 | Min=2.1 (y=198), Q1=2.3 (y=174), Med=2.5 (y=150), Q3=2.9 (y=102), Max=3.0 (y=90) -->
+        <!-- Moustache basse (198 à 174) -->
+        <line x1="220" y1="198" x2="220" y2="174" stroke="#1E40AF" stroke-width="2" stroke-dasharray="3 2" />
+        <line x1="185" y1="198" x2="255" y2="198" stroke="#1E40AF" stroke-width="2" />
+        <text x="260" y="202" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#6B7280">Min: 2.1</text>
+
+        <!-- Boîte Bépanda (y=102 à 174, h=72px) -->
+        <rect x="175" y="102" width="90" height="72" fill="#DBEAFE" stroke="#2563EB" stroke-width="2" rx="2" />
+        <!-- Médiane Bépanda (y=150) -->
+        <line x1="175" y1="150" x2="265" y2="150" stroke="#1E3A8A" stroke-width="3" />
+        <text x="272" y="154" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="700" fill="#1D4ED8">Méd : 2.5</text>
+
+        <!-- Moustache haute (102 à 90) -->
+        <line x1="220" y1="102" x2="220" y2="90" stroke="#1E40AF" stroke-width="2" stroke-dasharray="3 2" />
+        <line x1="185" y1="90" x2="255" y2="90" stroke="#1E40AF" stroke-width="2" />
+        <text x="260" y="93" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#6B7280">Max: 3.0</text>
+
+        <!-- GROUPE 2 : BONABÉRI (centre x = 430) -->
+        <!-- Données Bonabéri: 2.4, 2.7, 2.8, 3.1, 3.4 | Min=2.4 (y=162), Q1=2.7 (y=126), Med=2.8 (y=114), Q3=3.1 (y=78), Max=3.4 (y=42) -->
+        <!-- Moustache basse (162 à 126) -->
+        <line x1="430" y1="162" x2="430" y2="126" stroke="#065F46" stroke-width="2" stroke-dasharray="3 2" />
+        <line x1="395" y1="162" x2="465" y2="162" stroke="#065F46" stroke-width="2" />
+        <text x="470" y="166" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#6B7280">Min: 2.4</text>
+
+        <!-- Boîte Bonabéri (y=78 à 126, h=48px) -->
+        <rect x="385" y="78" width="90" height="48" fill="#D1FAE5" stroke="#059669" stroke-width="2" rx="2" />
+        <!-- Médiane Bonabéri (y=114) -->
+        <line x1="385" y1="114" x2="475" y2="114" stroke="#064E3B" stroke-width="3" />
+        <text x="482" y="118" font-family="'IBM Plex Sans', sans-serif" font-size="11.5" font-weight="700" fill="#047857">Méd : 2.8</text>
+
+        <!-- Moustache haute (78 à 42) -->
+        <line x1="430" y1="78" x2="430" y2="42" stroke="#065F46" stroke-width="2" stroke-dasharray="3 2" />
+        <line x1="395" y1="42" x2="465" y2="42" stroke="#065F46" stroke-width="2" />
+        <text x="470" y="45" font-family="'IBM Plex Sans', sans-serif" font-size="10.5" fill="#6B7280">Max: 3.4</text>
+
+        <!-- Noms des groupes sur X -->
+        <text x="220" y="232" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="600" fill="#1E40AF" text-anchor="middle">Bépanda</text>
+        <text x="430" y="232" font-family="'IBM Plex Sans', sans-serif" font-size="13" font-weight="600" fill="#065F46" text-anchor="middle">Bonabéri</text>
+        <text x="325" y="256" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Village</text>
+      </svg>
+    </div>
+
+    <!-- 5. RELATION ENTRE DEUX VARIABLES QUANTITATIVES -->
+    <h2><i class="fa-solid fa-braille" style="color:#2563EB;"></i> 5. Relation entre deux variables quantitatives : le nuage de points</h2>
+
+    <p>
+      Lorsque l'on a deux variables quantitatives continues (ici la <code>superficie</code> en ha et le <code>rendement</code> en t/ha), chaque parcelle est représentée par un <strong>point unique</strong> $(X, Y)$ sur le plan cartésien.
+    </p>
+
+    <div class="callout callout-remember">
+      <div class="callout-title"><i class="fa-solid fa-bookmark"></i> Règle d'or</div>
+      <p style="font-size:15px; margin-bottom:0; font-weight:600;">
+        « Le nuage de points permet d'observer visuellement la relation entre deux variables quantitatives. »
+      </p>
+    </div>
+
+    <p>Le code R pour tracer ce nuage :</p>
+
+    <pre><code>plot(
+  donnees$superficie,
+  donnees$rendement,
+  main = "Superficie et rendement",
+  xlab = "Superficie",
+  ylab = "Rendement"
+)</code></pre>
+
+    <!-- Vrai graphique réel R : Scatter plot (Nuage de points) -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <strong style="font-size:15px; color:var(--primary-dark);">Nuage de points (Scatter plot)</strong>
+          <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">Relation entre la <code>superficie</code> (X, 0.7 à 2.0 ha) et le <code>rendement</code> (Y, 2.1 à 3.4 t/ha)</div>
+        </div>
+        <span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;">Graphique réel R</span>
+      </div>
+
+      <svg class="chart-container-svg" viewBox="0 0 620 270" xmlns="http://www.w3.org/2000/svg">
+        <rect width="620" height="270" fill="#FAFAFA" rx="8" />
+
+        <!-- Grille & Axes -->
+        <!-- X span : 0.5 (x=80) à 2.2 (x=560) -> 480px pour 1.7 ha (282.35 px par ha, ~28.2 px par 0.1 ha) -->
+        <!-- Y span : 2.0 (y=210) à 3.6 (y=30) -> 180px pour 1.6 t/ha (112.5 px par t/ha, ~11.25 px par 0.1 t/ha) -->
+        <!-- x_pos = 80 + (sup - 0.5) * 282.35 -->
+        <!-- y_pos = 210 - (rend - 2.0) * 112.5 -->
+
+        <!-- Lignes horizontales Y -->
+        <line x1="80" y1="210" x2="560" y2="210" stroke="#E5E7EB" stroke-width="1.5" />
+        <line x1="80" y1="154" x2="560" y2="154" stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="97"  x2="560" y2="97"  stroke="#F3F4F6" stroke-width="1" />
+        <line x1="80" y1="41"  x2="560" y2="41"  stroke="#F3F4F6" stroke-width="1" />
+
+        <text x="68" y="214" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.0</text>
+        <text x="68" y="158" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">2.5</text>
+        <text x="68" y="101" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.0</text>
+        <text x="68" y="45"  font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#6B7280" text-anchor="end">3.5</text>
+        <text x="25" y="125" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563" font-weight="600" text-anchor="middle" transform="rotate(-90 25 125)">Rendement</text>
+
+        <!-- Graduations X -->
+        <line x1="80"  y1="210" x2="80"  y2="216" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="221" y1="210" x2="221" y2="216" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="362" y1="210" x2="362" y2="216" stroke="#4B5563" stroke-width="1.5" />
+        <line x1="504" y1="210" x2="504" y2="216" stroke="#4B5563" stroke-width="1.5" />
+
+        <text x="80"  y="230" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#374151" text-anchor="middle">0.5</text>
+        <text x="221" y="230" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#374151" text-anchor="middle">1.0</text>
+        <text x="362" y="230" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#374151" text-anchor="middle">1.5</text>
+        <text x="504" y="230" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#374151" text-anchor="middle">2.0</text>
+        <text x="320" y="254" font-family="'IBM Plex Sans', sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="middle">Superficie</text>
+
+        <!-- Tracé des 10 parcelles réelles -->
+        <!-- P01 (1.2, 2.8) -> x = 80 + 0.7*282.35 = 277.6, y = 210 - 0.8*112.5 = 120 -->
+        <circle cx="278" cy="120" r="6" fill="#059669" stroke="#065F46" stroke-width="1.5" />
+        <text x="278" y="110" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">P01</text>
+
+        <!-- P02 (0.8, 2.4) -> x = 80 + 0.3*282.35 = 164.7, y = 210 - 0.4*112.5 = 165 -->
+        <circle cx="165" cy="165" r="6" fill="#059669" stroke="#065F46" stroke-width="1.5" />
+        <text x="165" y="155" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">P02</text>
+
+        <!-- P03 (1.5, 3.1) -> x = 80 + 1.0*282.35 = 362.4, y = 210 - 1.1*112.5 = 86.25 -->
+        <circle cx="362" cy="86" r="6" fill="#059669" stroke="#065F46" stroke-width="1.5" />
+        <text x="362" y="76" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">P03</text>
+
+        <!-- P04 (1.0, 2.7) -> x = 80 + 0.5*282.35 = 221.2, y = 210 - 0.7*112.5 = 131.25 -->
+        <circle cx="221" cy="131" r="6" fill="#059669" stroke="#065F46" stroke-width="1.5" />
+        <text x="221" y="121" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">P04</text>
+
+        <!-- P05 (2.0, 3.4) -> x = 80 + 1.5*282.35 = 503.5, y = 210 - 1.4*112.5 = 52.5 -->
+        <circle cx="504" cy="53" r="6" fill="#059669" stroke="#065F46" stroke-width="1.5" />
+        <text x="504" y="43" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">P05</text>
+
+        <!-- P06 (0.7, 2.1) -> x = 80 + 0.2*282.35 = 136.5, y = 210 - 0.1*112.5 = 198.75 -->
+        <circle cx="137" cy="199" r="6" fill="#2563EB" stroke="#1E40AF" stroke-width="1.5" />
+        <text x="137" y="189" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">P06</text>
+
+        <!-- P07 (1.1, 2.5) -> x = 80 + 0.6*282.35 = 249.4, y = 210 - 0.5*112.5 = 153.75 -->
+        <circle cx="249" cy="154" r="6" fill="#2563EB" stroke="#1E40AF" stroke-width="1.5" />
+        <text x="249" y="144" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">P07</text>
+
+        <!-- P08 (1.4, 2.9) -> x = 80 + 0.9*282.35 = 334.1, y = 210 - 0.9*112.5 = 108.75 -->
+        <circle cx="334" cy="109" r="6" fill="#2563EB" stroke="#1E40AF" stroke-width="1.5" />
+        <text x="334" y="99" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">P08</text>
+
+        <!-- P09 (0.9, 2.3) -> x = 80 + 0.4*282.35 = 192.9, y = 210 - 0.3*112.5 = 176.25 -->
+        <circle cx="193" cy="176" r="6" fill="#2563EB" stroke="#1E40AF" stroke-width="1.5" />
+        <text x="193" y="166" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">P09</text>
+
+        <!-- P10 (1.8, 3.0) -> x = 80 + 1.3*282.35 = 447.1, y = 210 - 1.0*112.5 = 97.5 -->
+        <circle cx="447" cy="98" r="6" fill="#2563EB" stroke="#1E40AF" stroke-width="1.5" />
+        <text x="447" y="88" font-family="'IBM Plex Sans', sans-serif" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">P10</text>
+
+        <!-- Légende discrète -->
+        <circle cx="480" cy="170" r="4.5" fill="#059669" />
+        <text x="492" y="174" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563">Bonabéri</text>
+        <circle cx="480" cy="190" r="4.5" fill="#2563EB" />
+        <text x="492" y="194" font-family="'IBM Plex Sans', sans-serif" font-size="11" fill="#4B5563">Bépanda</text>
+      </svg>
+    </div>
+
+    <!-- 6. TABLEAU RÉCAPITULATIF -->
+    <h2><i class="fa-solid fa-table-list" style="color:#D97706;"></i> 6. Tableau récapitulatif</h2>
+
+    <p>Voici la boussole simple à garder sous la main pour ne plus jamais hésiter :</p>
+
+    <div class="table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th style="width:45%;">Situation de vos données</th>
+            <th style="width:35%;">Graphique conseillé</th>
+            <th style="width:20%; text-align:center;">Fonction R</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Une variable qualitative</strong> (ex: <code>village</code>)</td>
+            <td><span class="chart-badge" style="background:#ECFDF5; color:#065F46; border-color:#A7F3D0;"><i class="fa-solid fa-chart-column"></i> Diagramme en barres</span></td>
+            <td style="text-align:center;"><code>barplot()</code></td>
+          </tr>
+          <tr>
+            <td><strong>Une variable quantitative</strong> (ex: <code>rendement</code>)</td>
+            <td><span class="chart-badge" style="background:#EFF6FF; color:#1E40AF; border-color:#BFDBFE;"><i class="fa-solid fa-chart-area"></i> Histogramme</span></td>
+            <td style="text-align:center;"><code>hist()</code></td>
+          </tr>
+          <tr>
+            <td><strong>Une quantitative selon un groupe</strong> (ex: <code>rendement ~ village</code>)</td>
+            <td><span class="chart-badge" style="background:#F5F3FF; color:#6D28D9; border-color:#DDD6FE;"><i class="fa-solid fa-layer-group"></i> Boxplot</span></td>
+            <td style="text-align:center;"><code>boxplot()</code></td>
+          </tr>
+          <tr>
+            <td><strong>Deux quantitatives</strong> (ex: <code>superficie</code> et <code>rendement</code>)</td>
+            <td><span class="chart-badge" style="background:#FEF3C7; color:#92400E; border-color:#FDE68A;"><i class="fa-solid fa-braille"></i> Nuage de points</span></td>
+            <td style="text-align:center;"><code>plot()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 7. AVEC RAMSES -->
+    <h2><i class="fa-solid fa-desktop" style="color:#1F2937;"></i> 7. Maintenant, faisons la même chose dans Ramses</h2>
+
+    <p>
+      Dans l'application Ramses, vous disposez d'un studio graphique complet dédié à la visualisation interactive. Voici comment y accéder et tracer vos graphiques :
+    </p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-chart-column" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">1. Ouvrir l'onglet « Visualisation »</div>
+          <div class="step-desc">
+            Dans la barre de navigation supérieure principale, cliquez directement sur l'onglet <strong>« Visualisation »</strong> (icône de graphique en colonnes).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-shapes" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">2. Choisir le type de graphique</div>
+          <div class="step-desc">
+            Dans le menu déroulant <strong>« Type de graphique (Geom) : »</strong> du panneau latéral gauche, sélectionnez selon votre besoin :<br>
+            • <strong>« Diagramme en barres (Barplot) »</strong> pour une variable qualitative ;<br>
+            • <strong>« Histogramme de distribution »</strong> pour une variable quantitative seule ;<br>
+            • <strong>« Boîte à moustaches (Boxplot) »</strong> pour comparer une quantitative selon un groupe ;<br>
+            • <strong>« Nuage de points (Scatter plot) »</strong> pour croiser deux variables quantitatives.
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-arrows-up-down-left-right" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">3. Assigner les axes (X et Y)</div>
+          <div class="step-desc">
+            Sous la section <strong>« Assignation des Axes & Dimensions »</strong> :<br>
+            • Choisissez la variable d'abscisse dans <strong>« Axe X (Abscisse / Variable) : »</strong> ;<br>
+            • Choisissez si besoin la variable d'ordonnée dans <strong>« Axe Y (Ordonnée - optionnel en 1D) : »</strong> ;<br>
+            • Vous pouvez aussi associer une couleur dans <strong>« Couleur / Remplissage (Color/Fill) : »</strong> (ex: colorer les points par <code>village</code>).
+          </div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"><i class="fa-solid fa-wand-magic-sparkles" style="font-size:12px;"></i></div>
+        <div class="step-content">
+          <div class="step-title">4. Explorer et exporter</div>
+          <div class="step-desc">
+            Le graphique <strong>Plotly</strong> se met à jour instantanément dans le panneau <strong>« Visualisation Interactive »</strong>.<br>
+            • Cliquez sur le bouton <strong>« Code R »</strong> pour afficher le script ggplot2 reproductible ;<br>
+            • Ou cliquez sur <strong>« Injecter dans le Journal R Markdown »</strong> pour archiver l'analyse.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. PETIT DÉFI -->
+    <h2><i class="fa-solid fa-puzzle-piece" style="color:#2563EB;"></i> 8. Petit défi : Quel graphique choisir ?</h2>
+
+    <!-- Défi 1 -->
+    <div class="quiz-card" style="margin-bottom:20px;">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-question-circle" style="color:#2563EB;"></i> Situation 1</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Vous souhaitez représenter la <strong>répartition des producteurs par village</strong>. Quel graphique est le plus approprié ?
+      </p>
+
+      <div class="quiz-options">
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="1" data-answer="wrong">Histogramme</button>
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="1" data-answer="correct">Diagramme en barres</button>
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="1" data-answer="wrong">Nuage de points</button>
+      </div>
+
+      <div id="quiz-challenge-1-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- Défi 2 -->
+    <div class="quiz-card" style="margin-bottom:20px;">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-question-circle" style="color:#D97706;"></i> Situation 2</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Vous analysez la <strong>distribution de l'âge des agriculteurs</strong> (une variable numérique continue allant de 22 à 68 ans). Quel graphique devez-vous choisir ?
+      </p>
+
+      <div class="quiz-options">
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="2" data-answer="correct">Histogramme</button>
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="2" data-answer="wrong">Diagramme en barres</button>
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="2" data-answer="wrong">Nuage de points</button>
+      </div>
+
+      <div id="quiz-challenge-2-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- Défi 3 -->
+    <div class="quiz-card">
+      <h3 style="margin-top:0; font-size:16px; color:var(--primary-dark);"><i class="fa-solid fa-question-circle" style="color:#059669;"></i> Situation 3</h3>
+      <p style="margin-bottom:12px; font-size:15px; font-weight:600; color:#1F2937;">
+        Vous voulez observer si les parcelles ayant une plus grande <strong>superficie</strong> obtiennent un <strong>rendement</strong> plus élevé. Quel graphique convient le mieux ?
+      </p>
+
+      <div class="quiz-options">
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="3" data-answer="wrong">Diagramme en barres</button>
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="3" data-answer="wrong">Boîte à moustaches</button>
+        <button class="quiz-btn quiz-challenge-btn" data-challenge="3" data-answer="correct">Nuage de points</button>
+      </div>
+
+      <div id="quiz-challenge-3-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <!-- RAPPEL DE FIN DE CHAPITRE -->
+    <div class="callout callout-remember" style="margin-top:36px;">
+      <div class="callout-title" style="font-size:16px;"><i class="fa-solid fa-flag-checkered"></i> Ce qu'il faut retenir</div>
+      <p style="font-size:15px; line-height:1.7; margin-bottom:8px;">
+        • <strong>Catégories (qualitative)</strong> &rarr; <code>barplot()</code> (Diagramme en barres)<br>
+        • <strong>Distribution (quantitative)</strong> &rarr; <code>hist()</code> (Histogramme)<br>
+        • <strong>Comparaison entre groupes (quantitative ~ qualitative)</strong> &rarr; <code>boxplot()</code> (Boîte à moustaches)<br>
+        • <strong>Relation bivariée (quantitative vs quantitative)</strong> &rarr; <code>plot()</code> (Nuage de points)
+      </p>
+      <p style="margin-bottom:0; font-weight:700; color:#065F46; font-size:15px;">
+        « Un bon graphique raconte une histoire claire dès les trois premières secondes. »
+      </p>
+    </div>
+
+    <!-- Navigation précédent / suivant -->
+    <div class="chapter-nav-footer">
+      <a href="04-mesurer-une-variable-quantitative.html" class="chapter-nav-btn">
+        <span class="nav-direction">&larr; Précédent</span>
+        <span class="nav-target-title">04. Mesurer une variable quantitative</span>
+      </a>
+      <a href="06-pourquoi-statistiques-incertitude.html" class="chapter-nav-btn" style="text-align:right;">
+        <span class="nav-direction">Suivant &rarr;</span>
+        <span class="nav-target-title">06. Pourquoi les statistiques ne donnent-elles pas toujours une réponse certaine ?</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../script.js"></script>
+</body>
+</html>
