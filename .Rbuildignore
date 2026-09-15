@@ -1,25 +1,44 @@
-# Sauvegardes
-*.bak
-*.bak.*
+# ============================================================================
+# Fichier .Rbuildignore — Fichiers exclus du build du package R
+# ============================================================================
+# Syntaxe : EXPRESSIONS RÉGULIÈRES (regex), pas des globs.
+# Chaque ligne est un motif qui sera testé contre le nom de chaque fichier.
+# ============================================================================
 
-# Système
-Thumbs.db
-.DS_Store
-desktop.ini
+# --- Dossiers de développement ---
+^\.git$
+^\.gitignore$
+^\.Rbuildignore$
+^\.Rproj\.user$
+^\.github$
+^\.vscode$
+^\.idea$
 
-# Temporaire
-*.tmp
-*.log
-*.swp
+# --- Sauvegardes (syntaxe regex, pas glob !) ---
+^.*\.bak$
+^.*\.bak\..*$
+^.*~$
+^backup$
 
-# IDE
-.vscode/
-.idea/
+# --- Fichiers système ---
+^Thumbs\.db$
+^\.DS_Store$
+^desktop\.ini$
 
-# Python
-__pycache__/
-*.pyc
+# --- Fichiers temporaires ---
+^.*\.tmp$
+^.*\.log$
+^.*\.swp$
 
-# Fichiers générés pour la formation
-inst/www/cours-statistiques/formation-complete.html
-inst/www/cours-statistiques/formation-complete.pdf
+# --- Python ---
+^__pycache__$
+^.*\.pyc$
+
+# --- Fichiers générés ---
+^formation-complete\.html$
+^formation-complete\.pdf$
+
+# --- Fichiers de dev standard ---
+^\.travis\.yml$
+^appveyor\.yml$
+^codecov\.yml$
