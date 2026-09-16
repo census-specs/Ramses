@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ramses — Analyse statistique guidée avec R</title>
-  <meta name="description" content="Documentation simple et pratique de Ramses, une interface graphique Shiny pour préparer, explorer, visualiser et analyser des données avec R.">
+  <title>Ramses — Analyse statistique accessible avec R</title>
+  <meta name="description" content="Ramses rend l'analyse statistique accessible à tous. Importez vos données, explorez-les, visualisez-les et analysez-les sans écrire une seule ligne de code — avec le code R conservé pour la reproductibilité.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="navbar">
     <div class="navbar-container">
-      <a href="index.html" class="navbar-brand"><span>Ramses</span><span class="pkg-tag">v1.0.0</span></a>
+      <a href="index.html" class="navbar-brand">
+        <span>Ramses</span>
+        <span class="pkg-tag">v1.0.0</span>
+      </a>
       <ul class="nav-links">
         <li><a href="index.html" class="nav-link active">Accueil</a></li>
         <li><a href="installation.html" class="nav-link">Installation</a></li>
         <li><a href="tutoriel.html" class="nav-link">Tutoriel</a></li>
+        <li><a href="formation.html" class="nav-link">Formation</a></li>
         <li><a href="auteur.html" class="nav-link">À propos</a></li>
       </ul>
       <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
@@ -23,125 +27,234 @@
 
   <main class="main-wrapper">
     <article class="article-content">
-      <header>
-        <h1>Ramses</h1>
-        <p style="font-size:1.2rem;color:var(--color-primary-light);font-weight:600;">Faire des analyses statistiques avec R, sans devoir commencer par écrire du code.</p>
-        <p>Ramses est une interface graphique interactive pour préparer des données, faire des statistiques, créer des graphiques et produire un rapport reproductible.</p>
-        <div class="badge-group">
-          <span class="badge badge-version">Ramses 1.0.0</span>
-          <span class="badge badge-r-req">R ≥ 4.1.0</span>
-          <span class="badge badge-license">Licence MIT</span>
-          <span class="badge">Shiny + bslib</span>
-          <span class="badge badge-rmd">R Markdown</span>
+
+      <!-- HERO -->
+      <header class="hero">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <span class="hero-eyebrow">
+              🌱 Interface graphique pour R
+            </span>
+            <h1>Faites parler vos données,<br>sans écrire une ligne de code.</h1>
+            <p class="lead">
+              Ramses est une application qui vous accompagne de l'importation de vos données jusqu'à la rédaction de votre rapport d'analyse. Conçu pour les débutants, les étudiants et les professionnels de terrain.
+            </p>
+            <div class="hero-actions">
+              <a href="installation.html" class="btn btn-primary btn-arrow">Installer Ramses</a>
+              <a href="tutoriel.html" class="btn btn-secondary">Voir le tutoriel</a>
+            </div>
+          </div>
+          <figure class="hero-visual">
+            <img src="images/ramses-hero.png" alt="Aperçu de l'interface Ramses avec un jeu de données chargé" />
+          </figure>
         </div>
-        <figure>
-          <img src="images/ramses-hero.png" alt="Vue générale de Ramses" />
-          <figcaption>Ramses regroupe les principales étapes d'une analyse dans une seule interface.</figcaption>
-        </figure>
       </header>
 
+      <!-- BADGES -->
+      <div class="badge-group">
+        <span class="badge badge-version">Ramses 1.0.0</span>
+        <span class="badge badge-r-req">R ≥ 4.1.0</span>
+        <span class="badge badge-license">Licence MIT</span>
+        <span class="badge badge-stack">Shiny + bslib</span>
+        <span class="badge badge-rmd">R Markdown</span>
+      </div>
+
+      <!-- À QUOI ÇA SERT -->
       <section>
-        <h2>Ramses en une phrase</h2>
+        <h2>À quoi ça sert ?</h2>
+        <p>
+          Vous avez un fichier Excel, CSV ou SPSS rempli de données. Vous voulez en tirer des conclusions : moyennes, graphiques, tests statistiques, tableau de synthèse.
+        </p>
+        <p>
+          <strong>Ramses vous guide pas à pas.</strong> Vous cliquez, l'application calcule, et vous obtenez un résultat clair — sans jamais avoir à apprendre la programmation.
+        </p>
+        <p>
+          Et si vous voulez comprendre ce qui se passe « sous le capot », tout le code R utilisé est automatiquement conservé pour vous.
+        </p>
+
         <div class="callout callout-note">
-          <div class="callout-title">L'idée est simple</div>
-          <p style="margin-bottom:0;">Vous chargez vos données → vous les vérifiez → vous les préparez → vous choisissez une analyse → Ramses affiche les résultats → le code R correspondant est conservé dans le journal.</p>
+          <div class="callout-title">En une phrase</div>
+          <p style="margin-bottom:0;">
+            <strong>Vous faites de la statistique. Ramses se charge de la technique.</strong>
+          </p>
         </div>
-        <p>Vous n'avez donc pas besoin de connaître R pour commencer. En revanche, Ramses ne remplace pas le raisonnement statistique : il vous aide à l'appliquer et à garder une trace de ce que vous avez fait.</p>
       </section>
 
+      <!-- LES 5 GRANDES ÉTAPES -->
       <section>
-        <h2>Que peut faire Ramses ?</h2>
+        <h2>Votre parcours en 5 étapes</h2>
+        <p>
+          Chaque analyse suit naturellement la même logique. Ramses est structuré autour de ces cinq moments clés.
+        </p>
+
         <div class="grid-2">
-          <div class="card"><h3>1. Importer les données</h3><p>Importez des fichiers <strong>CSV, TXT/TSV, Excel (.xlsx/.xls), SPSS (.sav), Stata (.dta)</strong> ou des objets R <strong>.rds</strong>. Pour Excel, vous pouvez choisir la feuille à importer.</p></div>
-          <div class="card"><h3>2. Préparer les données</h3><p>Inspectez les lignes, colonnes, valeurs manquantes, doublons et valeurs aberrantes. Renommez, supprimez, réorganisez ou convertissez des variables, recodez des modalités, remplacez des valeurs et créez des variables calculées.</p></div>
-          <div class="card"><h3>3. Nettoyer et filtrer</h3><p>Traitez les valeurs manquantes, supprimez les doublons, nettoyez les espaces, modifiez la casse du texte, filtrez les observations, triez les lignes et sélectionnez les colonnes utiles.</p></div>
-          <div class="card"><h3>4. Décrire les données</h3><p>Calculez des effectifs, moyennes, médianes, variances, écarts-types, CV, minimum, maximum, IQR, asymétrie et aplatissement. Travaillez aussi par groupe.</p></div>
-          <div class="card"><h3>5. Faire des tableaux</h3><p>Créez des distributions qualitatives et des tableaux croisés avec effectifs, pourcentages par ligne, par colonne ou sur le total.</p></div>
-          <div class="card"><h3>6. Étudier les relations</h3><p>Calculez des corrélations <strong>Pearson</strong> ou <strong>Spearman</strong> dans les descriptifs, puis Pearson, Spearman ou Kendall dans les tests de corrélation.</p></div>
-          <div class="card"><h3>7. Tester des hypothèses</h3><p>Normalité, égalité des variances, tests t, Wilcoxon, ANOVA, Kruskal-Wallis, Chi-deux, Fisher, McNemar et tests de proportions sont disponibles.</p></div>
-          <div class="card"><h3>8. Modéliser</h3><p>Ajustez une <strong>régression linéaire</strong> simple ou multiple, ou une <strong>régression logistique binaire</strong>, avec tableaux de résultats et diagnostics.</p></div>
-          <div class="card"><h3>9. Visualiser</h3><p>Construisez des graphiques interactifs : nuage de points, barres, camembert, boxplot, violon, histogramme, ligne, densité et heatmap.</p></div>
-          <div class="card"><h3>10. Garder le code</h3><p>Les opérations réalisées dans l'interface peuvent être ajoutées au <strong>Journal R Markdown</strong>, puis exportées en <strong>.R, .Rmd ou .html</strong>.</p></div>
+          <div class="card">
+            <h3>
+              <span class="card-icon">1</span>
+              Importez
+            </h3>
+            <p>
+              Chargez vos fichiers <code>.csv</code>, <code>.xlsx</code>, <code>.sav</code> ou <code>.dta</code>. Ramses détecte le format et vous laisse ajuster les options.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span class="card-icon">2</span>
+              Préparez
+            </h3>
+            <p>
+              Vérifiez la qualité de vos données : valeurs manquantes, doublons, valeurs aberrantes. Renommez, recodez, filtrez — tout est guidé.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span class="card-icon">3</span>
+              Explorez
+            </h3>
+            <p>
+              Décrivez vos variables (moyennes, médianes, effectifs, pourcentages) et croisez-les pour repérer les tendances.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span class="card-icon">4</span>
+              Analysez
+            </h3>
+            <p>
+              Choisissez un test statistique (t, ANOVA, Chi-deux, corrélation, régression…) à partir d'une simple question.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>
+              <span class="card-icon">5</span>
+              Documentez
+            </h3>
+            <p>
+              Exportez votre rapport en HTML, votre code en R ou en R Markdown. Vos analyses sont reproductibles.
+            </p>
+          </div>
+
+          <div class="card" style="background: linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%); border-color: rgba(22,101,52,0.2);">
+            <h3>
+              <span class="card-icon">+</span>
+              Apprenez
+            </h3>
+            <p>
+              À chaque clic, le code R correspondant s'affiche dans le journal. Vous apprenez sans vous en rendre compte.
+            </p>
+          </div>
         </div>
       </section>
 
+      <!-- QUEL TEST CHOISIR -->
       <section>
-        <h2>Les grands espaces de travail</h2>
-        <table class="academic-table">
-          <thead><tr><th>Espace</th><th>À quoi sert-il ?</th><th>Exemples</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Données</strong></td><td>Charger et regarder le jeu de données actif.</td><td>Importer, aperçu, dimensions, recherche.</td></tr>
-            <tr><td><strong>Préparation</strong></td><td>Corriger et transformer les données avant l'analyse.</td><td>NA, doublons, recodage, calcul, filtre, tri.</td></tr>
-            <tr><td><strong>Descriptif</strong></td><td>Décrire ce que contient le jeu de données.</td><td>Moyenne, médiane, fréquences, tableaux croisés, corrélations.</td></tr>
-            <tr><td><strong>Tests statistiques</strong></td><td>Répondre à une question statistique.</td><td>Test t, Wilcoxon, ANOVA, Chi-deux, proportions, corrélation.</td></tr>
-            <tr><td><strong>Visualisation</strong></td><td>Construire un graphique en choisissant les variables.</td><td>X, Y, couleur, taille, facettes, thème et palette.</td></tr>
-            <tr><td><strong>Journal Rmd</strong></td><td>Conserver la démarche et le code reproductible.</td><td>Notes, code R, export R/Rmd/HTML.</td></tr>
-          </tbody>
-        </table>
+        <h2>Quel outil pour quelle question ?</h2>
+        <p>
+          Pas besoin de connaître le nom des tests. Cherchez simplement votre question dans la colonne de gauche.
+        </p>
+
+        <div class="table-container">
+          <table class="academic-table">
+            <thead>
+              <tr>
+                <th>Votre question</th>
+                <th>Ce que Ramses utilise</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mes données suivent-elles une loi normale ?</td>
+                <td>Test de normalité</td>
+              </tr>
+              <tr>
+                <td>Une moyenne est-elle différente d'une valeur de référence ?</td>
+                <td>Test t à 1 échantillon</td>
+              </tr>
+              <tr>
+                <td>Deux groupes ont-ils des moyennes différentes ?</td>
+                <td>Test t indépendant (ou Mann-Whitney)</td>
+              </tr>
+              <tr>
+                <td>Avant / après une intervention : y a-t-il un changement ?</td>
+                <td>Test t apparié (ou Wilcoxon)</td>
+              </tr>
+              <tr>
+                <td>Trois groupes ou plus sont-ils différents ?</td>
+                <td>ANOVA (ou Kruskal-Wallis)</td>
+              </tr>
+              <tr>
+                <td>Deux variables qualitatives sont-elles liées ?</td>
+                <td>Test du Chi-deux (ou Fisher)</td>
+              </tr>
+              <tr>
+                <td>Deux proportions sont-elles différentes ?</td>
+                <td>Test de proportions</td>
+              </tr>
+              <tr>
+                <td>Deux variables quantitatives évoluent-elles ensemble ?</td>
+                <td>Corrélation Pearson / Spearman</td>
+              </tr>
+              <tr>
+                <td>Je veux prédire une valeur numérique.</td>
+                <td>Régression linéaire</td>
+              </tr>
+              <tr>
+                <td>Je veux prédire une catégorie (oui/non).</td>
+                <td>Régression logistique</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">⚠️ À retenir</div>
+          <p style="margin-bottom:0;">
+            Un test statistique ne se choisit jamais au hasard. Il dépend de <strong>votre question</strong>, du <strong>type de vos variables</strong> et de <strong>votre plan d'étude</strong>. Ramses vous guide, mais reste à votre service.
+          </p>
+        </div>
       </section>
 
+      <!-- CE QUE RAMSES NE FAIT PAS -->
       <section>
-        <h2>Quel test choisir ?</h2>
-        <p>Pour un débutant, commencez par la <strong>question</strong>, pas par le nom du test.</p>
-        <table class="academic-table">
-          <thead><tr><th>Votre question</th><th>Outil Ramses à regarder</th></tr></thead>
-          <tbody>
-            <tr><td>Mes données suivent-elles approximativement une loi normale ?</td><td>Normalité & Variance</td></tr>
-            <tr><td>Une moyenne est-elle différente d'une valeur donnée ?</td><td>Test t — échantillon unique</td></tr>
-            <tr><td>Deux groupes ont-ils des moyennes différentes ?</td><td>Test t indépendant / Welch</td></tr>
-            <tr><td>Les mesures avant et après sont-elles différentes ?</td><td>Test t apparié ou Wilcoxon apparié</td></tr>
-            <tr><td>Trois groupes ou plus ont-ils des moyennes différentes ?</td><td>ANOVA ou Kruskal-Wallis</td></tr>
-            <tr><td>Deux variables qualitatives sont-elles associées ?</td><td>Chi-deux ou Fisher</td></tr>
-            <tr><td>Deux proportions sont-elles différentes ?</td><td>Tests de proportions</td></tr>
-            <tr><td>Deux variables quantitatives sont-elles liées ?</td><td>Corrélation Pearson / Spearman / Kendall</td></tr>
-            <tr><td>Je veux expliquer une variable quantitative.</td><td>Régression linéaire</td></tr>
-            <tr><td>Je veux expliquer une variable binaire.</td><td>Régression logistique</td></tr>
-          </tbody>
-        </table>
-        <div class="callout callout-warning"><div class="callout-title">Important</div><p style="margin-bottom:0;">Un test statistique ne se choisit pas uniquement avec un menu. Il faut tenir compte du type de variable, du plan d'étude, de l'indépendance ou de l'appariement des observations, des hypothèses du test et du contexte scientifique.</p></div>
+        <h2>Ce que Ramses ne fera jamais à votre place</h2>
+        <p>
+          Ramses automatise les calculs. Mais il ne peut pas :
+        </p>
+        <ul>
+          <li>Décider si votre <strong>question de recherche</strong> est pertinente.</li>
+          <li>Vérifier si vos variables <strong>mesurent vraiment</strong> ce que vous croyez.</li>
+          <li>Remplacer votre <strong>jugement scientifique</strong> sur les résultats.</li>
+          <li>Corriger un <strong>mauvais plan d'expérience</strong>.</li>
+        </ul>
+        <p>
+          <strong>Vous restez aux commandes.</strong> Ramses s'occupe de la technique. Vous vous occupez du sens.
+        </p>
       </section>
 
-      <section>
-        <h2>Pourquoi le journal R Markdown est important ?</h2>
-        <p>Ramses ne se limite pas à afficher un résultat. Lorsque vous réalisez une opération analytique, l'application peut conserver le code R correspondant dans le journal.</p>
-        <figure><img src="images/feature-rmd-journal.png" alt="Journal R Markdown de Ramses" /><figcaption>Le journal permet de revenir sur les étapes de l'analyse et de les reproduire.</figcaption></figure>
-        <p>À la fin, vous pouvez produire :</p>
-        <ul><li><strong>.R</strong> : le code R exécutable ;</li><li><strong>.Rmd</strong> : le document source R Markdown ;</li><li><strong>.html</strong> : un rapport HTML compilé.</li></ul>
+      <!-- CTA FINAL -->
+      <section style="text-align: center; padding: 2.5rem 1.5rem; background: linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%); border-radius: var(--radius-lg); border: 1px solid rgba(22,101,52,0.15); margin-top: 2rem;">
+        <h2 style="border: 0; margin-top: 0; padding: 0; justify-content: center; display: block;">Prêt à commencer ?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.75rem; max-width: 520px; margin-left: auto; margin-right: auto;">
+          L'installation prend moins de 5 minutes. Ensuite, vous êtes guidé pas à pas par le tutoriel.
+        </p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <a href="installation.html" class="btn btn-primary btn-arrow">Installer Ramses</a>
+          <a href="tutoriel.html" class="btn btn-secondary">Suivre le tutoriel</a>
+        </div>
       </section>
 
-      <section>
-        <h2>Commencer en 3 étapes</h2>
-        <ol>
-          <li><strong>Installer Ramses</strong> depuis la page <a href="installation.html">Installation</a>.</li>
-          <li><strong>Charger un jeu de données</strong>. Si vous débutez, Ramses démarre avec le jeu de données <code>iris</code>.</li>
-          <li><strong>Suivre le parcours</strong> : préparer → décrire → visualiser → tester → documenter.</li>
-        </ol>
-        <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>library(Ramses)
-run_app()</code></pre></div>
-      </section>
-
-      <section>
-        <h2>Ce que Ramses ne fait pas à votre place</h2>
-        <p>Ramses automatise l'exécution et la présentation de nombreuses méthodes. Il ne décide pas si votre étude est bien conçue, si vos variables mesurent réellement ce que vous voulez mesurer ou si une conclusion est scientifiquement pertinente.</p>
-        <p><strong>Le bon réflexe :</strong> utiliser Ramses pour faciliter l'analyse, puis expliquer clairement pourquoi la méthode choisie répond à votre question.</p>
-      </section>
-
-      <section>
-        <h2>Besoin d'un guide pas à pas ?</h2>
-        <p>Le <a href="tutoriel.html"><strong>tutoriel débutant</strong></a> vous accompagne depuis le chargement des données jusqu'au rapport final.</p>
-      </section>
     </article>
   </main>
 
-  <footer class="footer"><p><strong>Ramses 1.0.0</strong> — Interface graphique pour l'analyse statistique en R — Licence MIT.</p></footer>
-  <script>
-    document.querySelectorAll('.btn-copy').forEach(button => {
-      button.addEventListener('click', async () => {
-        const code = button.closest('.code-block-container').querySelector('pre code').innerText;
-        try { await navigator.clipboard.writeText(code); button.querySelector('span').textContent = 'Copié !'; setTimeout(() => button.querySelector('span').textContent = 'Copier', 1600); }
-        catch(e) { button.querySelector('span').textContent = 'Sélectionnez le code'; }
-      });
-    });
-  </script>
+  <footer class="footer">
+    <p><strong>Ramses 1.0.0</strong> — Interface graphique pour l'analyse statistique en R</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+      Licence MIT · Développé par Pierre Valdeze MBOM MBOM
+    </p>
+  </footer>
 </body>
 </html>

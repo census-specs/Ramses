@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Installer Ramses</title>
-  <meta name="description" content="Guide simple pour installer et lancer Ramses, package R d'analyse statistique guidée.">
+  <title>Installer Ramses — Guide pas à pas</title>
+  <meta name="description" content="Installation de Ramses en moins de 5 minutes. Guide pas à pas pour débutants.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +14,8 @@
       <ul class="nav-links">
         <li><a href="index.html" class="nav-link">Accueil</a></li>
         <li><a href="installation.html" class="nav-link active">Installation</a></li>
-        <li><a href="tutoriel.html" class="nav-link">Tutoriel</a></li>
+        <li><a href="tutoriel.html" class="nav-link">Démarrage</a></li>
+        <li><a href="formation.html" class="nav-link">Formation</a></li>
         <li><a href="auteur.html" class="nav-link">À propos</a></li>
       </ul>
       <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
@@ -24,23 +25,34 @@
   <main class="main-wrapper"><article class="article-content">
     <header>
       <h1>Installer Ramses</h1>
-      <p>Si vous êtes débutant en R, suivez simplement les étapes dans l'ordre. Vous n'avez pas besoin de connaître Git pour utiliser Ramses.</p>
+      <p style="font-size:1.05rem;color:var(--text-secondary);">L'installation prend moins de 5 minutes. Suivez les étapes dans l'ordre — vous n'avez pas besoin de connaître R pour commencer.</p>
     </header>
 
     <section>
-      <h2>1. Ce qu'il vous faut</h2>
-      <ul>
-        <li><strong>R 4.1.0 ou une version plus récente.</strong></li>
-        <li><strong>RStudio</strong> est fortement conseillé pour débuter, même si Ramses peut fonctionner avec R seul.</li>
-        <li>Une connexion Internet est nécessaire pendant l'installation de Ramses et de ses dépendances.</li>
-      </ul>
-      <div class="callout callout-note"><div class="callout-title">Pas besoin d'installer tous les packages à la main</div><p style="margin-bottom:0;">L'installation depuis GitHub demande à R d'installer les dépendances nécessaires. Cela peut prendre quelques minutes la première fois.</p></div>
+      <h2>Ce qu'il vous faut</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3><span class="card-icon">R</span> R 4.1.0 ou plus récent</h3>
+          <p>Le langage statistique. <a href="https://cran.r-project.org/" target="_blank" rel="noopener">Télécharger R</a> si ce n'est pas déjà fait.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">RStudio</span> RStudio (recommandé)</h3>
+          <p>L'environnement de travail. Facilite l'usage de R pour les débutants. <a href="https://posit.co/download/rstudio-desktop/" target="_blank" rel="noopener">Télécharger RStudio</a>.</p>
+        </div>
+      </div>
+      <div class="callout callout-note">
+        <div class="callout-title">Connexion Internet</div>
+        <p style="margin-bottom:0;">Nécessaire pendant l'installation (téléchargement des dépendances). Ensuite, Ramses fonctionne hors ligne.</p>
+      </div>
     </section>
 
     <section>
-      <h2>2. Installer Ramses depuis GitHub</h2>
-      <p>Ouvrez RStudio, puis copiez ce code dans la console R :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">Console R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>if (!requireNamespace("remotes", quietly = TRUE)) {
+      <h2>Étape unique : installer Ramses</h2>
+      <p>Ouvrez <strong>RStudio</strong>, puis copiez ce code dans la console R :</p>
+
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">Console R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
 
@@ -48,98 +60,104 @@ remotes::install_github(
   "census-specs/Ramses",
   dependencies = TRUE,
   upgrade = "ask"
-)</code></pre></div>
-      <p>Si R vous demande si vous voulez mettre à jour certains packages, vous pouvez généralement choisir l'option proposée par défaut.</p>
+)</code></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Première installation</div>
+        <p style="margin-bottom:0;">R vous demandera peut-être de mettre à jour des packages. Acceptez les propositions par défaut — c'est normal et sans risque.</p>
+      </div>
     </section>
 
     <section>
-      <h2>3. Lancer Ramses</h2>
-      <p>Une fois l'installation terminée :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">Console R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>library(Ramses)
-run_app()</code></pre></div>
-      <p>Ramses ouvre normalement une fenêtre d'application avec votre navigateur compatible. Si aucun navigateur compatible avec le mode « fenêtre dédiée » n'est trouvé, l'application utilise le navigateur standard.</p>
+      <h2>Lancer Ramses</h2>
+      <p>Une fois l'installation terminée, toujours dans la console R :</p>
+
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">Console R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>library(Ramses)
+run_app()</code></pre>
+      </div>
+
+      <p>Ramses s'ouvre dans votre navigateur. Vous êtes prêt à explorer.</p>
+
+      <figure>
+        <img src="images/tutorial-install-1.png" alt="Capture d'écran de l'interface Ramses au démarrage" />
+        <figcaption>Ramses démarre avec le jeu de données <code>iris</code> : vous pouvez commencer immédiatement.</figcaption>
+      </figure>
     </section>
 
     <section>
-      <h2>4. Premier démarrage : que vais-je voir ?</h2>
-      <p>Ramses démarre avec le jeu de données <code>iris</code>. C'est volontaire : vous pouvez tester l'application immédiatement sans préparer un fichier.</p>
+      <h2>Premier démarrage : par où commencer ?</h2>
+      <p>Ramses ouvre automatiquement un jeu de données d'exemple (<code>iris</code>). Vous pouvez donc tester l'application tout de suite, sans rien préparer.</p>
       <ol>
         <li>Regardez le tableau de données.</li>
-        <li>Ouvrez <strong>Préparation</strong> pour voir le diagnostic.</li>
-        <li>Ouvrez <strong>Statistiques descriptives</strong> pour calculer quelques indicateurs.</li>
+        <li>Ouvrez l'onglet <strong>Préparation</strong> pour voir le diagnostic.</li>
+        <li>Ouvrez <strong>Statistiques descriptives</strong> pour calculer vos premiers indicateurs.</li>
         <li>Essayez <strong>Visualisation</strong> pour créer un graphique.</li>
-        <li>Essayez ensuite un test dans <strong>Tests statistiques</strong>.</li>
+        <li>Testez un <strong>test statistique</strong> simple.</li>
       </ol>
+      <p><a href="tutoriel.html"><strong>→ Suivre le guide de démarrage</strong></a></p>
     </section>
 
     <section>
-      <h2>5. Installer depuis une copie locale du package</h2>
-      <p>Cette méthode est surtout utile si vous développez Ramses ou si vous avez téléchargé/cloné le dépôt.</p>
-      <p>Dans RStudio, ouvrez le projet Ramses puis utilisez :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>remotes::install_local("chemin/vers/Ramses")</code></pre></div>
-      <p>Depuis la racine du dépôt, le script <code>dev/build_package.R</code> peut également servir aux opérations de développement et de construction du package.</p>
+      <h2>Si l'installation pose problème</h2>
+
+      <h3>« Package not available »</h3>
+      <p>Vérifiez votre version de R :</p>
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>R.version.string</code></pre>
+      </div>
+      <p>Si R est ancien, mettez-le à jour puis relancez l'installation.</p>
+
+      <h3>Un package dépendant pose problème</h3>
+      <p>Installez-le manuellement, puis relancez :</p>
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>install.packages("nom_du_package")
+remotes::install_github("census-specs/Ramses", dependencies = TRUE)</code></pre>
+      </div>
+
+      <h3>L'application ne s'ouvre pas</h3>
+      <p>Lancez-la sans ouvrir automatiquement le navigateur :</p>
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>library(Ramses)
+run_app(launch.browser = FALSE)</code></pre>
+      </div>
+      <p>Puis ouvrez manuellement l'adresse indiquée dans la console (ex : <code>http://127.0.0.1:3838</code>).</p>
     </section>
 
     <section>
-      <h2>6. Dépendances principales</h2>
-      <p>Ramses s'appuie notamment sur :</p>
-      <table class="academic-table">
-        <thead><tr><th>Package</th><th>Rôle simple</th></tr></thead>
-        <tbody>
-          <tr><td><code>shiny</code></td><td>Construire l'application interactive.</td></tr>
-          <tr><td><code>bslib</code></td><td>Construire l'interface moderne et responsive.</td></tr>
-          <tr><td><code>DT</code></td><td>Afficher et explorer les tableaux.</td></tr>
-          <tr><td><code>plotly</code></td><td>Créer des graphiques interactifs.</td></tr>
-          <tr><td><code>ggplot2</code></td><td>Construire les graphiques R.</td></tr>
-          <tr><td><code>readxl</code></td><td>Lire les fichiers Excel.</td></tr>
-          <tr><td><code>haven</code></td><td>Lire SPSS et Stata.</td></tr>
-          <tr><td><code>rmarkdown</code> + <code>knitr</code></td><td>Produire les rapports reproductibles.</td></tr>
-        </tbody>
-      </table>
+      <h2>Vérifier l'installation</h2>
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>packageVersion("Ramses")</code></pre>
+      </div>
+      <p>La version attendue est <strong>1.0.0</strong> ou plus récente.</p>
     </section>
 
     <section>
-      <h2>7. Si l'installation échoue</h2>
-      <h3>Erreur : « package ... is not available »</h3>
-      <p>Commencez par vérifier votre version de R :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>R.version.string</code></pre></div>
-      <p>Si R est ancien, mettez-le à jour puis relancez l'installation de Ramses.</p>
-
-      <h3>Erreur concernant un package dépendant</h3>
-      <p>Essayez d'abord d'installer le package indiqué par le message :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">Exemple</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>install.packages("nom_du_package")
-remotes::install_github("census-specs/Ramses", dependencies = TRUE)</code></pre></div>
-
-      <h3>Ramses ne s'ouvre pas</h3>
-      <p>Vous pouvez lancer l'application sans ouverture automatique du navigateur :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>library(Ramses)
-run_app(launch.browser = FALSE)</code></pre></div>
-      <p>Vous pouvez aussi choisir un port précis :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>run_app(port = 3838)</code></pre></div>
-    </section>
-
-    <section>
-      <h2>8. Vérifier que Ramses est bien installé</h2>
-      <p>Dans R :</p>
-      <div class="code-block-container"><div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div><pre><code>packageVersion("Ramses")
-Ramses::run_app()</code></pre></div>
-      <p>La version attendue actuellement est <strong>1.0.0</strong>.</p>
-    </section>
-
-    <section>
-      <h2>9. Pour les développeurs</h2>
-      <p>Le dépôt contient les modules Shiny, les fonctions utilitaires, les tests automatisés et la documentation web. Les tests utilisent <code>testthat</code>. Le dossier <code>docs/</code> contient le site de documentation statique.</p>
-      <p><a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer"><strong>Ouvrir le dépôt Ramses sur GitHub</strong></a></p>
+      <h2>Pour aller plus loin</h2>
+      <p>Vous voulez apprendre les statistiques appliquées avec Ramses ? Une <strong>formation complète</strong> est intégrée à l'application : 15 modules interactifs, du comptage simple à la rédaction scientifique.</p>
+      <div class="callout callout-tip">
+        <div class="callout-title">📘 Formation intégrée</div>
+        <p style="margin-bottom:0;">Accessible depuis l'application via le bouton <strong>Aide & Formation</strong>. Aucun prérequis mathématique.</p>
+      </div>
     </section>
   </article></main>
 
-  <footer class="footer"><p><strong>Ramses 1.0.0</strong> — Installation — Licence MIT.</p></footer>
+  <footer class="footer">
+    <p><strong>Ramses 1.0.0</strong> — Installation — Licence MIT</p>
+  </footer>
+
   <script>
     document.querySelectorAll('.btn-copy').forEach(button => {
       button.addEventListener('click', async () => {
         const code = button.closest('.code-block-container').querySelector('pre code').innerText;
-        try { await navigator.clipboard.writeText(code); button.querySelector('span').textContent = 'Copié !'; setTimeout(() => button.querySelector('span').textContent = 'Copier', 1600); }
-        catch(e) { button.querySelector('span').textContent = 'Sélectionnez le code'; }
+        try { await navigator.clipboard.writeText(code); button.querySelector('span').textContent = 'Copié !'; button.classList.add('copied'); setTimeout(() => { button.querySelector('span').textContent = 'Copier'; button.classList.remove('copied'); }, 1600); }
+        catch(e) { button.querySelector('span').textContent = 'Sélectionnez'; }
       });
     });
   </script>
