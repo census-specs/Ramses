@@ -1,152 +1,239 @@
 # Ramses <img src="man/figures/logo.png" align="right" height="138" alt="Ramses logo" />
 
-<!-- badges: start -->
-[![R-CMD-check](https://img.shields.io/badge/R%20CMD%20check-passing-brightgreen.svg)](https://github.com/census-specs/Ramses/actions)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/census-specs/Ramses)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![R-Universe](https://img.shields.io/badge/R--Universe-astral--r-orange.svg)](https://astral-r.r-universe.dev)
-<!-- badges: end -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Modern Graphical User Interface for Statistical Analysis in R**  
-> Une interface graphique contemporaine, fluide et réactive conçue comme une alternative moderne à **Rcmdr** (R Commander).
+> **Ramses** est une interface graphique moderne pour réaliser des analyses statistiques avec R, sans devoir commencer par écrire du code.
 
 ---
 
-## 🌟 Présentation
+## 📌 Qu'est-ce que Ramses ?
 
-**Ramses** est un package R complet fournissant une interface utilisateur graphique (GUI) moderne développée avec **Shiny** et **bslib** (Bootstrap 5). Conçu pour les chercheurs, data analysts, biostatisticiens, enseignants et étudiants, Ramses simplifie l'exploration et l'analyse statistique tout en garantissant une **reproductibilité scientifique absolue**.
+**Ramses** est un package R qui propose une interface graphique interactive construite avec **Shiny** et **bslib**.
 
-Contrairement aux interfaces classiques reposant sur Tcl/Tk, Ramses offre une expérience web interactive, dynamique et élégante, s'exécutant directement dans votre navigateur web ou au sein de RStudio.
+L'objectif est de rendre l'analyse statistique plus simple et plus accessible, notamment pour les étudiants, enseignants, chercheurs et professionnels qui souhaitent travailler avec R à travers une interface graphique.
+
+Ramses permet de charger un jeu de données, l'explorer, réaliser des analyses statistiques, créer des graphiques et conserver les commandes utilisées dans un journal **R Markdown**.
+
+Ramses est développé comme une alternative moderne à **Rcmdr (R Commander)**, avec une interface accessible depuis un navigateur web.
+
+> **État du projet :** Ramses est actuellement en développement. Le package n'a pas encore fait l'objet d'une vérification complète avec `R CMD check`.
 
 ---
 
-## ✨ Fonctionnalités Clés
+## ✨ Ce que Ramses permet de faire
 
-### 1. Importation & Gestion Multi-formats
-- **Formats supportés** : Fichiers délimités (`.csv`, `.tsv`, `.txt`), feuilles de calcul Excel (`.xlsx`, `.xls`), fichiers SPSS (`.sav`), Stata (`.dta`) et objets sérialisés R (`.rds`, `.RData`).
-- **Détection automatique du format** basée sur l'extension et fenêtre modale de paramétrage fin (séparateurs, décimales, encodage, noms de variables, typage).
-- **Explorateur interactif** avec recherche globale, pagination et filtres par colonne via `DT::datatable`.
+### 📂 Importer des données
 
-### 2. Statistiques Descriptives Complètes
-- **Variables Quantitatives** : Moyenne, écart-type, médiane, IQR, min/max, skewness, kurtosis, intervalles de confiance et graphiques univariés (histogrammes avec courbe de densité, boxplots interactifs).
-- **Variables Qualitatives** : Tables d'effectifs, pourcentages simples et cumulés, diagrammes en barres et camemberts interactifs via Plotly.
-- **Analyses Bivariées & Contingence** : Tableaux croisés avec pourcentages ligne / colonne / total, et matrices de corrélation numériques (Pearson, Spearman).
+Ramses peut importer plusieurs formats courants :
 
-### 3. Visualisation Dynamique ("Tableau-Style" Chart Builder)
-- Système de glisser-déposer intuitif pour assigner les axes X, Y, la couleur/remplissage, la taille et les facettes (`facet_wrap`).
-- Plus de 10 géométries ggplot2 intégrées : Nuages de points, régressions linéaires et LOESS, boîtes à moustaches, diagrammes en violon, histogrammes, barres, séries temporelles et cartes de chaleur.
-- Double affichage synchronisé : Rendu interactif WebGL/SVG via `plotly` et code R source `ggplot2` généré en temps réel.
+- CSV, TXT et TSV ;
+- Excel (`.xlsx`, `.xls`) ;
+- SPSS (`.sav`) ;
+- Stata (`.dta`) ;
+- RDS (`.rds`) ;
+- objets R présents dans la session (`.GlobalEnv`).
 
-### 4. Tests Statistiques & Modélisation Exhaustifs
-Six catégories méthodologiques prêtes à l'emploi :
-1. **Tests paramétriques univariés & bivariés** : Test de Student pour échantillon unique, échantillons indépendants (Welch ou Student classique), et séries appariées.
-2. **Tests non-paramétriques** : Test de Wilcoxon-Mann-Whitney (2 groupes) et test de Wilcoxon pour séries appariées.
-3. **Analyse de variance (ANOVA)** : ANOVA à un facteur, ANOVA factorielle et test non-paramétrique de Kruskal-Wallis avec tests post-hoc (Tukey HSD).
-4. **Tests d'association & proportions** : Test du Chi-2 d'indépendance de Pearson, test exact de Fisher, et tests de proportions à 1 ou 2 échantillons.
-5. **Régression & Modélisation** : Régression linéaire simple et multiple (OLS), régression logistique binaire avec calcul automatique des Odds Ratios (OR) et diagnostics des résidus.
-6. **Tests de normalité & homoscédasticité** : Shapiro-Wilk, Kolmogorov-Smirnov, test de Levene et test de Bartlett.
+Une fenêtre d'importation permet de configurer les principaux paramètres du fichier avant son chargement.
 
-### 5. Journal R Markdown & Reproductibilité
-- **Journalisation automatique** : Chaque filtre, transformation de données, graphique et test statistique exécuté dans l'interface est fidèlement consigné sous forme de script R Markdown (`.Rmd`).
-- **Console d'édition en direct** : Permet d'insérer des notes textuelles, interprétations cliniques ou remarques d'analyse.
-- **Exportation multi-formats** :
-  - Script R exécutable pur (`.R`) pour exécution en ligne de commande ou `source()`.
-  - Fichier source R Markdown complet (`.Rmd`).
-  - Rapport autonome compilé en HTML interactif (`.html`) avec table des matières et thèmes graphiques.
+### 📊 Explorer les données
+
+Le jeu de données actif peut être consulté dans une table interactive avec recherche, pagination et défilement horizontal.
+
+Ramses affiche également un résumé du jeu de données : nombre de lignes, nombre de colonnes et types généraux de variables.
+
+### 📈 Faire des statistiques descriptives
+
+Le module descriptif permet notamment de travailler avec :
+
+- les variables quantitatives ;
+- les variables qualitatives ;
+- les distributions et statistiques usuelles ;
+- les tableaux d'effectifs et de pourcentages ;
+- les analyses par groupes ;
+- les corrélations entre variables numériques.
+
+### 📉 Créer des graphiques
+
+Le **Chart Builder** permet de construire graphiquement différents types de visualisations à partir de `ggplot2`, avec une restitution interactive via `plotly`.
+
+Il propose notamment des graphiques tels que :
+
+- nuages de points ;
+- histogrammes ;
+- diagrammes en barres ;
+- boxplots ;
+- violons ;
+- courbes ;
+- régressions ;
+- cartes de chaleur.
+
+Le code R correspondant au graphique peut également être consulté.
+
+### 🧪 Réaliser des tests statistiques et des modèles
+
+Ramses regroupe plusieurs méthodes statistiques dans une interface guidée, notamment :
+
+- tests t ;
+- tests de Wilcoxon ;
+- ANOVA ;
+- Kruskal-Wallis ;
+- Chi-deux et test exact de Fisher ;
+- tests de proportions ;
+- tests de normalité ;
+- tests d'homoscédasticité ;
+- régression linéaire ;
+- régression logistique.
+
+Les choix proposés dépendent du type de données et de l'analyse sélectionnée.
+
+### 📝 Conserver les étapes de l'analyse
+
+Ramses possède un **journal R Markdown** qui enregistre les principales étapes réalisées dans l'interface.
+
+Il est possible d'y ajouter des notes et commentaires, puis d'exporter le travail sous différents formats, notamment :
+
+- script R (`.R`) ;
+- fichier R Markdown (`.Rmd`) ;
+- rapport HTML.
+
+L'objectif est de faciliter la compréhension, la reproduction et la poursuite d'une analyse.
+
+### 🎓 Formation statistique intégrée
+
+Le dépôt contient également une **formation statistique complète composée de 15 modules**, avec des contenus pédagogiques, un glossaire et des jeux de données d'exemple.
 
 ---
 
 ## 🚀 Installation
 
 ### Prérequis
-- R version **4.1.0** ou supérieure installée sur votre système.
 
-### Installation depuis GitHub
-Vous pouvez installer la version de développement de **Ramses** directement depuis GitHub à l'aide du package `remotes` :
+Il faut disposer de :
+
+- **R ≥ 4.1.0** ;
+- une connexion Internet pour installer Ramses et ses dépendances ;
+- un navigateur web récent pour utiliser l'interface.
+
+### Installer Ramses depuis GitHub
+
+La méthode la plus simple consiste à installer `remotes`, puis Ramses directement depuis le dépôt GitHub :
 
 ```r
-# Installer le package remotes si nécessaire
+# 1. Installer remotes si nécessaire
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
 
-# Installer Ramses depuis le dépôt GitHub
-remotes::install_github("astral-r/Ramses")
+# 2. Installer Ramses
+remotes::install_github("census-specs/Ramses")
 ```
 
-### Installation locale (depuis les sources du package)
-Si vous avez cloné ou téléchargé le code source :
+Cette commande installe également les dépendances déclarées par Ramses.
+
+### Installer une copie locale du dépôt
+
+Si vous avez téléchargé ou cloné le dépôt sur votre ordinateur, placez-vous dans le dossier racine de **Ramses**, puis utilisez :
 
 ```r
-# Depuis le répertoire racine du package
-devtools::install()
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
 
-# Ou en exécutant le script automatisé d'assemblage
-source("dev/build_package.R")
+remotes::install_local(".")
+```
+
+Vous pouvez également utiliser `devtools::install()` si `devtools` est déjà installé :
+
+```r
+devtools::install()
 ```
 
 ---
 
-## 💻 Utilisation Rapide
+## ▶️ Lancer Ramses
 
-Le démarrage de l'application nécessite une seule ligne de code :
+Après l'installation :
 
 ```r
-# Charger le package
 library(Ramses)
-
-# Lancer l'interface utilisateur dans votre navigateur par défaut
 run_app()
 ```
 
-### Options de Lancement Avancées
+Par défaut, Ramses cherche un navigateur compatible avec le mode fenêtre dédiée. Si aucun navigateur compatible n'est trouvé, il utilise le navigateur par défaut du système.
 
-La fonction `run_app()` offre des paramètres de configuration adaptés aux environnements locaux, serveurs distants ou conteneurs Docker :
+### Quelques options utiles
+
+Ouvrir Ramses dans le navigateur standard :
 
 ```r
-# Lancer sur un port TCP spécifique (ex: 3838)
-run_app(port = 3838)
+run_app(standalone = FALSE)
+```
 
-# Lancer sans ouvrir automatiquement le navigateur (mode serveur)
-run_app(port = 8080, launch.browser = FALSE)
+Utiliser un port précis :
 
-# Écouter sur toutes les interfaces réseau (ex: conteneur Docker / Cloud Run)
+```r
+run_app(standalone = FALSE, port = 3838)
+```
+
+Démarrer le serveur sans ouvrir automatiquement le navigateur :
+
+```r
+run_app(launch.browser = FALSE)
+```
+
+Pour un environnement distant ou conteneurisé :
+
+```r
 run_app(host = "0.0.0.0", port = 3000)
 ```
 
 ---
 
-## 📁 Architecture du Package
+## 📁 Structure du dépôt
 
 ```text
 Ramses/
-├── DESCRIPTION             # Métadonnées officielles et dépendances
-├── NAMESPACE               # Fonctions exportées et imports roxygen2
-├── LICENSE                 # Licence MIT
-├── .Rbuildignore           # Fichiers exclus de la compilation binaire
-├── README.md               # Documentation de présentation du projet
-├── dev/
-│   └── build_package.R     # Script d'audit, documentation et installation
+├── DESCRIPTION
+├── NAMESPACE
+├── README.md
+├── LICENSE
 ├── R/
-│   ├── run_app.R           # Point d'entrée public exporté : run_app()
-│   ├── app_ui.R            # Interface globale bslib (navbar, modales)
-│   ├── app_server.R        # Logique réactive centrale et journal Rmd
-│   ├── mod_descriptives.R  # Module de statistiques descriptives univariées/bivariées
-│   ├── mod_chart_builder.R # Module créateur de graphiques (ggplot2 / Plotly)
-│   └── mod_tests.R         # Module de tests statistiques et modélisation
-└── man/                    # Fiches d'aide générées automatiquement par roxygen2
+│   ├── app_ui.R
+│   ├── app_server.R
+│   ├── run_app.R
+│   ├── mod_data_prep.R
+│   ├── mod_descriptives.R
+│   ├── mod_chart_builder.R
+│   ├── mod_tests.R
+│   ├── mod_regression.R
+│   └── utilitaires...
+├── dev/
+├── docs/
+└── inst/
 ```
+
+Le code principal de l'application se trouve dans le dossier `R/`. La documentation et les ressources pédagogiques sont regroupées notamment dans `docs/` et `inst/`.
 
 ---
 
-## 🤝 Contribution & Signalement de Bugs
+## 🐛 Signaler un problème
 
-Les contributions sont les bienvenues ! Pour signaler un problème ou proposer une nouvelle fonctionnalité :
-1. Ouvrez une *issue* sur GitHub : [https://github.com/astral-r/Ramses/issues](https://github.com/astral-r/Ramses/issues)
-2. Soumettez une *Pull Request* avec les tests associés.
+Si vous rencontrez un problème ou souhaitez proposer une amélioration, vous pouvez ouvrir une **issue** sur le dépôt GitHub :
+
+https://github.com/census-specs/Ramses/issues
 
 ---
 
 ## 📄 Licence
 
-Ce projet est distribué sous licence libre **MIT**. Consultez le fichier [LICENSE](LICENSE) pour plus de détails.
+Ramses est distribué sous licence **MIT**. Voir le fichier [LICENSE](LICENSE).
+
+---
+
+## 👤 Auteur
+
+**Pierre Valdeze MBOM MBOM**  
+Association ASTRAL  
+
+Dépôt du projet : https://github.com/census-specs/Ramses
