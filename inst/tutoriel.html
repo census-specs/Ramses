@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide de démarrage — Ramses</title>
+  <meta name="description" content="Prenez en main Ramses en quelques minutes : premier import, première analyse, premier graphique.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand"><span>Ramses</span><span class="pkg-tag">v1.0.0</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Accueil</a></li>
+        <li><a href="installation.html" class="nav-link">Installation</a></li>
+        <li><a href="tutoriel.html" class="nav-link active">Démarrage</a></li>
+        <li><a href="formation.html" class="nav-link">Formation</a></li>
+        <li><a href="auteur.html" class="nav-link">À propos</a></li>
+      </ul>
+      <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
+    </div>
+  </nav>
+
+  <main class="main-wrapper"><article class="article-content">
+    <header>
+      <h1>Bien démarrer avec Ramses</h1>
+      <p style="font-size:1.05rem;color:var(--text-secondary);">En 5 minutes, faites votre première analyse. Le principe : comprendre ce que vous faites, pas cliquer partout.</p>
+    </header>
+
+    <section>
+      <h2>La règle d'or</h2>
+      <div class="callout callout-tip">
+        <div class="callout-title">Toujours dans le même ordre</div>
+        <p style="margin-bottom:0;"><strong>1. Préparer → 2. Décrire → 3. Visualiser → 4. Analyser → 5. Documenter.</strong></p>
+      </div>
+      <p>Ce parcours est valable pour toute analyse de données. Ramses vous fournit les outils. C'est vous qui reliez chaque étape à <strong>votre question</strong>.</p>
+    </section>
+
+    <section>
+      <h2>Étape 1 — Ouvrir Ramses</h2>
+      <div class="code-block-container">
+        <div class="code-header"><span class="code-lang">R</span><button class="btn-copy" type="button"><span>Copier</span></button></div>
+        <pre><code>library(Ramses)
+run_app()</code></pre>
+      </div>
+      <p>Ramses démarre avec un jeu de données d'exemple (<code>iris</code>). Vous pouvez vous entraîner immédiatement.</p>
+    </section>
+
+    <section>
+      <h2>Étape 2 — Comprendre votre jeu de données</h2>
+      <p>Avant tout calcul, posez-vous ces 5 questions simples :</p>
+      <ul>
+        <li>Combien ai-je d'observations (lignes) ?</li>
+        <li>Combien ai-je de variables (colonnes) ?</li>
+        <li>Quelles variables sont <strong>numériques</strong> (quantitatives) ?</li>
+        <li>Quelles variables sont <strong>catégorielles</strong> (qualitatives) ?</li>
+        <li>Y a-t-il des <strong>valeurs manquantes</strong> ou <strong>aberrantes</strong> ?</li>
+      </ul>
+      <p>Dans <strong>Préparation des données → Explorer</strong>, Ramses répond automatiquement à ces questions.</p>
+    </section>
+
+    <section>
+      <h2>Étape 3 — Importer vos propres données</h2>
+      <p>Cliquez sur <strong>Importer</strong> et choisissez votre fichier.</p>
+
+      <div class="table-container">
+        <table class="academic-table">
+          <thead>
+            <tr><th>Format</th><th>Ce que vous pouvez ajuster</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>.csv</code>, <code>.txt</code>, <code>.tsv</code></td><td>Séparateur, décimales, présence d'en-tête</td></tr>
+            <tr><td><code>.xlsx</code>, <code>.xls</code></td><td>Choix de la feuille, noms de colonnes</td></tr>
+            <tr><td><code>.sav</code> (SPSS)</td><td>Conversion des labels en facteurs</td></tr>
+            <tr><td><code>.dta</code> (Stata)</td><td>Conversion des labels en facteurs</td></tr>
+            <tr><td><code>.rds</code>, <code>.RData</code></td><td>Lecture directe d'un objet R</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Après le chargement, Ramses remplace le jeu actif et ajoute l'opération dans le journal.</p>
+    </section>
+
+    <section>
+      <h2>Étape 4 — Nettoyer les données</h2>
+      <p>L'onglet <strong>Préparation</strong> vous permet de :</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3><span class="card-icon">⚙️</span> Modifier</h3>
+          <p>Renommer, supprimer, réorganiser, recoder, créer une variable calculée.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">🧹</span> Nettoyer</h3>
+          <p>Gérer les valeurs manquantes, doublons, espaces et casse du texte.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">🔍</span> Filtrer</h3>
+          <p>Sélectionner certaines lignes, trier, ne garder que les variables utiles.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">📋</span> Diagnostiquer</h3>
+          <p>Valeurs aberrantes, résumés rapides, qualité du jeu de données.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <div class="callout-title">⚠️ Attention aux transformations</div>
+        <p style="margin-bottom:0;">Ne supprimez pas une valeur uniquement parce qu'elle vous gêne. Une donnée inhabituelle peut être une <strong>vraie observation</strong>. Comprenez sa cause avant de la modifier.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Étape 5 — Décrire vos données</h2>
+      <p>Rendez-vous dans <strong>Statistiques descriptives</strong> et choisissez selon vos variables :</p>
+
+      <ul>
+        <li><strong>Variable quantitative</strong> : moyenne, médiane, écart-type, minimum, maximum, quartiles.</li>
+        <li><strong>Variable qualitative</strong> : effectifs, pourcentages, diagrammes en barres.</li>
+        <li><strong>Deux variables qualitatives</strong> : tableau croisé avec pourcentages ligne/colonne/total.</li>
+        <li><strong>Deux variables quantitatives</strong> : matrice de corrélation (Pearson ou Spearman).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Étape 6 — Construire un graphique</h2>
+      <p>Ouvrez <strong>Visualisation</strong>. Choisissez le type de graphique, puis associez vos variables aux axes.</p>
+
+      <div class="table-container">
+        <table class="academic-table">
+          <thead>
+            <tr><th>Élément</th><th>Question simple</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>X</strong></td><td>Quelle variable sur l'axe horizontal ?</td></tr>
+            <tr><td><strong>Y</strong></td><td>Quelle variable sur l'axe vertical ?</td></tr>
+            <tr><td><strong>Couleur</strong></td><td>Quelle variable distingue les groupes ?</td></tr>
+            <tr><td><strong>Facette</strong></td><td>Faut-il un sous-graphique par groupe ?</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Types disponibles : nuage de points, barres, camembert, boxplot, violon, histogramme, ligne, densité, heatmap.</p>
+    </section>
+
+    <section>
+      <h2>Étape 7 — Choisir un test</h2>
+      <p>Ne cherchez pas le nom du test. Cherchez <strong>votre question</strong>.</p>
+
+      <div class="table-container">
+        <table class="academic-table">
+          <thead>
+            <tr><th>Votre question</th><th>Ce que Ramses utilise</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Un groupe vs une valeur de référence</td><td>Test t à 1 échantillon</td></tr>
+            <tr><td>Deux groupes indépendants</td><td>Test t indépendant</td></tr>
+            <tr><td>Avant / après (mêmes individus)</td><td>Test t apparié</td></tr>
+            <tr><td>Trois groupes ou plus</td><td>ANOVA</td></tr>
+            <tr><td>Deux variables qualitatives</td><td>Chi-deux</td></tr>
+            <tr><td>Deux variables quantitatives</td><td>Corrélation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Avant de lancer</div>
+        <p style="margin-bottom:0;">Vérifiez le type des variables, le nombre de groupes, l'indépendance/appariement et les hypothèses du test. Ramses vous guide.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Étape 8 — Lire le résultat</h2>
+      <p>Ne regardez pas uniquement la <em>p-value</em>. Regardez aussi :</p>
+      <ul>
+        <li>La statistique du test.</li>
+        <li>La différence observée (effet).</li>
+        <li>L'intervalle de confiance.</li>
+        <li>La taille d'effet.</li>
+        <li>Le contexte et l'importance pratique.</li>
+      </ul>
+      <p>Une différence peut être <strong>statistiquement significative sans être importante</strong> en pratique. Et l'inverse aussi.</p>
+    </section>
+
+    <section>
+      <h2>Étape 9 — Documenter l'analyse</h2>
+      <p>Chaque action est consignée dans le <strong>Journal Rmd</strong>. Vous pouvez :</p>
+      <ul>
+        <li>Ajouter des notes personnelles.</li>
+        <li>Copier le script R.</li>
+        <li>Exporter en <code>.R</code>, <code>.Rmd</code> ou rapport <code>.html</code>.</li>
+      </ul>
+
+      <figure>
+        <img src="images/feature-rmd-journal.png" alt="Capture du journal R Markdown de Ramses" />
+        <figcaption>Le journal conserve chaque étape et le code R associé.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>Checklist avant de présenter vos résultats</h2>
+      <ul>
+        <li>☐ Données vérifiées (types, valeurs manquantes, aberrantes)</li>
+        <li>☐ Variables correctement codées</li>
+        <li>☐ Test cohérent avec le plan d'étude</li>
+        <li>☐ Hypothèses du test vérifiées</li>
+        <li>☐ Résultat statistique correctement interprété</li>
+        <li>☐ Importance pratique discutée</li>
+        <li>☐ Code et rapport conservés</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Pour aller plus loin</h2>
+      <div class="callout callout-tip">
+        <div class="callout-title">📘 Formation complète intégrée</div>
+        <p style="margin-bottom:0;">
+          Vous voulez apprendre les méthodes statistiques en profondeur ? Une formation de <strong>15 modules interactifs</strong> est intégrée à Ramses. Accessible depuis l'application via le bouton <strong>Aide &amp; Formation</strong>. Aucun prérequis.
+        </p>
+      </div>
+    </section>
+
+    <section style="text-align:center; padding:2rem 1.5rem; background:linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%); border-radius:var(--radius-lg); border:1px solid rgba(22,101,52,0.15); margin-top:2rem;">
+      <h2 style="border:0; margin-top:0; padding:0; display:block;">Vous êtes prêt</h2>
+      <p style="color:var(--text-secondary); max-width:520px; margin:0 auto 1.5rem;">Lancez Ramses, chargez vos données, et commencez votre première analyse.</p>
+      <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener" class="btn btn-primary btn-arrow">Voir le dépôt GitHub</a>
+    </section>
+  </article></main>
+
+  <footer class="footer">
+    <p><strong>Ramses 1.0.0</strong> — Guide de démarrage — Licence MIT</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.btn-copy').forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = button.closest('.code-block-container').querySelector('pre code').innerText;
+        try { await navigator.clipboard.writeText(code); button.querySelector('span').textContent = 'Copié !'; button.classList.add('copied'); setTimeout(() => { button.querySelector('span').textContent = 'Copier'; button.classList.remove('copied'); }, 1600); }
+        catch(e) { button.querySelector('span').textContent = 'Sélectionnez'; }
+      });
+    });
+  </script>
+</body>
+</html>

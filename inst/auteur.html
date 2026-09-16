@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>À propos — Pierre Valdeze MBOM MBOM</title>
+  <meta name="description" content="Pierre Valdeze MBOM MBOM — Ingénieur agroéconomiste et statisticien. Analyse de données, optimisation agricole, montage de projets, formations. Auteur du package Ramses.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* === Photo de profil agrandie === */
+    .author-portrait-figure img {
+      width: 180px !important;
+      height: 180px !important;
+      box-shadow: 0 0 0 4px var(--bg-surface), 0 0 0 6px var(--brand-primary-light), var(--shadow-lg) !important;
+      transition: transform var(--transition-base);
+    }
+    .author-portrait-figure img:hover {
+      transform: scale(1.03);
+    }
+
+    /* === Réseaux sociaux === */
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(22, 101, 52, 0.2);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+    .social-link:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+    }
+    .social-link svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .social-link.linkedin:hover { background: #0A66C2; color: #FFFFFF; border-color: #0A66C2; }
+    .social-link.linkedin:hover svg { fill: #FFFFFF; }
+    .social-link.linkedin svg { fill: #0A66C2; }
+    .social-link.facebook:hover { background: #1877F2; color: #FFFFFF; border-color: #1877F2; }
+    .social-link.facebook:hover svg { fill: #FFFFFF; }
+    .social-link.facebook svg { fill: #1877F2; }
+    .social-link.github:hover { background: #181717; color: #FFFFFF; border-color: #181717; }
+    .social-link.github:hover svg { fill: #FFFFFF; }
+    .social-link.github svg { fill: #181717; }
+    .social-link.youtube:hover { background: #FF0000; color: #FFFFFF; border-color: #FF0000; }
+    .social-link.youtube:hover svg { fill: #FFFFFF; }
+    .social-link.youtube svg { fill: #FF0000; }
+    .social-link.orcid:hover { background: #A6CE39; color: #FFFFFF; border-color: #A6CE39; }
+    .social-link.orcid:hover svg { fill: #FFFFFF; }
+    .social-link.orcid svg { fill: #A6CE39; }
+
+    /* === Section services === */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem 0;
+    }
+    .service-card {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 1.5rem;
+      transition: all var(--transition-base);
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-base);
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(22, 101, 52, 0.3);
+      box-shadow: var(--shadow-lg);
+    }
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+    .service-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: var(--brand-primary-light);
+      color: var(--brand-primary);
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    .service-card h3 {
+      margin: 0 0 0.6rem 0;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      display: block;
+    }
+    .service-card h3::before { display: none; }
+    .service-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.85rem;
+    }
+    .service-card ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .service-card ul li {
+      margin-bottom: 0.25rem;
+    }
+    .service-card .service-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--brand-primary);
+      text-decoration: none;
+      margin-top: 0.75rem;
+    }
+    .service-card .service-cta:hover {
+      text-decoration: underline;
+    }
+
+    /* === Citation personnelle === */
+    .personal-quote {
+      margin: 3rem 0 1rem 0;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%);
+      border-left: 4px solid var(--brand-primary);
+      border-radius: var(--radius-lg);
+      position: relative;
+    }
+    .personal-quote::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--brand-primary);
+      opacity: 0.15;
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+    .personal-quote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+      font-weight: 500;
+    }
+    .personal-quote .quote-author {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--brand-primary-dark);
+      font-style: normal;
+      margin-bottom: 0;
+    }
+
+    /* === Dark mode === */
+    @media (prefers-color-scheme: dark) {
+      .social-link {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(34, 197, 94, 0.3);
+        color: var(--text-primary);
+      }
+      .social-link svg { fill: #86EFAC; }
+      .social-link.linkedin:hover svg,
+      .social-link.facebook:hover svg,
+      .social-link.github:hover svg,
+      .social-link.youtube:hover svg { fill: #FFFFFF; }
+
+      .service-card {
+        background: var(--bg-surface);
+      }
+      .service-icon {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ADE80;
+      }
+
+      .personal-quote {
+        background: linear-gradient(135deg, #052E16 0%, #78350F 100%);
+      }
+      .personal-quote p { color: #F1F5F9; }
+      .personal-quote .quote-author { color: #86EFAC; }
+      .personal-quote::before { color: #4ADE80; opacity: 0.2; }
+    }
+
+    /* === Diagramme radar === */
+    .radar-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin: 2rem 0;
+      padding: 2rem 1.5rem;
+      background: linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%);
+      border: 1px solid rgba(22, 101, 52, 0.15);
+      border-radius: var(--radius-xl);
+    }
+    .radar-svg-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .radar-svg {
+      width: 100%;
+      max-width: 520px;
+      height: auto;
+      display: block;
+    }
+    .radar-svg text {
+      font-family: var(--font-sans);
+      fill: var(--text-primary);
+    }
+    .radar-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .radar-legend h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+    .radar-legend p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+    .radar-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.75rem;
+    }
+    .radar-scale-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+    }
+    .radar-scale-bar {
+      flex: 1;
+      height: 8px;
+      background: rgba(22, 101, 52, 0.12);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      max-width: 180px;
+    }
+    .radar-scale-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-primary), #16A34A);
+      border-radius: var(--radius-full);
+    }
+    .radar-scale-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: 170px;
+    }
+    .radar-scale-value {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--brand-primary-dark);
+      min-width: 35px;
+      text-align: right;
+    }
+    @media (max-width: 900px) {
+      .radar-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 1.5rem 1rem;
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      .radar-container {
+        background: linear-gradient(135deg, #052E16 0%, #78350F 100%);
+        border-color: rgba(34, 197, 94, 0.2);
+      }
+      .radar-svg text { fill: #F1F5F9; }
+      .radar-scale-bar { background: rgba(34, 197, 94, 0.15); }
+      .radar-scale-fill { background: linear-gradient(90deg, #22C55E, #4ADE80); }
+      .radar-scale-value { color: #86EFAC; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand"><span>Ramses</span><span class="pkg-tag">v1.0.0</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Accueil</a></li>
+        <li><a href="installation.html" class="nav-link">Installation</a></li>
+        <li><a href="tutoriel.html" class="nav-link">Démarrage</a></li>
+        <li><a href="formation.html" class="nav-link">Formation</a></li>
+        <li><a href="auteur.html" class="nav-link active">À propos</a></li>
+      </ul>
+      <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
+    </div>
+  </nav>
+
+  <main class="main-wrapper"><article class="article-content">
+    <header>
+      <h1>À propos</h1>
+      <p style="font-size:1.05rem;color:var(--text-secondary);">Ramses est un projet né d'une conviction : rendre l'analyse statistique <strong>accessible à ceux qui n'ont pas de formation technique</strong>, sans sacrifier la rigueur scientifique.</p>
+    </header>
+
+    <!-- PROFIL HERO -->
+    <section class="profile-hero">
+      <figure class="author-portrait-figure">
+        <img src="images/author-profile.jpg" alt="Portrait de Pierre Valdeze MBOM MBOM" />
+      </figure>
+      <div class="profile-hero-content">
+        <h2>Pierre Valdeze MBOM MBOM</h2>
+        <div class="role">Ingénieur agroéconomiste &amp; statisticien</div>
+        <p class="bio">
+          Passionné par le croisement entre <strong>agriculture, statistiques et outils numériques</strong>, je conçois des solutions qui rendent l'analyse de données accessible aux étudiants, aux chercheurs et aux professionnels de terrain.
+        </p>
+
+        <!-- Réseaux sociaux -->
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/pierre-valdeze-mbom-mbom-75a660217" target="_blank" rel="noopener noreferrer" class="social-link linkedin" aria-label="Profil LinkedIn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            LinkedIn
+          </a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-link facebook" aria-label="Profil Facebook">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+          </a>
+          <a href="https://github.com/census-specs" target="_blank" rel="noopener noreferrer" class="social-link github" aria-label="Profil GitHub">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+            GitHub
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="social-link youtube" aria-label="Chaîne YouTube">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube
+          </a>
+          <a href="https://orcid.org/0009-0006-7799-1473" target="_blank" rel="noopener noreferrer" class="social-link orcid" aria-label="Profil ORCID">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947 0 .525-.422.947-.947.947-.525 0-.946-.422-.946-.947 0-.516.421-.947.946-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/>
+            </svg>
+            ORCID
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOMAINES D'EXPERTISE — RADAR CHART -->
+    <section>
+      <h2>Domaines d'expertise</h2>
+      <p style="color:var(--text-secondary);">
+        Mon profil se situe à l'intersection de plusieurs disciplines. Le diagramme ci-dessous présente visuellement le <strong>niveau de pratique</strong> dans chaque domaine — de l'expertise la plus approfondie (statistiques, analyse de données) à la pratique plus ponctuelle (intelligence artificielle, développement d'outils).
+      </p>
+
+      <div class="radar-container">
+        <div class="radar-svg-wrap">
+          <svg class="radar-svg" viewBox="0 0 700 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagramme en toile d'araignée des domaines d'expertise">
+
+            <polygon points="350,90 490.7,157.8 525.5,310.1 428.2,432.1 271.9,432.2 174.6,310.2 209.3,157.8"
+                     fill="none" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <polygon points="350,126 462.6,180.2 490.4,302.1 412.5,399.7 287.5,399.8 209.6,302.2 237.4,180.2"
+                     fill="none" stroke="#CBD5E1" stroke-width="1" opacity="0.4" />
+            <polygon points="350,162 434.4,202.7 455.3,294.0 396.9,367.3 303.1,367.3 244.7,294.1 265.6,202.7"
+                     fill="none" stroke="#CBD5E1" stroke-width="1" opacity="0.4" />
+            <polygon points="350,198 406.3,225.1 420.2,286.0 381.3,334.8 318.7,334.9 279.8,286.1 293.7,225.1"
+                     fill="none" stroke="#CBD5E1" stroke-width="1" opacity="0.4" />
+            <polygon points="350,234 378.1,247.5 385.1,278.0 365.6,302.4 334.4,302.4 314.9,278.1 321.9,247.5"
+                     fill="none" stroke="#CBD5E1" stroke-width="1" opacity="0.4" />
+
+            <line x1="350" y1="270" x2="350" y2="90" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <line x1="350" y1="270" x2="490.7" y2="157.8" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <line x1="350" y1="270" x2="525.5" y2="310.1" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <line x1="350" y1="270" x2="428.2" y2="432.1" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <line x1="350" y1="270" x2="271.9" y2="432.2" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <line x1="350" y1="270" x2="174.6" y2="310.2" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+            <line x1="350" y1="270" x2="209.3" y2="157.8" stroke="#CBD5E1" stroke-width="1" opacity="0.5" />
+
+            <polygon points="350,108 476.7,169 437.7,290 381.3,334.8 303.1,367.3 218.4,300.2 237.4,180.2"
+                     fill="rgba(22, 101, 52, 0.22)"
+                     stroke="#166534"
+                     stroke-width="2.5"
+                     stroke-linejoin="round" />
+
+            <circle cx="350" cy="108" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="476.7" cy="169" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="437.7" cy="290" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="381.3" cy="334.8" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="303.1" cy="367.3" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="218.4" cy="300.2" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="237.4" cy="180.2" r="6" fill="#166534" stroke="#FFFFFF" stroke-width="2" />
+
+            <text x="350" y="60" text-anchor="middle" font-size="15" font-weight="700">Statistiques appliquées</text>
+            <text x="350" y="80" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">9/10</text>
+
+            <text x="510" y="135" text-anchor="start" font-size="15" font-weight="700">Analyse de données</text>
+            <text x="510" y="155" text-anchor="start" font-size="13" font-weight="600" fill="#166534">9/10</text>
+
+            <text x="552" y="308" text-anchor="start" font-size="15" font-weight="700">Développement d'outils</text>
+            <text x="552" y="328" text-anchor="start" font-size="13" font-weight="600" fill="#166534">5/10</text>
+
+            <text x="440" y="470" text-anchor="middle" font-size="15" font-weight="700">Intelligence artificielle</text>
+            <text x="440" y="490" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">4/10</text>
+
+            <text x="260" y="470" text-anchor="middle" font-size="15" font-weight="700">Agriculture</text>
+            <text x="260" y="490" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">6/10</text>
+
+            <text x="140" y="308" text-anchor="end" font-size="15" font-weight="700">Économie rurale</text>
+            <text x="140" y="328" text-anchor="end" font-size="13" font-weight="600" fill="#166534">7,5/10</text>
+
+            <text x="185" y="135" text-anchor="end" font-size="15" font-weight="700">Agroéconomie</text>
+            <text x="185" y="155" text-anchor="end" font-size="13" font-weight="600" fill="#166534">8/10</text>
+          </svg>
+        </div>
+
+        <div class="radar-legend">
+          <h3>Lecture du diagramme</h3>
+          <p>
+            Chaque axe représente un domaine. Plus la surface du polygone vert est <strong>étendue</strong> dans une direction, plus le niveau de pratique est élevé dans ce domaine.
+          </p>
+
+          <div class="radar-scale">
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Statistiques appliquées</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 90%;"></div></div>
+              <span class="radar-scale-value">9</span>
+            </div>
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Analyse de données</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 90%;"></div></div>
+              <span class="radar-scale-value">9</span>
+            </div>
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Agroéconomie</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 80%;"></div></div>
+              <span class="radar-scale-value">8</span>
+            </div>
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Économie rurale</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 75%;"></div></div>
+              <span class="radar-scale-value">7,5</span>
+            </div>
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Agriculture</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 60%;"></div></div>
+              <span class="radar-scale-value">6</span>
+            </div>
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Développement d'outils</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 50%;"></div></div>
+              <span class="radar-scale-value">5</span>
+            </div>
+            <div class="radar-scale-item">
+              <span class="radar-scale-label">Intelligence artificielle</span>
+              <div class="radar-scale-bar"><div class="radar-scale-fill" style="width: 40%;"></div></div>
+              <span class="radar-scale-value">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CE QUE JE PEUX FAIRE POUR VOUS -->
+    <section>
+      <h2>Ce que je peux faire pour vous</h2>
+      <p style="color:var(--text-secondary);">
+        Vous avez des données, un projet agricole, un mémoire à rédiger ou une équipe à former ? Voici les domaines dans lesquels je peux vous accompagner.
+      </p>
+
+      <div class="services-grid">
+
+        <!-- Service 1 : Analyse de données -->
+        <div class="service-card">
+          <div class="service-icon">📊</div>
+          <h3>Analyse de données</h3>
+          <p>
+            Vous avez des données brutes (enquêtes, essais, mesures) et vous voulez en tirer des conclusions claires et fiables.
+          </p>
+          <ul>
+            <li>Nettoyage et préparation des fichiers</li>
+            <li>Statistiques descriptives et graphiques</li>
+            <li>Tests statistiques et modélisation</li>
+            <li>Rapport d'analyse reproductible</li>
+          </ul>
+          <a href="mailto:pierrembom@outlook.com?subject=Demande%20d'analyse%20de%20données" class="service-cta">Demander un devis →</a>
+        </div>
+
+        <!-- Service 2 : Optimisation agricole (GAMS) -->
+        <div class="service-card">
+          <div class="service-icon">🌾</div>
+          <h3>Optimisation agricole (GAMS)</h3>
+          <p>
+            Modélisation mathématique et optimisation de systèmes agricoles : allocation de ressources, planification de production, choix de cultures.
+          </p>
+          <ul>
+            <li>Modélisation avec GAMS</li>
+            <li>Optimisation sous contraintes</li>
+            <li>Scénarios et simulations</li>
+            <li>Analyse économique des résultats</li>
+          </ul>
+          <a href="mailto:pierrembom@outlook.com?subject=Demande%20d'optimisation%20agricole%20(GAMS)" class="service-cta">Discuter d'un projet →</a>
+        </div>
+
+        <!-- Service 3 : Montage et analyse de projets -->
+        <div class="service-card">
+          <div class="service-icon">📋</div>
+          <h3>Montage et analyse de projets agricoles</h3>
+          <p>
+            Structurer, évaluer et accompagner des projets agricoles — de l'idée à la mise en œuvre.
+          </p>
+          <ul>
+            <li>Études de faisabilité</li>
+            <li>Analyse coûts-bénéfices</li>
+            <li>Indicateurs de rentabilité (VAN, TRI)</li>
+            <li>Suivi et évaluation de projets</li>
+          </ul>
+          <a href="mailto:pierrembom@outlook.com?subject=Demande%20d'accompagnement%20de%20projet%20agricole" class="service-cta">Parler de votre projet →</a>
+        </div>
+
+        <!-- Service 4 : Formations -->
+        <div class="service-card">
+          <div class="service-icon">🎓</div>
+          <h3>Formations sur mesure</h3>
+          <p>
+            Vous voulez monter en compétence, ou former votre équipe aux outils d'analyse statistique et agricole.
+          </p>
+          <ul>
+            <li><strong>Statistiques appliquées</strong> — bases, tests, interprétation</li>
+            <li><strong>Ramses</strong> — prise en main de l'outil</li>
+            <li><strong>R pour l'analyse</strong> — initiation et pratique</li>
+            <li><strong>Analyse de données agricoles</strong> — cas concrets</li>
+            <li><strong>GAMS</strong> — optimisation appliquée</li>
+          </ul>
+          <a href="mailto:pierrembom@outlook.com?subject=Demande%20de%20formation" class="service-cta">Organiser une formation →</a>
+        </div>
+
+        <!-- Service 5 : Accompagnement mémoires -->
+        <div class="service-card">
+          <div class="service-icon">📚</div>
+          <h3>Accompagnement mémoires &amp; thèses</h3>
+          <p>
+            Étudiants en licence, master ou thèse : je vous accompagne sur toute la partie analyse de votre travail.
+          </p>
+          <ul>
+            <li>Formulation des hypothèses</li>
+            <li>Choix du plan d'étude</li>
+            <li>Analyse des données et résultats</li>
+            <li>Rédaction de la section Méthodes &amp; Résultats</li>
+          </ul>
+          <a href="mailto:association.astral@gmail.com?subject=Accompagnement%20mémoire" class="service-cta">Décrire votre sujet →</a>
+        </div>
+
+        <!-- Service 6 : Développement d'outils -->
+        <div class="service-card">
+          <div class="service-icon">🛠️</div>
+          <h3>Développement d'outils sur mesure</h3>
+          <p>
+            Vous avez un besoin spécifique (interface, automatisation, tableau de bord) ? Discutons de la faisabilité.
+          </p>
+          <ul>
+            <li>Applications Shiny (R)</li>
+            <li>Scripts d'automatisation</li>
+            <li>Interfaces pour non-spécialistes</li>
+            <li>Intégration d'outils statistiques</li>
+          </ul>
+          <a href="mailto:pierrembom@outlook.com?subject=Projet%20de%20développement%20d'outil" class="service-cta">Explorer une idée →</a>
+        </div>
+
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">💡 Vous ne savez pas dans quelle case vous situer ?</div>
+        <p style="margin-bottom:0;">
+          Écrivez-moi simplement avec votre besoin. On verra ensemble si je peux vous aider — et si oui, de quelle manière. <a href="mailto:pierrembom@outlook.com">Contactez-moi</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- PARCOURS -->
+    <section>
+      <h2>Parcours</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">Depuis 2024</div>
+          <div class="timeline-title">Secrétaire Technique (Statisticien) — SOCAPALM, Kienké</div>
+          <p class="timeline-desc">Service des Techniques Agricoles. Analyse statistique et suivi technique dans un environnement professionnel agricole.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">En cours</div>
+          <div class="timeline-title">Promoteur — MEMOSTAT COMPANY</div>
+          <p class="timeline-desc">Start-up spécialisée dans l'accompagnement des mémoires d'étudiants, l'analyse statistique professionnelle et le traitement de données.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">2025</div>
+          <div class="timeline-title">Master en Statistiques Agricoles — ISSEA-CEMAC</div>
+          <p class="timeline-desc">Institut Sous-régional de Statistique et d'Économie Appliquée. Spécialisation en statistiques appliquées à l'agriculture.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">Antérieur</div>
+          <div class="timeline-title">Responsable commercial — CABI</div>
+          <p class="timeline-desc">Center for Agric-Business Innovations. Développement de produits rentables à base de champignons et développement commercial.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">Antérieur</div>
+          <div class="timeline-title">Promoteur &amp; Président — Association ASTRAL</div>
+          <p class="timeline-desc">Création et direction d'une association œuvrant pour le développement scientifique et professionnel.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">Formation initiale</div>
+          <div class="timeline-title">Diplôme d'Ingénieur Agronome — Université de Dschang</div>
+          <p class="timeline-desc">Option Économie et Sociologie Rurales. Cameroun.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISION DU PROJET -->
+    <section>
+      <h2>Pourquoi Ramses existe</h2>
+      <p>
+        R est un langage extrêmement puissant pour l'analyse statistique. Mais <strong>apprendre à coder</strong> représente un obstacle majeur pour une personne qui veut surtout <em>comprendre ses données</em>.
+      </p>
+      <p>
+        J'ai conçu Ramses pour lever cet obstacle. Une interface graphique claire, guidée, qui permet à n'importe qui de faire une analyse complète — <strong>sans écrire une ligne de code</strong>.
+      </p>
+      <p>
+        Mais Ramses va plus loin : chaque action produit automatiquement le <strong>code R correspondant</strong>. L'utilisateur apprend <em>en faisant</em>, progressivement, sans s'en apercevoir.
+      </p>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">L'ambition</div>
+        <p style="margin-bottom:0;">Démocratiser l'accès à la statistique appliquée, en particulier dans les domaines <strong>agricole et agroéconomique</strong>, sans compromettre la rigueur scientifique.</p>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHIE -->
+    <section>
+      <h2>Philosophie du projet</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3><span class="card-icon">🌱</span> Simple à utiliser</h3>
+          <p>Les menus sont pensés pour des personnes qui débutent en analyse de données. Aucun prérequis technique.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">🔬</span> Statistiquement sérieux</h3>
+          <p>Les méthodes reposent sur l'écosystème R, référence mondiale. Aucun compromis sur la rigueur.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">🔁</span> Reproductible</h3>
+          <p>Chaque analyse génère du code R et un rapport R Markdown. Vos travaux sont traçables et vérifiables.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">🌍</span> Ouvert</h3>
+          <p>Code source disponible sous licence MIT, sur GitHub. Inspectable, testable, améliorable par la communauté.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJETS -->
+    <section>
+      <h2>Autres projets</h2>
+      <p>En parallèle de Ramses, je développe d'autres solutions pensées pour simplifier l'accès aux technologies statistiques et informatiques.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3><span class="card-icon">🧪</span> Hygie</h3>
+          <p>Outil dédié au traitement et à la préparation des données. Simplifier la phase critique du nettoyage avant analyse.</p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">🤖</span> Assistants IA</h3>
+          <p>Exploration d'applications d'IA pour rendre accessibles des outils techniques complexes à des utilisateurs non spécialistes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTRIBUER -->
+    <section>
+      <h2>Contribuer &amp; signaler</h2>
+      <p>Ramses est un projet ouvert. Vos retours comptent.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3><span class="card-icon">🐛</span> Signaler un bug</h3>
+          <p>Un comportement inattendu ? Ouvrez une issue sur GitHub.</p>
+          <p style="margin-top:0.75rem;"><a href="https://github.com/census-specs/Ramses/issues" target="_blank" rel="noopener" class="btn btn-secondary">Ouvrir une issue</a></p>
+        </div>
+        <div class="card">
+          <h3><span class="card-icon">💡</span> Proposer une amélioration</h3>
+          <p>Une idée pour améliorer Ramses ? Une suggestion de fonctionnalité ?</p>
+          <p style="margin-top:0.75rem;"><a href="https://github.com/census-specs/Ramses/issues/new" target="_blank" rel="noopener" class="btn btn-secondary">Proposer une idée</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO PACKAGE -->
+    <section>
+      <h2>Informations du package</h2>
+      <div class="table-container">
+        <table class="academic-table">
+          <tbody>
+            <tr><th style="width:40%;">Nom</th><td>Ramses</td></tr>
+            <tr><th>Version</th><td>1.0.0</td></tr>
+            <tr><th>Auteur / mainteneur</th><td>Pierre Valdeze MBOM MBOM</td></tr>
+            <tr><th>Version minimale de R</th><td>4.1.0</td></tr>
+            <tr><th>Licence</th><td>MIT</td></tr>
+            <tr><th>Dépôt</th><td><a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener">census-specs/Ramses</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CITATION PERSONNELLE -->
+    <div class="personal-quote">
+      <p>Je ne veux pas seulement analyser les données. Je veux que mes utilisateurs puissent les analyser eux-mêmes.</p>
+      <div class="quote-author">— Pierre Valdeze MBOM MBOM</div>
+    </div>
+
+    <!-- CTA FINAL -->
+    <section style="text-align:center; padding:2.5rem 1.5rem; background:linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%); border-radius:var(--radius-lg); border:1px solid rgba(22,101,52,0.15); margin-top:2rem;">
+      <h2 style="border:0; margin-top:0; padding:0; display:block;">Une question ? Un projet ?</h2>
+      <p style="color:var(--text-secondary); max-width:520px; margin:0 auto 1.5rem;">
+        Pour toute demande académique, scientifique ou professionnelle, vous pouvez me contacter directement.
+      </p>
+      <a href="mailto:pierrembom@outlook.com" class="btn btn-primary btn-arrow">Me contacter</a>
+    </section>
+  </article></main>
+
+  <footer class="footer">
+    <p><strong>Ramses 1.0.0</strong> — Développé par Pierre Valdeze MBOM MBOM</p>
+    <p style="margin-top:0.5rem;font-size:0.8rem;">Licence MIT · <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener">Code source sur GitHub</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formation intégrée — Apprendre les statistiques avec Ramses</title>
+  <meta name="description" content="Formation complète et interactive aux méthodes statistiques appliquées, intégrée à Ramses. 15 modules, du comptage aux tests avancés, sans prérequis mathématique.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand">
+        <span>Ramses</span>
+        <span class="pkg-tag">v1.0.0</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Accueil</a></li>
+        <li><a href="installation.html" class="nav-link">Installation</a></li>
+        <li><a href="tutoriel.html" class="nav-link">Démarrage</a></li>
+        <li><a href="formation.html" class="nav-link active">Formation</a></li>
+        <li><a href="auteur.html" class="nav-link">À propos</a></li>
+      </ul>
+      <a href="https://github.com/census-specs/Ramses" target="_blank" rel="noopener noreferrer" class="nav-btn-github">GitHub</a>
+    </div>
+  </nav>
+
+  <main class="main-wrapper">
+    <article class="article-content">
+
+      <!-- HERO -->
+      <header class="hero" style="background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 40%, #FEF3C7 100%);">
+        <div class="hero-content">
+          <span class="hero-eyebrow">🌱 Formation intégrée · 15 modules</span>
+          <h1>Apprendre les statistiques,<br>à partir d'une vraie question.</h1>
+          <p class="lead">
+            Une formation complète, interactive et sans jargon inutile. Vous partez d'une question de terrain, vous arrivez à une analyse rigoureuse — en utilisant les mêmes outils que Ramses.
+          </p>
+          <div class="hero-actions">
+            <a href="cours-statistiques/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-arrow">
+              Ouvrir la formation
+            </a>
+            <a href="#modules" class="btn btn-secondary">
+              Voir les 15 modules
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- À QUI ÇA S'ADRESSE -->
+      <section>
+        <h2>À qui s'adresse cette formation ?</h2>
+        <p>
+          Cette formation a été conçue pour les personnes qui <strong>n'ont pas de formation technique poussée en statistique</strong> — mais qui ont besoin de comprendre leurs données pour prendre de meilleures décisions.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3><span class="card-icon">🎓</span> Étudiants</h3>
+            <p>Licence, master, thèse. Analyser vos données de mémoire ou de recherche avec rigueur.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🌾</span> Agronomes &amp; techniciens</h3>
+            <p>Évaluer une variété, un traitement, une pratique. Transformer des mesures de terrain en conclusions utiles.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🔬</span> Chercheurs débutants</h3>
+            <p>Structurer un protocole, valider un jeu de données, publier des résultats reproductibles.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">📊</span> Professionnels des données</h3>
+            <p>Toute personne qui veut comprendre et interpréter ses données sans commencer par des mathématiques complexes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRINCIPES PÉDAGOGIQUES -->
+      <section>
+        <h2>Les principes de la formation</h2>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3><span class="card-icon">❓</span> Partir d'une question</h3>
+            <p>Chaque module commence par une situation concrète : « Est-ce que ma variété B produit vraiment plus que la variété A ? ». Jamais par une formule.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🔁</span> Un fil rouge continu</h3>
+            <p>Les mêmes 10 parcelles de maïs sont analysées dans tous les modules. Vous suivez une vraie démarche, pas une collection d'exemples isolés.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🔍</span> Comprendre avant de cliquer</h3>
+            <p>Chaque analyse explique <em>pourquoi</em> on fait les choses, pas seulement <em>comment</em>. Les formules ne sont jamais parachutées.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">⚙️</span> R + Ramses côte à côte</h3>
+            <p>Vous voyez toujours la commande R correspondante à chaque action dans Ramses. Vous pouvez comprendre le code sans avoir à l'écrire.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">📈</span> Visualiser avant de tester</h3>
+            <p>Avant tout test, on regarde toujours un graphique. On ne calcule pas à l'aveugle.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🧠</span> Se poser les bonnes questions</h3>
+            <p>Types de variables, structure des données, hypothèses — la formation vous apprend à <em>savoir quel test choisir</em>, pas à en mémoriser.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- LES 15 MODULES -->
+      <section id="modules">
+        <h2>Les 15 modules</h2>
+        <p>
+          La formation se parcourt dans l'ordre. Chaque module est court (10 à 25 minutes) et autonome.
+        </p>
+
+        <h3>🌱 Fondamentaux</h3>
+        <div class="table-container">
+          <table class="academic-table">
+            <thead>
+              <tr><th style="width:8%;">N°</th><th>Titre</th><th style="width:15%;">Durée</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>01</strong></td><td>Bienvenue dans Ramses : de mon problème à mes premières données</td><td>10 min</td></tr>
+              <tr><td><strong>02</strong></td><td>Comprendre mes variables : quelles informations contient mon fichier ?</td><td>15 min</td></tr>
+              <tr><td><strong>02b</strong></td><td>Préparer et nettoyer mes données avant toute analyse</td><td>20 min</td></tr>
+              <tr><td><strong>03</strong></td><td>Compter et résumer mes données</td><td>15 min</td></tr>
+              <tr><td><strong>04</strong></td><td>Mesurer une variable quantitative</td><td>20 min</td></tr>
+              <tr><td><strong>05</strong></td><td>Visualiser mes données</td><td>20 min</td></tr>
+              <tr><td><strong>05b</strong></td><td>Les intervalles de confiance</td><td>15 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>🔬 Inférence &amp; comparaisons</h3>
+        <div class="table-container">
+          <table class="academic-table">
+            <thead>
+              <tr><th style="width:8%;">N°</th><th>Titre</th><th style="width:15%;">Durée</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>06</strong></td><td>Pourquoi les statistiques ne donnent pas toujours une réponse certaine</td><td>15 min</td></tr>
+              <tr><td><strong>07</strong></td><td>Comprendre l'hypothèse et la p-value</td><td>20 min</td></tr>
+              <tr><td><strong>08</strong></td><td>Comparer des groupes : quel test choisir ?</td><td>20 min</td></tr>
+              <tr><td><strong>08b</strong></td><td>Vérifier les conditions d'un test avant de conclure</td><td>15 min</td></tr>
+              <tr><td><strong>09</strong></td><td>Comparer 3 groupes ou plus (ANOVA)</td><td>20 min</td></tr>
+              <tr><td><strong>09b</strong></td><td>ANOVA à deux facteurs et interactions</td><td>20 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>📈 Relations &amp; rédaction</h3>
+        <div class="table-container">
+          <table class="academic-table">
+            <thead>
+              <tr><th style="width:8%;">N°</th><th>Titre</th><th style="width:15%;">Durée</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>10</strong></td><td>Étudier la relation entre deux variables</td><td>25 min</td></tr>
+              <tr><td><strong>10b</strong></td><td>Régression linéaire simple</td><td>25 min</td></tr>
+              <tr><td><strong>11</strong></td><td>Exploiter ses résultats et rédiger un article</td><td>25 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>🧭 Approfondissement</h3>
+        <div class="table-container">
+          <table class="academic-table">
+            <thead>
+              <tr><th style="width:8%;">N°</th><th>Titre</th><th style="width:15%;">Durée</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>12</strong></td><td>Puissance statistique et taille d'échantillon</td><td>20 min</td></tr>
+              <tr><td><strong>13</strong></td><td>Limites et biais des statistiques</td><td>20 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>📖 Référence</h3>
+        <div class="table-container">
+          <table class="academic-table">
+            <thead>
+              <tr><th style="width:8%;">N°</th><th>Titre</th><th style="width:15%;">Durée</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>14</strong></td><td>Glossaire des symboles et termes statistiques</td><td>Consultation</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-note">
+          <div class="callout-title">Durée totale</div>
+          <p style="margin-bottom:0;">
+            Environ <strong>5 heures</strong> pour parcourir l'intégralité de la formation. Mais chaque module est autonome : vous pouvez suivre uniquement ceux qui vous intéressent.
+          </p>
+        </div>
+      </section>
+
+      <!-- CE QUE VOUS Y TROUVEREZ -->
+      <section>
+        <h2>Ce que vous y trouverez</h2>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3><span class="card-icon">📝</span> Explications progressives</h3>
+            <p>Chaque notion est introduite à partir d'un exemple concret avant d'être formalisée.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">📊</span> Graphiques réels</h3>
+            <p>Histogrammes, boîtes à moustaches, nuages de points — construits sur les vraies données de l'exemple.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">💻</span> Code R commenté</h3>
+            <p>À chaque étape, vous voyez la commande R utilisée, expliquée ligne par ligne.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">✅</span> Quiz interactifs</h3>
+            <p>Des mini-exercices à chaque fin de module, avec correction immédiate et explication.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🗂️</span> Jeux de données fournis</h3>
+            <p>Téléchargez les fichiers CSV utilisés dans la formation pour refaire les analyses.</p>
+          </div>
+          <div class="card">
+            <h3><span class="card-icon">🔗</span> Liens directs vers Ramses</h3>
+            <p>Chaque module explique comment refaire l'analyse dans Ramses, étape par étape.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- AVERTISSEMENT -->
+      <section>
+        <h2>Ce que la formation ne fait pas</h2>
+        <p>
+          La formation <strong>ne remplace pas</strong> un cours universitaire de statistique. Elle ne couvre pas :
+        </p>
+        <ul>
+          <li>Les démonstrations mathématiques formelles.</li>
+          <li>Les modèles avancés (modèles mixtes, séries temporelles, apprentissage automatique).</li>
+          <li>Les méthodes bayésiennes.</li>
+        </ul>
+        <p>
+          Son objectif est ailleurs : vous permettre de <strong>comprendre et appliquer correctement</strong> les analyses statistiques les plus courantes en agronomie, biologie et sciences appliquées.
+        </p>
+
+        <div class="callout callout-tip">
+          <div class="callout-title">💡 Un complément, pas un substitut</div>
+          <p style="margin-bottom:0;">
+            Utilisez cette formation comme un <strong>guide pratique</strong>. Pour aller plus loin, consultez des ouvrages spécialisés ou un enseignant.
+          </p>
+        </div>
+      </section>
+
+      <!-- CTA FINAL -->
+      <section style="text-align:center; padding:2.5rem 1.5rem; background:linear-gradient(135deg, var(--brand-primary-light) 0%, #FEF3C7 100%); border-radius:var(--radius-lg); border:1px solid rgba(22,101,52,0.15); margin-top:2rem;">
+        <h2 style="border:0; margin-top:0; padding:0; display:block;">Prêt à commencer ?</h2>
+        <p style="color:var(--text-secondary); max-width:560px; margin:0 auto 1.5rem;">
+          La formation s'ouvre dans un nouvel onglet. Vous pouvez la parcourir module par module, ou y revenir plus tard — votre progression est conservée tant que l'onglet reste ouvert.
+        </p>
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+          <a href="cours-statistiques/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-arrow">
+            Ouvrir la formation
+          </a>
+          <a href="installation.html" class="btn btn-secondary">
+            Installer Ramses d'abord
+          </a>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="footer">
+    <p><strong>Ramses 1.0.0</strong> — Formation intégrée</p>
+    <p style="margin-top:0.5rem;font-size:0.8rem;">
+      Licence MIT · Développé par Pierre Valdeze MBOM MBOM
+    </p>
+  </footer>
+</body>
+</html>
