@@ -231,9 +231,48 @@ Ramses est distribué sous licence **MIT**. Voir le fichier [LICENSE](LICENSE).
 
 ---
 
-## 👤 Auteur
+## 👤 Auteur et parcours
 
-**Pierre Valdeze MBOM MBOM**  
-Association ASTRAL  
+### Pierre Valdeze MBOM MBOM
+
+**Ingénieur agroéconomiste et statisticien**  
+**Secrétaire Technique (Statisticien)** — Service des Techniques Agricoles, SOCAPALM, Kienké  
+**Travailleur indépendant / Freelance**
+
+#### Coordonnées
+
+- **Téléphone :** +237 698 389 030 / +237 650 989 019
+- **E-mail :** pierrembom@outlook.com
+- **E-mail professionnel :** pmbom@socapalm.org
+
+#### Formation
+
+- **Master en Statistiques Agricoles — 2025** — ISSEA-CEMAC, Institut Sous-régional de Statistique et d'Économie Appliquée
+- **Diplôme d'Ingénieur Agronome, option Économie et Sociologie Rurales** — Université de Dschang, Cameroun
+
+#### Parcours professionnel et entrepreneurial
+
+**Secrétaire Technique (Statisticien) — Service des Techniques Agricoles, SOCAPALM, Kienké**  
+Fonction actuelle dans un environnement professionnel lié aux techniques agricoles et à l'analyse statistique.
+
+**Promoteur — MEMOSTAT COMPANY**  
+Création et développement d'une start-up spécialisée notamment dans le suivi et l'accompagnement des mémoires d'étudiants ainsi que dans les analyses statistiques pour les professionnels.
+
+**Responsable commercial — CABI (Center for Agric-Business Innovations)**  
+Développement de produits rentables à base de champignons et signature de contrats de vente.
+
+**Promoteur et Président — Association ASTRAL**  
+Ancien promoteur et président de l'association ASTRAL.
+
+#### Activités actuelles et développement de solutions numériques
+
+En parallèle de son activité professionnelle, Pierre Valdeze MBOM MBOM exerce également comme **freelance** et développe activement des solutions simples et rapides d'utilisation destinées notamment aux utilisateurs novices.
+
+Il s'appuie sur **l'intelligence artificielle** pour concevoir des outils facilitant le traitement et l'analyse des données, notamment :
+
+- **Ramses** : solution orientée vers l'analyse statistique et l'accompagnement des utilisateurs dans l'exploitation des données ;
+- **Hygie** : solution destinée notamment au traitement et à la préparation des données.
+
+Son parcours se situe ainsi à l'intersection de **l'agriculture, de l'agroéconomie, des statistiques, de l'analyse des données, de l'entrepreneuriat et du développement de solutions numériques**.
 
 Dépôt du projet : https://github.com/census-specs/Ramses
